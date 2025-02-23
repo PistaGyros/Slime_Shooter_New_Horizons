@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Slime_Shooter_New_Horizons", "Slime_Shooter_New_Horizons\Slime_Shooter_New_Horizons.csproj", "{507D9C97-A95E-4607-ACEC-BFC8C67BE35A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{507D9C97-A95E-4607-ACEC-BFC8C67BE35A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{507D9C97-A95E-4607-ACEC-BFC8C67BE35A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{507D9C97-A95E-4607-ACEC-BFC8C67BE35A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{507D9C97-A95E-4607-ACEC-BFC8C67BE35A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
