@@ -20,18 +20,24 @@ public enum PlayerOrientation
 public class Player : Sprite
 {
     private float defaultSpeed = 0.3f;
+
+    private Texture2D slimeTexture;
+    private Texture2D crossLines;
+    private float slimeShootTimer = 0;
     
     public PlayerOrientation playerOrientation;
     
     public Player(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, Vector2 colliderSize,
-        float scaleMultiplier) : 
+        float scaleMultiplier, Texture2D slimeTexture, Texture2D crossLines) : 
         base(texture, destinationRectangle, sourceRectangle, colliderSize, scaleMultiplier)
     {
+        this.slimeTexture = slimeTexture;
+        this.crossLines = crossLines;
     }
     
     
     
-    public virtual void Update(GameTime gameTime)
+    public virtual void Update(GameTime gameTime, List<Slime> slimeList, Vector2 offset, Vector2 screenRes)
     {
         KeyboardState keyboardState = Keyboard.GetState();
         int changeY = 0;
@@ -60,16 +66,55 @@ public class Player : Sprite
             changeX += (int) (defaultSpeed * gameTime.ElapsedGameTime.Milliseconds);
         }
         destinationRectangle.X += changeX;
+
+        if (slimeShootTimer <= 0 && Mouse.GetState().LeftButton == ButtonState.Pressed)
+        {
+            slimeShootTimer = 0.25f;
+            Vector2 mousePos = Mouse.GetState().Position.ToVector2();
+            SpawnSlime(slimeList, mousePos, offset, screenRes);
+        }
+        slimeShootTimer -= gameTime.ElapsedGameTime.Milliseconds * 0.001f;
     }
 
-    /**public new virtual void Draw(SpriteBatch spriteBatch, Vector2 offset)
+    public virtual void Draw(SpriteBatch spriteBatch)
     {
-        Rectangle dest = new Rectangle(
-            (int)offset.X + destinationRectangle.X,
-            (int)offset.Y + destinationRectangle.Y,
-            destinationRectangle.Width,
-            destinationRectangle.Height);
-        
-        spriteBatch.Draw(texture, dest, sourceRectangle, Color.White);
-    }**/
+        spriteBatch.Draw(crossLines, new Vector2(destinationRectangle.X, destinationRectangle.Y), Color.White);
+    }
+    
+
+    private void SpawnSlime(List<Slime> slimeList, Vector2 spawnPos, Vector2 offset, Vector2 screenRes)
+    {
+        Console.WriteLine(destinationRectangle.X.ToString() + " + " + destinationRectangle.Y.ToString());
+        Slime slime = new Slime(slimeTexture,
+            new Rectangle(destinationRectangle.X, destinationRectangle.Y, slimeTexture.Width, slimeTexture.Height),
+            new Rectangle(0, 0, slimeTexture.Width, slimeTexture.Height), 
+            new Vector2(slimeTexture.Width, slimeTexture.Height), 3, QuadrantClicked(spawnPos, screenRes));
+        slimeList.Add(slime);
+    }
+    
+    private int QuadrantClicked(Vector2 clickPos, Vector2 screenRes)
+    {
+        int quadrant = 0;
+        float angle = MathF.Atan(-(clickPos.Y - screenRes.Y / 2) / (clickPos.X - screenRes.X / 2)) / MathF.PI * 180;
+        float relativeX = clickPos.X - screenRes.X / 2;
+        if (relativeX > 0)
+        {
+            if (-90 <= angle && angle <= -45)
+                quadrant = 4;
+            else if (-44 <= angle && angle <= 45)
+                quadrant = 1;
+            else if (angle >= 46 && angle <= 90)
+                quadrant = 2;
+        }
+        else if (relativeX < 0)
+        {
+            if (-90 <= angle && angle <= -45)
+                quadrant = 2;
+            else if (-44 <= angle && angle <= 45)
+                quadrant = 3;
+            else if (angle >= 46 && angle <= 90)
+                quadrant = 4;
+        }
+        return quadrant;
+    }
 }

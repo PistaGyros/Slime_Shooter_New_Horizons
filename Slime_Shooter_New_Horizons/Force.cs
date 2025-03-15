@@ -10,7 +10,7 @@ public class Force
         
     }
 
-    public void AddForce(Rectangle destinationRectangle, Vector2 force)
+    public void Throw(Rectangle destinationRectangle, Vector2 force)
     {
         
     }

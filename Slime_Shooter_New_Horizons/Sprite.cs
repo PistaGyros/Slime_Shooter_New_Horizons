@@ -22,8 +22,11 @@ public class Sprite : Force
         this.scaleMultiplier = scaleMultiplier;
         this.colliderSize = colliderSize;
     }
-    
-    public virtual void Update(GameTime gameTime){}
+
+    public new void Update(GameTime gameTime)
+    {
+        
+    }
 
     public virtual void Draw(SpriteBatch spriteBatch, Vector2 offset)
     {
