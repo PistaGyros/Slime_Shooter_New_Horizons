@@ -22,17 +22,15 @@ public class Player : Sprite
     private float defaultSpeed = 0.3f;
 
     private Texture2D slimeTexture;
-    private Texture2D crossLines;
-    private float slimeShootTimer = 0;
+    private float slimeShootTimer;
     
     public PlayerOrientation playerOrientation;
     
     public Player(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, Vector2 colliderSize,
-        float scaleMultiplier, Texture2D slimeTexture, Texture2D crossLines) : 
+        float scaleMultiplier, Texture2D slimeTexture) : 
         base(texture, destinationRectangle, sourceRectangle, colliderSize, scaleMultiplier)
     {
         this.slimeTexture = slimeTexture;
-        this.crossLines = crossLines;
     }
     
     
@@ -75,20 +73,15 @@ public class Player : Sprite
         }
         slimeShootTimer -= gameTime.ElapsedGameTime.Milliseconds * 0.001f;
     }
-
-    public virtual void Draw(SpriteBatch spriteBatch)
-    {
-        spriteBatch.Draw(crossLines, new Vector2(destinationRectangle.X, destinationRectangle.Y), Color.White);
-    }
     
 
     private void SpawnSlime(List<Slime> slimeList, Vector2 spawnPos, Vector2 offset, Vector2 screenRes)
     {
-        Console.WriteLine(destinationRectangle.X.ToString() + " + " + destinationRectangle.Y.ToString());
         Slime slime = new Slime(slimeTexture,
-            new Rectangle(destinationRectangle.X, destinationRectangle.Y, slimeTexture.Width, slimeTexture.Height),
-            new Rectangle(0, 0, slimeTexture.Width, slimeTexture.Height), 
-            new Vector2(slimeTexture.Width, slimeTexture.Height), 3, QuadrantClicked(spawnPos, screenRes));
+            new Rectangle(destinationRectangle.X, destinationRectangle.Y, 20, 20),
+            new Rectangle(0, 0, 20, 20), 
+            new Vector2(20, 20), 
+            2, 6, 6, new Vector2(20, 20), QuadrantClicked(spawnPos, screenRes));
         slimeList.Add(slime);
     }
     
@@ -99,20 +92,20 @@ public class Player : Sprite
         float relativeX = clickPos.X - screenRes.X / 2;
         if (relativeX > 0)
         {
-            if (-90 <= angle && angle <= -45)
+            if (angle is >= -90 and <= -45)
                 quadrant = 4;
-            else if (-44 <= angle && angle <= 45)
+            else if (angle is >= -44 and <= 45)
                 quadrant = 1;
-            else if (angle >= 46 && angle <= 90)
+            else if (angle is >= 46 and <= 90)
                 quadrant = 2;
         }
         else if (relativeX < 0)
         {
-            if (-90 <= angle && angle <= -45)
+            if (angle is >= -90 and <= -45)
                 quadrant = 2;
-            else if (-44 <= angle && angle <= 45)
+            else if (angle is >= -44 and <= 45)
                 quadrant = 3;
-            else if (angle >= 46 && angle <= 90)
+            else if (angle is >= 46 and <= 90)
                 quadrant = 4;
         }
         return quadrant;

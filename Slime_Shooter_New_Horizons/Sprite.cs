@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -25,7 +26,7 @@ public class Sprite : Force
 
     public new void Update(GameTime gameTime)
     {
-        
+        Console.WriteLine("sprite update");
     }
 
     public virtual void Draw(SpriteBatch spriteBatch, Vector2 offset)

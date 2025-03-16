@@ -46,18 +46,18 @@ public class Game1 : Game
 
         // TODO: use this.Content to load your game content here
         
-        slimeTexture = Content.Load<Texture2D>("pink_slime");
+        slimeTexture = Content.Load<Texture2D>("pink_slime_jumping_spritesheet-export");
         Slime littleSlime = new Slime
-        (slimeTexture, new Rectangle(50, 50, 50 + slimeTexture.Width, 50 + slimeTexture.Height), 
-            new Rectangle(0, 0, slimeTexture.Width, slimeTexture.Height), 
-            new Vector2(slimeTexture.Width, slimeTexture.Height), 1, 1);
+        (slimeTexture, new Rectangle(50, 50, 20, 20), 
+            new Rectangle(0, 0, 20, 20), 
+            new Vector2(slimeTexture.Width, slimeTexture.Height), 
+            2, 6, 6, new Vector2(20, 20), 1);
         slimeList.Add(littleSlime);
-
-        Texture2D crossLinesTex = Content.Load<Texture2D>("simple_cross_lines");
-        Texture2D playerTexture = Content.Load<Texture2D>("white_prototype_rectangle");
+        
+        Texture2D playerTexture = Content.Load<Texture2D>("spr_player_1_left_idle");
         player = new Player(playerTexture, new Rectangle(0, 0, playerTexture.Width * 5, playerTexture.Height * 5), 
             new Rectangle(0, 0, playerTexture.Width, playerTexture.Height), 
-            new Vector2(playerTexture.Width, playerTexture.Height), 1, slimeTexture, crossLinesTex);
+            new Vector2(playerTexture.Width, playerTexture.Height), 1, slimeTexture);
 
     }
 
@@ -90,17 +90,14 @@ public class Game1 : Game
         // TODO: Add your drawing code here
         
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-        
-        player.Draw(_spriteBatch, followCamera.position);
-        
-        Texture2D playerTexture = Content.Load<Texture2D>("white_prototype_rectangle");
-        _spriteBatch.Draw(playerTexture, new Rectangle((int)followCamera.position.X, (int)followCamera.position.Y, playerTexture.Width, playerTexture.Height), Color.White);
 
         if (slimeList != null)
             foreach (var slime in slimeList)
             {
                 slime.Draw(_spriteBatch, followCamera.position);
             }
+        
+        player.Draw(_spriteBatch, followCamera.position);
         
         _spriteBatch.End();
 
