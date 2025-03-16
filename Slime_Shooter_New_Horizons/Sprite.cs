@@ -14,14 +14,21 @@ public class Sprite : Force
 
     private Vector2 colliderSize;
 
-    public Sprite(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, Vector2 colliderSize,
-        float scaleMultiplier)
+    public Sprite(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier, Vector2 colliderSize)
     {
         this.texture = texture;
         this.destinationRectangle = destinationRectangle;
         this.sourceRectangle = sourceRectangle;
         this.scaleMultiplier = scaleMultiplier;
         this.colliderSize = colliderSize;
+    }
+
+    public Sprite(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier)
+    {
+        this.texture = texture;
+        this.destinationRectangle = destinationRectangle;
+        this.sourceRectangle = sourceRectangle;
+        this.scaleMultiplier = scaleMultiplier;
     }
 
     public new void Update(GameTime gameTime)

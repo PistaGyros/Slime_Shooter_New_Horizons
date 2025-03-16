@@ -8,9 +8,9 @@ public class Slime : Animator
 {
     private bool fly;
     
-    public Slime(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, Vector2 colliderSize,
-        float scaleMultiplier,int quadrantSpawned) :
-        base(texture, destinationRectangle, sourceRectangle, colliderSize, scaleMultiplier)
+    public Slime(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier, 
+        Vector2 colliderSize, int quadrantSpawned) :
+        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize)
     {
         Throw(destinationRectangle);
         fly = true;
@@ -18,9 +18,9 @@ public class Slime : Animator
         velocity *= DecideWhatinitQuadrant(quadrantSpawned);
     }
 
-    public Slime(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, Vector2 colliderSize,
-        float scaleMultiplier, int numFrames, int numCollums, Vector2 size, int animSpeedMultiplier, int quadrantSpawned) : base(texture,
-        destinationRectangle, sourceRectangle, colliderSize, scaleMultiplier, numFrames, numCollums, size, animSpeedMultiplier)
+    public Slime(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier, 
+        Vector2 colliderSize, int numFrames, int numCollums, Vector2 size, int animSpeedMultiplier, int quadrantSpawned) : base(texture,
+        destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize, numFrames, numCollums, size, animSpeedMultiplier)
     {
         Throw(destinationRectangle);
         fly = true;
@@ -30,7 +30,7 @@ public class Slime : Animator
 
     
 
-    public override void Update(GameTime gameTime)
+    public new void Update(GameTime gameTime)
     {
         UpdateAnimator(gameTime);
         if (fly)

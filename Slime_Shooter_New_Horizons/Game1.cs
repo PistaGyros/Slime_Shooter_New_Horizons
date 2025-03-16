@@ -25,6 +25,7 @@ public class Game1 : Game
     private Inventory inventory;
 
     private Player player;
+    private Corral corral;
 
     public Game1()
     {
@@ -70,14 +71,22 @@ public class Game1 : Game
 
         Slime littleSlime = new Slime(slimeTexture, new Rectangle(50, 50, 20, 20),
             new Rectangle(0, 0, 20, 20),
-            new Vector2(slimeTexture.Width, slimeTexture.Height),
-            2, 6, 6, new Vector2(20, 20), 1, 1);
+            2, new Vector2(slimeTexture.Width, slimeTexture.Height),
+            6, 6, new Vector2(20, 20), 1, 1);
         slimeList.Add(littleSlime);
         
         Texture2D playerTexture = Content.Load<Texture2D>("spr_player_1_left_idle");
         player = new Player(playerTexture, new Rectangle(0, 0, playerTexture.Width * 5, playerTexture.Height * 5), 
             new Rectangle(0, 0, playerTexture.Width, playerTexture.Height), 
-            new Vector2(playerTexture.Width, playerTexture.Height), 1, slimeTexture);
+            1, new Vector2(playerTexture.Width, playerTexture.Height), slimeTexture);
+
+        Texture2D corralTex = Content.Load<Texture2D>("corral_deactivated");
+        Texture2D forceFieldTexHorizontal = Content.Load<Texture2D>("force_field_corral_prototype_anim");
+        Texture2D forceFieldTexVertical = Content.Load<Texture2D>("force_field_corral_prototype_anim_vertical");
+        corral = new Corral(corralTex,
+            new Rectangle(0, 0, corralTex.Width, corralTex.Height),
+            new Rectangle(0, 0, corralTex.Width, corralTex.Height),
+            3, forceFieldTexHorizontal, forceFieldTexVertical);
 
     }
 
@@ -99,6 +108,8 @@ public class Game1 : Game
             {
                 slime.Update(gameTime);
             }
+        
+        corral.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -118,6 +129,12 @@ public class Game1 : Game
             }
         
         player.Draw(_spriteBatch, followCamera.position);
+        
+        corral.Draw(_spriteBatch, followCamera.position);
+        foreach (var fence in corral.forceFields)
+        {
+            fence.Draw(_spriteBatch, followCamera.position);
+        }
         
         _spriteBatch.End();
 

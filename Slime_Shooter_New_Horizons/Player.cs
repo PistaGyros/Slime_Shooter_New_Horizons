@@ -26,9 +26,9 @@ public class Player : Sprite
     
     public PlayerOrientation playerOrientation;
     
-    public Player(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, Vector2 colliderSize,
-        float scaleMultiplier, Texture2D slimeTexture) : 
-        base(texture, destinationRectangle, sourceRectangle, colliderSize, scaleMultiplier)
+    public Player(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle,
+        float scaleMultiplier, Vector2 colliderSize, Texture2D slimeTexture) : 
+        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize)
     {
         this.slimeTexture = slimeTexture;
     }
@@ -79,9 +79,8 @@ public class Player : Sprite
     {
         Slime slime = new Slime(slimeTexture,
             new Rectangle(destinationRectangle.X, destinationRectangle.Y, 20, 20),
-            new Rectangle(0, 0, 20, 20), 
-            new Vector2(20, 20), 
-            2, QuadrantClicked(spawnPos, screenRes));
+            new Rectangle(0, 0, 20, 20), 2, new Vector2(20, 20), 
+            QuadrantClicked(spawnPos, screenRes));
         slime.SetupAnimator(6, 6, new Vector2(20, 20), 1);
         slimeList.Add(slime);
     }

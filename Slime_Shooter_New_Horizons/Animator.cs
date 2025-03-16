@@ -9,16 +9,16 @@ public class Animator : Sprite
     public int numFrames = 1;
     public int numCollums = 1;
     public Vector2 size;
-    public int counter;
-    private int animSpeedMultiplier = 1;
+    public float counter;
+    private float animSpeedMultiplier = 1;
     
     public int currentFrame;
     public int colPos;
     
     
-    public Animator(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, Vector2 colliderSize,
-        float scaleMultiplier, int numFrames, int numCollums, Vector2 size, int animSpeedMultiplier) :
-        base(texture, destinationRectangle, sourceRectangle, colliderSize, scaleMultiplier)
+    public Animator(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier,
+        Vector2 colliderSize, int numFrames, int numCollums, Vector2 size, float animSpeedMultiplier) :
+        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize)
     {
         this.numFrames = numFrames;
         this.numCollums = numCollums;
@@ -26,14 +26,14 @@ public class Animator : Sprite
         this.animSpeedMultiplier = animSpeedMultiplier;
     }
     
-    public Animator(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, Vector2 colliderSize,
-        float scaleMultiplier) : 
-        base(texture, destinationRectangle, sourceRectangle, colliderSize, scaleMultiplier)
+    public Animator(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier,
+        Vector2 colliderSize) : 
+        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize)
     {
         size = new Vector2(sourceRectangle.Width, sourceRectangle.Height);
     }
 
-    public void SetupAnimator(int numFrames, int numCollums, Vector2 size, int animSpeedMultiplier)
+    public void SetupAnimator(int numFrames, int numCollums, Vector2 size, float animSpeedMultiplier)
     {
         this.numFrames = numFrames;
         this.numCollums = numCollums;
@@ -41,7 +41,7 @@ public class Animator : Sprite
         this.animSpeedMultiplier = animSpeedMultiplier;
     }
 
-    public new virtual void Update(GameTime gameTime)
+    public new void Update(GameTime gameTime)
     {
         UpdateAnimator(gameTime);
     }
