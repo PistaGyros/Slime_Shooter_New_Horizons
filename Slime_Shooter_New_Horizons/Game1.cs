@@ -136,6 +136,7 @@ public class Game1 : Game
         {
             fence.Draw(_spriteBatch, followCamera.position);
         }
+
         
         _spriteBatch.End();
 
