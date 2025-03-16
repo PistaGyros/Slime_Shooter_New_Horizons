@@ -72,7 +72,7 @@ public class Game1 : Game
         Slime littleSlime = new Slime(slimeTexture, new Rectangle(50, 50, 20, 20),
             new Rectangle(0, 0, 20, 20),
             2, new Vector2(slimeTexture.Width, slimeTexture.Height),
-            6, 6, new Vector2(20, 20), 1, 1);
+            6, 6, 1, new Vector2(20, 20), 1, 1);
         slimeList.Add(littleSlime);
         
         Texture2D playerTexture = Content.Load<Texture2D>("spr_player_1_left_idle");
@@ -128,9 +128,10 @@ public class Game1 : Game
                 slime.Draw(_spriteBatch, followCamera.position);
             }
         
+        corral.Draw(_spriteBatch, followCamera.position);
+        
         player.Draw(_spriteBatch, followCamera.position);
         
-        corral.Draw(_spriteBatch, followCamera.position);
         foreach (var fence in corral.forceFields)
         {
             fence.Draw(_spriteBatch, followCamera.position);

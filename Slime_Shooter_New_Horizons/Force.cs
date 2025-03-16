@@ -10,7 +10,7 @@ public class Force
     public Vector2 velocity;
     public Vector2 initPos;
     public int initQuadrant;
-    public float power = 200;
+    public float power = 100;
     public float gravityAcceleration;
     
     public Force()
@@ -26,7 +26,7 @@ public class Force
     
     public Rectangle Fly(GameTime gameTime, Rectangle destinationRectangle)
     {
-        time += (float)gameTime.ElapsedGameTime.TotalSeconds * 3;
+        time += (float)gameTime.ElapsedGameTime.TotalSeconds * 5;
 
         float newX = KinematicEquation(5f, velocity.X, initPos.X, time);
         float newY = KinematicEquation(gravityAcceleration, velocity.Y, initPos.Y, time);

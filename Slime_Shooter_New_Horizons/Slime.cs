@@ -19,8 +19,8 @@ public class Slime : Animator
     }
 
     public Slime(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier, 
-        Vector2 colliderSize, int numFrames, int numCollums, Vector2 size, int animSpeedMultiplier, int quadrantSpawned) : base(texture,
-        destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize, numFrames, numCollums, size, animSpeedMultiplier)
+        Vector2 colliderSize, int numFrames, int numCollums, int numRows, Vector2 size, int animSpeedMultiplier, int quadrantSpawned) : base(texture,
+        destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize, numFrames, numCollums, numRows, size, animSpeedMultiplier)
     {
         Throw(destinationRectangle);
         fly = true;

@@ -8,20 +8,23 @@ public class Animator : Sprite
 {
     public int numFrames = 1;
     public int numCollums = 1;
+    public int numRows;
     public Vector2 size;
     public float counter;
     private float animSpeedMultiplier = 1;
     
     public int currentFrame;
     public int colPos;
+    public int currentRow;
     
     
     public Animator(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier,
-        Vector2 colliderSize, int numFrames, int numCollums, Vector2 size, float animSpeedMultiplier) :
+        Vector2 colliderSize, int numFrames, int numCollums, int numRows, Vector2 size, float animSpeedMultiplier) :
         base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize)
     {
         this.numFrames = numFrames;
         this.numCollums = numCollums;
+        this.numRows = numRows;
         this.size = size;
         this.animSpeedMultiplier = animSpeedMultiplier;
     }
@@ -33,10 +36,11 @@ public class Animator : Sprite
         size = new Vector2(sourceRectangle.Width, sourceRectangle.Height);
     }
 
-    public void SetupAnimator(int numFrames, int numCollums, Vector2 size, float animSpeedMultiplier)
+    public void SetupAnimator(int numFrames, int numCollums, int numRows, Vector2 size, float animSpeedMultiplier)
     {
         this.numFrames = numFrames;
         this.numCollums = numCollums;
+        this.numRows = numRows;
         this.size = size;
         this.animSpeedMultiplier = animSpeedMultiplier;
     }
@@ -64,7 +68,7 @@ public class Animator : Sprite
             (int)(destinationRectangle.Width * scaleMultiplier),
             (int)(destinationRectangle.Height * scaleMultiplier));
         
-        spriteBatch.Draw(texture, dest, GetFrame(0), Color.White);
+        spriteBatch.Draw(texture, dest, GetFrame(currentRow), Color.White);
     }
 
     public void NextFrame()
@@ -72,14 +76,15 @@ public class Animator : Sprite
         currentFrame++;
         colPos++;
         
-        if (currentFrame >= numFrames)
-        {
-            ResetAnim();
-        }
-
         if (colPos >= numCollums)
         {
             colPos = 0;
+            currentRow++;
+        }
+        
+        if (currentRow >= numRows)
+        {
+            ResetAnim();
         }
     }
 
@@ -87,6 +92,7 @@ public class Animator : Sprite
     {
         currentFrame = 0;
         colPos = 0;
+        currentRow = 0;
     }
 
     public Rectangle GetFrame(int actualRow)
