@@ -6,8 +6,8 @@ namespace Slime_Shooter_New_Horizons;
 
 public class Animator : Sprite
 {
-    public int numFrames = 1;
-    public int numCollums = 1;
+    public int numFrames;
+    public int numCollums;
     public int numRows;
     public Vector2 size;
     public float counter;
