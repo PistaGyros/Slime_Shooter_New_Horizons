@@ -6,9 +6,8 @@ namespace Slime_Shooter_New_Horizons;
 
 public class Force
 {
-    public bool fly;
     public float time;
-    public Vector2 initVelocity;
+    public Vector2 velocity;
     public Vector2 initPos;
     public int initQuadrant;
     public float power = 200;
@@ -21,17 +20,16 @@ public class Force
 
     public void Throw(Rectangle destinationRectangle)
     {
-        initVelocity = new Vector2(MathF.Cos(40 * MathF.PI / 180), MathF.Sin(215 * MathF.PI / 180)) * power;
+        velocity = new Vector2(MathF.Cos(40 * MathF.PI / 180), MathF.Sin(215 * MathF.PI / 180)) * power;
         initPos = new Vector2(destinationRectangle.X, destinationRectangle.Y);
-        fly = true;
     }
     
     public Rectangle Fly(GameTime gameTime, Rectangle destinationRectangle)
     {
         time += (float)gameTime.ElapsedGameTime.TotalSeconds * 3;
 
-        float newX = KinematicEquation(5f, initVelocity.X, initPos.X, time);
-        float newY = KinematicEquation(gravityAcceleration, initVelocity.Y, initPos.Y, time);
+        float newX = KinematicEquation(5f, velocity.X, initPos.X, time);
+        float newY = KinematicEquation(gravityAcceleration, velocity.Y, initPos.Y, time);
         
         destinationRectangle.X = (int)newX;
         destinationRectangle.Y = (int)newY;

@@ -81,7 +81,8 @@ public class Player : Sprite
             new Rectangle(destinationRectangle.X, destinationRectangle.Y, 20, 20),
             new Rectangle(0, 0, 20, 20), 
             new Vector2(20, 20), 
-            2, 6, 6, new Vector2(20, 20), QuadrantClicked(spawnPos, screenRes));
+            2, QuadrantClicked(spawnPos, screenRes));
+        slime.SetupAnimator(6, 6, new Vector2(20, 20), 1);
         slimeList.Add(slime);
     }
     

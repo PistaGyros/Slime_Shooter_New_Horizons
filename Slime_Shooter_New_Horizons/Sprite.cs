@@ -26,7 +26,6 @@ public class Sprite : Force
 
     public new void Update(GameTime gameTime)
     {
-        Console.WriteLine("sprite update");
     }
 
     public virtual void Draw(SpriteBatch spriteBatch, Vector2 offset)

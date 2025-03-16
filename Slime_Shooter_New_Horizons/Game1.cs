@@ -10,20 +10,27 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    private Vector2 screenRes = new Vector2(1280, 720);
 
     private Texture2D slimeTexture;
+    
+    // UI related
+    private Texture2D itemsAtlas;
+    private List<string> itemsNames;
+    private Dictionary<string, int> itemsID;
     
     private List<Slime> slimeList;
 
     private FollowCamera followCamera;
+    private Inventory inventory;
 
     private Player player;
 
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
-        _graphics.PreferredBackBufferWidth = 1280;
-        _graphics.PreferredBackBufferHeight = 720;
+        _graphics.PreferredBackBufferWidth = (int)screenRes.X;
+        _graphics.PreferredBackBufferHeight = (int)screenRes.Y;
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
@@ -34,6 +41,18 @@ public class Game1 : Game
         // TODO: Add your initialization logic here
         
         followCamera = new FollowCamera(Vector2.Zero);
+        
+        // UI
+        itemsNames = new List<string>()
+        {
+            "Pink Slime", "Rock Slime"
+        };
+        itemsID = new Dictionary<string, int>();
+        for (int i = 0; i < itemsNames.Count; i++)
+        {
+            itemsID[itemsNames[i]] = i;
+        }
+        //inventory = new(new Vector2(screenRes.X / 2 - 200f, screenRes.Y - 100f), );
 
         slimeList = new List<Slime>();
 
@@ -47,11 +66,12 @@ public class Game1 : Game
         // TODO: use this.Content to load your game content here
         
         slimeTexture = Content.Load<Texture2D>("pink_slime_jumping_spritesheet-export");
-        Slime littleSlime = new Slime
-        (slimeTexture, new Rectangle(50, 50, 20, 20), 
-            new Rectangle(0, 0, 20, 20), 
-            new Vector2(slimeTexture.Width, slimeTexture.Height), 
-            2, 6, 6, new Vector2(20, 20), 1);
+        itemsAtlas = Content.Load<Texture2D>("items_atlas");
+
+        Slime littleSlime = new Slime(slimeTexture, new Rectangle(50, 50, 20, 20),
+            new Rectangle(0, 0, 20, 20),
+            new Vector2(slimeTexture.Width, slimeTexture.Height),
+            2, 6, 6, new Vector2(20, 20), 1, 1);
         slimeList.Add(littleSlime);
         
         Texture2D playerTexture = Content.Load<Texture2D>("spr_player_1_left_idle");

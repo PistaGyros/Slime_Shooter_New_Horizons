@@ -6,21 +6,39 @@ namespace Slime_Shooter_New_Horizons;
 
 public class Animator : Sprite
 {
-    public int numFrames;
-    public int numCollums;
+    public int numFrames = 1;
+    public int numCollums = 1;
     public Vector2 size;
     public int counter;
+    private int animSpeedMultiplier = 1;
     
     public int currentFrame;
     public int colPos;
     
+    
     public Animator(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, Vector2 colliderSize,
-        float scaleMultiplier, int numFrames, int numCollums, Vector2 size) : 
+        float scaleMultiplier, int numFrames, int numCollums, Vector2 size, int animSpeedMultiplier) :
         base(texture, destinationRectangle, sourceRectangle, colliderSize, scaleMultiplier)
     {
         this.numFrames = numFrames;
         this.numCollums = numCollums;
         this.size = size;
+        this.animSpeedMultiplier = animSpeedMultiplier;
+    }
+    
+    public Animator(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, Vector2 colliderSize,
+        float scaleMultiplier) : 
+        base(texture, destinationRectangle, sourceRectangle, colliderSize, scaleMultiplier)
+    {
+        size = new Vector2(sourceRectangle.Width, sourceRectangle.Height);
+    }
+
+    public void SetupAnimator(int numFrames, int numCollums, Vector2 size, int animSpeedMultiplier)
+    {
+        this.numFrames = numFrames;
+        this.numCollums = numCollums;
+        this.size = size;
+        this.animSpeedMultiplier = animSpeedMultiplier;
     }
 
     public new virtual void Update(GameTime gameTime)
@@ -30,7 +48,7 @@ public class Animator : Sprite
 
     public void UpdateAnimator(GameTime gameTime)
     {
-        counter++;
+        counter += animSpeedMultiplier;
         if (counter >= 8)
         {
             counter = 0;

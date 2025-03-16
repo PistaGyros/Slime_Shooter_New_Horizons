@@ -6,13 +6,26 @@ namespace Slime_Shooter_New_Horizons;
 
 public class Slime : Animator
 {
+    private bool fly;
+    
     public Slime(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, Vector2 colliderSize,
-        float scaleMultiplier, int numFrames, int numCollums, Vector2 size, int quadrantSpawned) :
-        base(texture, destinationRectangle, sourceRectangle, colliderSize, scaleMultiplier, numFrames, numCollums, size)
+        float scaleMultiplier,int quadrantSpawned) :
+        base(texture, destinationRectangle, sourceRectangle, colliderSize, scaleMultiplier)
     {
         Throw(destinationRectangle);
+        fly = true;
         initQuadrant = quadrantSpawned;
-        initVelocity *= DecideWhatinitQuadrant(quadrantSpawned);
+        velocity *= DecideWhatinitQuadrant(quadrantSpawned);
+    }
+
+    public Slime(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, Vector2 colliderSize,
+        float scaleMultiplier, int numFrames, int numCollums, Vector2 size, int animSpeedMultiplier, int quadrantSpawned) : base(texture,
+        destinationRectangle, sourceRectangle, colliderSize, scaleMultiplier, numFrames, numCollums, size, animSpeedMultiplier)
+    {
+        Throw(destinationRectangle);
+        fly = true;
+        initQuadrant = quadrantSpawned;
+        velocity *= DecideWhatinitQuadrant(quadrantSpawned);
     }
 
     
