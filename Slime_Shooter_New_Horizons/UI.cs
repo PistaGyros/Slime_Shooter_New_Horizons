@@ -8,38 +8,38 @@ namespace Slime_Shooter_New_Horizons;
 
 public class UI
 {
-    private Vector2 position;
+    private Rectangle UIRec;
     private Texture2D bgTexture;
     private Texture2D fgTexture;
     
     
-    public UI(Vector2 UIPosition, Texture2D backgroundTexture, Texture2D forGroundTexture)
+    public UI(Rectangle UIRec, Texture2D backGroundTexture, Texture2D forGroundTexture)
     {
-        this.position = UIPosition;
-        this.bgTexture = backgroundTexture;
+        this.UIRec = UIRec;
+        this.bgTexture = backGroundTexture;
         this.fgTexture = forGroundTexture;
         
     }
 
-    public UI(Vector2 UIPosition, Texture2D backgroundTexture)
+    public UI(Rectangle UIRec, Texture2D backGroundTexture)
     {
-        this.position = UIPosition;
-        this.bgTexture = backgroundTexture;
+        this.UIRec = UIRec;
+        this.bgTexture = backGroundTexture;
     }
 
-    public void Draw(SpriteBatch spriteBatch)
+    public virtual void Draw(SpriteBatch spriteBatch)
     {
         DrawBack(spriteBatch);
         DrawForeground(spriteBatch);
     }
 
-    public void DrawBack(SpriteBatch spriteBatch)
+    public virtual void DrawBack(SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(bgTexture, position, Color.White);
+        spriteBatch.Draw(bgTexture, UIRec, Color.White);
     }
 
     private void DrawForeground(SpriteBatch spriteBatch)
     {
-        
+        spriteBatch.Draw(fgTexture, UIRec, Color.White);
     }
 }

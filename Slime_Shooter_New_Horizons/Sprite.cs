@@ -13,14 +13,18 @@ public class Sprite : Force
     public float scaleMultiplier;
 
     private Vector2 colliderSize;
+    private Texture2D colliderTexture;
+    private bool colliderVisible = false;
 
-    public Sprite(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier, Vector2 colliderSize)
+    public Sprite(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier, 
+        Vector2 colliderSize, Texture2D colliderTexture)
     {
         this.texture = texture;
         this.destinationRectangle = destinationRectangle;
         this.sourceRectangle = sourceRectangle;
         this.scaleMultiplier = scaleMultiplier;
         this.colliderSize = colliderSize;
+        this.colliderTexture = colliderTexture;
     }
 
     public Sprite(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier)
@@ -29,6 +33,11 @@ public class Sprite : Force
         this.destinationRectangle = destinationRectangle;
         this.sourceRectangle = sourceRectangle;
         this.scaleMultiplier = scaleMultiplier;
+    }
+    
+    public void ShowCollider()
+    {
+        colliderVisible = true;
     }
 
     public new void Update(GameTime gameTime)
@@ -44,6 +53,12 @@ public class Sprite : Force
             destinationRectangle.Height * (int)scaleMultiplier);
         
         spriteBatch.Draw(texture, dest, sourceRectangle, Color.White);
+
+        /**if (colliderVisible)
+        {
+            spriteBatch.Draw(colliderTexture, destinationRectangle, 
+                new Rectangle(0, 0, colliderTexture.Width, colliderTexture.Height), Color.White);
+        }**/
     }
     
     public Rectangle GetCollisionRectangle

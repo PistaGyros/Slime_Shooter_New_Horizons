@@ -22,15 +22,18 @@ public class Player : Sprite
     private float defaultSpeed = 0.3f;
 
     private Texture2D slimeTexture;
+    private Texture2D colliderTexture;
     private float slimeShootTimer;
+    public Inventory inventory;
     
     public PlayerOrientation playerOrientation;
     
     public Player(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle,
-        float scaleMultiplier, Vector2 colliderSize, Texture2D slimeTexture) : 
-        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize)
+        float scaleMultiplier, Vector2 colliderSize, Texture2D colliderTexture, Texture2D slimeTexture) : 
+        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize, colliderTexture)
     {
         this.slimeTexture = slimeTexture;
+        this.colliderTexture = colliderTexture;
     }
     
     
@@ -72,6 +75,18 @@ public class Player : Sprite
             SpawnSlime(slimeList, mousePos, offset, screenRes);
         }
         slimeShootTimer -= gameTime.ElapsedGameTime.Milliseconds * 0.001f;
+        
+        if (keyboardState.IsKeyDown(Keys.C))
+            ShowCollider();
+        if (keyboardState.IsKeyDown(Keys.D1))
+            inventory.ChangeActiveSlot(1);
+        else if (keyboardState.IsKeyDown(Keys.D2))
+            inventory.ChangeActiveSlot(2);
+        else if (keyboardState.IsKeyDown(Keys.D3))
+            inventory.ChangeActiveSlot(3);
+        else if (keyboardState.IsKeyDown(Keys.D4))
+            inventory.ChangeActiveSlot(4);
+            
     }
     
 
@@ -79,10 +94,19 @@ public class Player : Sprite
     {
         Slime slime = new Slime(slimeTexture,
             new Rectangle(destinationRectangle.X, destinationRectangle.Y, 20, 20),
-            new Rectangle(0, 0, 20, 20), 2, new Vector2(20, 20), 
+            new Rectangle(0, 0, 20, 20), 2, new Vector2(20, 20), colliderTexture, 
             QuadrantClicked(spawnPos, screenRes));
         slime.SetupAnimator(6, 6, 1, new Vector2(20, 20), 1);
         slimeList.Add(slime);
+    }
+
+    public void CreateInventory(Vector2 screenRes, Texture2D itemsAtlas, Texture2D inventoryTex, 
+        Dictionary<string, int> itemsID)
+    {
+        inventory = new(new Rectangle((int)(screenRes.X / 2 - 150f), (int)(screenRes.Y - 100f), 
+                itemsAtlas.Width, itemsAtlas.Height),
+            new Rectangle((int)(screenRes.X / 2 - 150f), (int)(screenRes.Y - 100f), itemsAtlas.Width, itemsAtlas.Height),
+            inventoryTex, itemsAtlas, itemsID);
     }
     
     private int QuadrantClicked(Vector2 clickPos, Vector2 screenRes)

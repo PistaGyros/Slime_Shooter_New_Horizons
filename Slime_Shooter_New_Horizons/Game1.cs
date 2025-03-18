@@ -16,6 +16,8 @@ public class Game1 : Game
     
     // UI related
     private Texture2D itemsAtlas;
+    private Texture2D inventoryTex;
+    private Texture2D colliderTexture;
     private List<string> itemsNames;
     private Dictionary<string, int> itemsID;
     
@@ -35,25 +37,24 @@ public class Game1 : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
-    
+
 
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
-        
+
         followCamera = new FollowCamera(Vector2.Zero);
-        
+
         // UI
         itemsNames = new List<string>()
         {
-            "Pink Slime", "Rock Slime"
+            "Deep Nothingnes", "Pink Slime", "Rock Slime", "Tabby Slime", "Fosfor slime", "Honey Slime"
         };
         itemsID = new Dictionary<string, int>();
         for (int i = 0; i < itemsNames.Count; i++)
         {
             itemsID[itemsNames[i]] = i;
         }
-        //inventory = new(new Vector2(screenRes.X / 2 - 200f, screenRes.Y - 100f), );
 
         slimeList = new List<Slime>();
 
@@ -67,18 +68,15 @@ public class Game1 : Game
         // TODO: use this.Content to load your game content here
         
         slimeTexture = Content.Load<Texture2D>("pink_slime_jumping_spritesheet-export");
+        colliderTexture = Content.Load<Texture2D>("collider_texture");
+        inventoryTex = Content.Load<Texture2D>("inventory");
         itemsAtlas = Content.Load<Texture2D>("items_atlas");
-
-        Slime littleSlime = new Slime(slimeTexture, new Rectangle(50, 50, 20, 20),
-            new Rectangle(0, 0, 20, 20),
-            2, new Vector2(slimeTexture.Width, slimeTexture.Height),
-            6, 6, 1, new Vector2(20, 20), 1, 1);
-        slimeList.Add(littleSlime);
         
         Texture2D playerTexture = Content.Load<Texture2D>("spr_player_1_left_idle");
         player = new Player(playerTexture, new Rectangle(0, 0, playerTexture.Width * 5, playerTexture.Height * 5), 
             new Rectangle(0, 0, playerTexture.Width, playerTexture.Height), 
-            1, new Vector2(playerTexture.Width, playerTexture.Height), slimeTexture);
+            1, new Vector2(playerTexture.Width * 5, playerTexture.Height * 5), colliderTexture, slimeTexture);
+        player.CreateInventory(screenRes, itemsAtlas, inventoryTex, itemsID);
 
         Texture2D corralTex = Content.Load<Texture2D>("corral_deactivated");
         Texture2D forceFieldTexHorizontal = Content.Load<Texture2D>("force_field_corral_prototype_anim");
@@ -86,7 +84,7 @@ public class Game1 : Game
         corral = new Corral(corralTex,
             new Rectangle(0, 0, corralTex.Width, corralTex.Height),
             new Rectangle(0, 0, corralTex.Width, corralTex.Height),
-            3, forceFieldTexHorizontal, forceFieldTexVertical);
+            3, colliderTexture, forceFieldTexHorizontal, forceFieldTexVertical);
 
     }
 
@@ -136,7 +134,8 @@ public class Game1 : Game
         {
             fence.Draw(_spriteBatch, followCamera.position);
         }
-
+        
+        player.inventory.Draw(_spriteBatch);
         
         _spriteBatch.End();
 

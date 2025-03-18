@@ -23,6 +23,11 @@ public class Force
         velocity = new Vector2(MathF.Cos(40 * MathF.PI / 180), MathF.Sin(215 * MathF.PI / 180)) * power;
         initPos = new Vector2(destinationRectangle.X, destinationRectangle.Y);
     }
+
+    public void Vacuum(Rectangle playerRectangle, Rectangle destinationRectangle)
+    {
+        
+    }
     
     public Rectangle Fly(GameTime gameTime, Rectangle destinationRectangle)
     {

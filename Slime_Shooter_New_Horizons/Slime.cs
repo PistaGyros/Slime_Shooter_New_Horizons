@@ -9,8 +9,8 @@ public class Slime : Animator
     private bool fly;
     
     public Slime(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier, 
-        Vector2 colliderSize, int quadrantSpawned) :
-        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize)
+        Vector2 colliderSize, Texture2D colliderTexture, int quadrantSpawned) :
+        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize, colliderTexture)
     {
         Throw(destinationRectangle);
         fly = true;
@@ -19,8 +19,9 @@ public class Slime : Animator
     }
 
     public Slime(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier, 
-        Vector2 colliderSize, int numFrames, int numCollums, int numRows, Vector2 size, int animSpeedMultiplier, int quadrantSpawned) : base(texture,
-        destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize, numFrames, numCollums, numRows, size, animSpeedMultiplier)
+        Vector2 colliderSize, Texture2D colliderTexture, int numFrames, int numCollums, int numRows, Vector2 size, 
+        int animSpeedMultiplier, int quadrantSpawned) : base(texture, destinationRectangle, sourceRectangle, 
+        scaleMultiplier, colliderSize, colliderTexture, numFrames, numCollums, numRows, size, animSpeedMultiplier)
     {
         Throw(destinationRectangle);
         fly = true;
@@ -52,7 +53,6 @@ public class Slime : Animator
     private Vector2 DecideWhatinitQuadrant(int quadrantSpawned)
     {
         Vector2 quadrantVec = Vector2.Zero;
-        Console.WriteLine(quadrantSpawned);
         switch (quadrantSpawned)
         {
             case 1:

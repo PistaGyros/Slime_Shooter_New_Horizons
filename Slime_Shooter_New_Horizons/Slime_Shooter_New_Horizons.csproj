@@ -15,6 +15,7 @@
         <None Remove="Icon.bmp"/>
         <None Remove="Data\**" />
         <None Remove="Content\white_prototype_rectangle.png" />
+        <None Remove="Content\items_atlas.png" />
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Include="Icon.ico">

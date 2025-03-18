@@ -19,8 +19,8 @@ public class Animator : Sprite
     
     
     public Animator(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier,
-        Vector2 colliderSize, int numFrames, int numCollums, int numRows, Vector2 size, float animSpeedMultiplier) :
-        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize)
+        Vector2 colliderSize, Texture2D colliderTexture, int numFrames, int numCollums, int numRows, Vector2 size, float animSpeedMultiplier) :
+        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize, colliderTexture)
     {
         this.numFrames = numFrames;
         this.numCollums = numCollums;
@@ -30,8 +30,14 @@ public class Animator : Sprite
     }
     
     public Animator(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier,
-        Vector2 colliderSize) : 
-        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize)
+        Vector2 colliderSize, Texture2D colliderTexture) : 
+        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize, colliderTexture)
+    {
+        size = new Vector2(sourceRectangle.Width, sourceRectangle.Height);
+    }
+    
+    public Animator(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier) : 
+        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier)
     {
         size = new Vector2(sourceRectangle.Width, sourceRectangle.Height);
     }
