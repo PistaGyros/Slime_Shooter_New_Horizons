@@ -12,12 +12,12 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch;
     private Vector2 screenRes = new Vector2(1280, 720);
 
-    private Texture2D slimeTexture;
     
     // UI related
     private Texture2D itemsAtlas;
     private Texture2D inventoryTex;
     private Texture2D colliderTexture;
+    private List<Texture2D> slimeTextures;
     private List<string> itemsNames;
     private Dictionary<string, int> itemsID;
     
@@ -48,14 +48,14 @@ public class Game1 : Game
         // UI
         itemsNames = new List<string>()
         {
-            "Deep Nothingnes", "Pink Slime", "Rock Slime", "Tabby Slime", "Fosfor slime", "Honey Slime"
+            "Deep Nothingness", "Pink Slime", "Rock Slime", "Tabby Slime", "Fosfor slime", "Honey Slime"
         };
         itemsID = new Dictionary<string, int>();
         for (int i = 0; i < itemsNames.Count; i++)
         {
             itemsID[itemsNames[i]] = i;
         }
-
+        
         slimeList = new List<Slime>();
 
         base.Initialize();
@@ -66,17 +66,30 @@ public class Game1 : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         // TODO: use this.Content to load your game content here
+
+        slimeTextures = new List<Texture2D>()
+        {
+            null, 
+            Content.Load<Texture2D>("pink_slime_new_spritesheet"),
+            Content.Load<Texture2D>("rock_slime_new_spritesheet"),
+            Content.Load<Texture2D>("tabby_slime_new_spritesheet"),
+            Content.Load<Texture2D>("phospor_slime_new_spritesheet"),
+            Content.Load<Texture2D>("honey_slime_new_spritesheet")
+        };
         
-        slimeTexture = Content.Load<Texture2D>("pink_slime_jumping_spritesheet-export");
         colliderTexture = Content.Load<Texture2D>("collider_texture");
         inventoryTex = Content.Load<Texture2D>("inventory");
         itemsAtlas = Content.Load<Texture2D>("items_atlas");
         
+        
         Texture2D playerTexture = Content.Load<Texture2D>("spr_player_1_left_idle");
         player = new Player(playerTexture, new Rectangle(0, 0, playerTexture.Width * 5, playerTexture.Height * 5), 
             new Rectangle(0, 0, playerTexture.Width, playerTexture.Height), 
-            1, new Vector2(playerTexture.Width * 5, playerTexture.Height * 5), colliderTexture, slimeTexture);
-        player.CreateInventory(screenRes, itemsAtlas, inventoryTex, itemsID);
+            1, new Vector2(playerTexture.Width * 5, playerTexture.Height * 5), colliderTexture);
+        SpriteFont uiFont = Content.Load<SpriteFont>("Bell MT");
+        player.CreateInventory(screenRes, itemsAtlas, inventoryTex, uiFont, itemsID);
+        player.slimeTextures = slimeTextures;
+        
 
         Texture2D corralTex = Content.Load<Texture2D>("corral_deactivated");
         Texture2D forceFieldTexHorizontal = Content.Load<Texture2D>("force_field_corral_prototype_anim");
@@ -104,7 +117,7 @@ public class Game1 : Game
         if (slimeList != null)
             foreach (var slime in slimeList)
             {
-                slime.Update(gameTime);
+                slime.Update(gameTime, player.destinationRectangle);
             }
         
         corral.Update(gameTime);

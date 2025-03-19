@@ -6,47 +6,50 @@ namespace Slime_Shooter_New_Horizons;
 
 public class Slime : Animator
 {
-    private bool fly;
+    private bool isThrowed = false;
+    public bool IsVacuumed = false;
     
     public Slime(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier, 
-        Vector2 colliderSize, Texture2D colliderTexture, int quadrantSpawned) :
+        Vector2 colliderSize, Texture2D colliderTexture) :
         base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize, colliderTexture)
     {
-        Throw(destinationRectangle);
-        fly = true;
-        initQuadrant = quadrantSpawned;
-        velocity *= DecideWhatinitQuadrant(quadrantSpawned);
     }
 
     public Slime(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier, 
         Vector2 colliderSize, Texture2D colliderTexture, int numFrames, int numCollums, int numRows, Vector2 size, 
-        int animSpeedMultiplier, int quadrantSpawned) : base(texture, destinationRectangle, sourceRectangle, 
+        int animSpeedMultiplier) : base(texture, destinationRectangle, sourceRectangle, 
         scaleMultiplier, colliderSize, colliderTexture, numFrames, numCollums, numRows, size, animSpeedMultiplier)
     {
+    }
+
+    public void ThrowSlime(int quadrantSpawned)
+    {
         Throw(destinationRectangle);
-        fly = true;
+        isThrowed = true;
         initQuadrant = quadrantSpawned;
         velocity *= DecideWhatinitQuadrant(quadrantSpawned);
     }
-
     
 
-    public new void Update(GameTime gameTime)
+    public new void Update(GameTime gameTime, Rectangle playerRec)
     {
         UpdateAnimator(gameTime);
-        if (fly)
+        if (IsVacuumed)
         {
-            destinationRectangle = Fly(gameTime, destinationRectangle);
+            destinationRectangle = Vacuum(playerRec, destinationRectangle, gameTime);
         }
+        else if (isThrowed)
+            destinationRectangle = Fly(gameTime, destinationRectangle);
+
 
         if (initQuadrant == 1 | initQuadrant == 3 && destinationRectangle.Y >= initPos.Y + 46)
         {
-            fly = false;
+            isThrowed = false;
         }
         else if (initQuadrant == 4 && destinationRectangle.Y >= initPos.Y + 146)
-            fly = false;
+            isThrowed = false;
         else if (initQuadrant == 2 && destinationRectangle.Y <= initPos.Y - 146)
-            fly = false;
+            isThrowed = false;
     }
     
     

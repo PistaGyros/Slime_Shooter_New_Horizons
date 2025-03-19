@@ -11,20 +11,22 @@ public class UI
     private Rectangle UIRec;
     private Texture2D bgTexture;
     private Texture2D fgTexture;
+    private SpriteFont font;
     
     
-    public UI(Rectangle UIRec, Texture2D backGroundTexture, Texture2D forGroundTexture)
+    public UI(Rectangle UIRec, Texture2D backGroundTexture, Texture2D forGroundTexture, SpriteFont font)
     {
         this.UIRec = UIRec;
         this.bgTexture = backGroundTexture;
         this.fgTexture = forGroundTexture;
-        
+        this.font = font;
     }
 
-    public UI(Rectangle UIRec, Texture2D backGroundTexture)
+    public UI(Rectangle UIRec, Texture2D backGroundTexture, SpriteFont font)
     {
         this.UIRec = UIRec;
         this.bgTexture = backGroundTexture;
+        this.font = font;
     }
 
     public virtual void Draw(SpriteBatch spriteBatch)

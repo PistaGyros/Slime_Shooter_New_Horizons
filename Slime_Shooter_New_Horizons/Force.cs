@@ -6,7 +6,8 @@ namespace Slime_Shooter_New_Horizons;
 
 public class Force
 {
-    public float time;
+    private float time;
+    public float vacuumTime;
     public Vector2 velocity;
     public Vector2 initPos;
     public int initQuadrant;
@@ -24,17 +25,22 @@ public class Force
         initPos = new Vector2(destinationRectangle.X, destinationRectangle.Y);
     }
 
-    public void Vacuum(Rectangle playerRectangle, Rectangle destinationRectangle)
+    public Rectangle Vacuum(Rectangle vacuumerRec, Rectangle vacuumedRec, GameTime gameTime)
     {
-        
+        Vector2 pointVec = new Vector2(vacuumerRec.X - vacuumedRec.X, vacuumerRec.Y - vacuumedRec.Y);
+        float x = vacuumedRec.X + pointVec.X * vacuumTime * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        float y = vacuumedRec.Y + pointVec.Y * vacuumTime * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        vacuumedRec.X = (int)x;
+        vacuumedRec.Y = (int)y;
+        return vacuumedRec;
     }
     
     public Rectangle Fly(GameTime gameTime, Rectangle destinationRectangle)
     {
-        time += (float)gameTime.ElapsedGameTime.TotalSeconds * 5;
+        time += (float)gameTime.ElapsedGameTime.TotalSeconds * 300;
 
-        float newX = KinematicEquation(5f, velocity.X, initPos.X, time);
-        float newY = KinematicEquation(gravityAcceleration, velocity.Y, initPos.Y, time);
+        float newX = KinematicEquation(5f, velocity.X, initPos.X, time * (float)gameTime.ElapsedGameTime.TotalSeconds);
+        float newY = KinematicEquation(gravityAcceleration, velocity.Y, initPos.Y, time * (float)gameTime.ElapsedGameTime.TotalSeconds);
         
         destinationRectangle.X = (int)newX;
         destinationRectangle.Y = (int)newY;

@@ -13,6 +13,18 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin ../../../../../pixel_arts/slime_rancehr/Slimes/rock_slime_new_spritesheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../../../../../pixel_arts/slime_rancehr/Slimes/rock_slime_new_spritesheet.png;rock_slime_new_spritesheet.png
+
 #begin collider_texture.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -61,6 +73,18 @@
 /processorParam:TextureFormat=Color
 /build:force_field_corral_prototype_anim.png
 
+#begin honey_slime_new_spritesheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:honey_slime_new_spritesheet.png
+
 #begin inventory.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -85,6 +109,18 @@
 /processorParam:TextureFormat=Color
 /build:items_atlas.png
 
+#begin phospor_slime_new_spritesheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:phospor_slime_new_spritesheet.png
+
 #begin pink_slime_jumping_spritesheet-export.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -108,6 +144,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:pink_slime_jumping_spritesheet.png
+
+#begin pink_slime_new_spritesheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:pink_slime_new_spritesheet.png
 
 #begin pink_slime_new.png
 /importer:TextureImporter
@@ -156,4 +204,23 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:spr_player_1_left_idle.png
+
+#begin tabby_slime_new_spritesheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:tabby_slime_new_spritesheet.png
+
+#begin UI_menu_font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:UI_menu_font.spritefont;Bell MT.spritefont
 

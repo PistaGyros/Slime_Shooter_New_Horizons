@@ -79,4 +79,13 @@ public class CorralForceField : Animator
     {
         
     }
+
+    public CorralForceField(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle,
+        float scaleMultiplier, Vector2 colliderSize, Texture2D colliderTexture, int numFrames, int numCollums,
+        int numRows, Vector2 size) :
+        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize, colliderTexture, numFrames,
+            numCollums, numRows, size)
+    {
+        
+    }
 }

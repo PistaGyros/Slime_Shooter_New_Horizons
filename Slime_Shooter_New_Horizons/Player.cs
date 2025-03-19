@@ -9,30 +9,26 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Slime_Shooter_New_Horizons;
 
-public enum PlayerOrientation
-{
-    Down,
-    Right,
-    Left,
-    Up
-}
-
 public class Player : Sprite
 {
+    public bool IsRightButtonPressed;
+        
     private float defaultSpeed = 0.3f;
 
-    private Texture2D slimeTexture;
     private Texture2D colliderTexture;
+
+    public Texture2D playerTexture;
+    public List<Texture2D> slimeTextures;
+    
     private float slimeShootTimer;
     public Inventory inventory;
     
     public PlayerOrientation playerOrientation;
     
-    public Player(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle,
-        float scaleMultiplier, Vector2 colliderSize, Texture2D colliderTexture, Texture2D slimeTexture) : 
+    public Player(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier, 
+        Vector2 colliderSize, Texture2D colliderTexture) : 
         base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize, colliderTexture)
     {
-        this.slimeTexture = slimeTexture;
         this.colliderTexture = colliderTexture;
     }
     
@@ -64,20 +60,68 @@ public class Player : Sprite
         if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
         {
             playerOrientation = PlayerOrientation.Right;
-            changeX += (int) (defaultSpeed * gameTime.ElapsedGameTime.Milliseconds);
+            changeX += (int)(defaultSpeed * gameTime.ElapsedGameTime.Milliseconds);
         }
         destinationRectangle.X += changeX;
 
+        if (Mouse.GetState().RightButton == ButtonState.Pressed)
+        {
+            List<Slime> vacuumedSlimeList = new List<Slime>();
+            Vector2 mousePos = Mouse.GetState().Position.ToVector2();
+            List<Rectangle> vacuumConeRecs = CreateVacuumConeRecs(mousePos, screenRes);
+            // Check for vacuum collisions with slimes
+            foreach (var vacuumCone in vacuumConeRecs)
+            {
+                foreach (var slime in slimeList)
+                {
+                    if (slime.destinationRectangle.Intersects(vacuumCone))
+                    {
+                        Console.WriteLine("Slime has intersect with vacuum cone");
+                        slime.vacuumTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                        slime.IsVacuumed = true;
+                        if (destinationRectangle.Intersects(slime.destinationRectangle))
+                        {
+                            VacuumItemIntoVacTank();
+                            vacuumedSlimeList.Add(slime);
+                        }
+                    }
+                }
+                if (vacuumedSlimeList != null)
+                    foreach (var vacuumedSlime in vacuumedSlimeList)
+                    {
+                        slimeList.Remove(vacuumedSlime);
+                    }
+            }
+        }
+        else if (Mouse.GetState().RightButton == ButtonState.Released)
+        {
+            Vector2 mousePos = Mouse.GetState().Position.ToVector2();
+            List<Rectangle> vacuumConeRecs = CreateVacuumConeRecs(mousePos, screenRes);
+            // Check for vacuum collisions with slimes
+            foreach (var vacuumCone in vacuumConeRecs)
+            {
+                foreach (var slime in slimeList)
+                {
+                    if (slime.destinationRectangle.Intersects(vacuumCone))
+                    {
+                        slime.vacuumTime = 0;
+                        slime.IsVacuumed = false;
+                    }
+                }
+            }
+        }
+            
         if (slimeShootTimer <= 0 && Mouse.GetState().LeftButton == ButtonState.Pressed)
         {
             slimeShootTimer = 0.25f;
             Vector2 mousePos = Mouse.GetState().Position.ToVector2();
-            SpawnSlime(slimeList, mousePos, offset, screenRes);
+            Shoot(slimeList, mousePos, screenRes);
         }
         slimeShootTimer -= gameTime.ElapsedGameTime.Milliseconds * 0.001f;
         
         if (keyboardState.IsKeyDown(Keys.C))
             ShowCollider();
+        
         if (keyboardState.IsKeyDown(Keys.D1))
             inventory.ChangeActiveSlot(1);
         else if (keyboardState.IsKeyDown(Keys.D2))
@@ -88,25 +132,99 @@ public class Player : Sprite
             inventory.ChangeActiveSlot(4);
             
     }
-    
 
-    private void SpawnSlime(List<Slime> slimeList, Vector2 spawnPos, Vector2 offset, Vector2 screenRes)
+    private void VacuumItemIntoVacTank()
     {
-        Slime slime = new Slime(slimeTexture,
-            new Rectangle(destinationRectangle.X, destinationRectangle.Y, 20, 20),
-            new Rectangle(0, 0, 20, 20), 2, new Vector2(20, 20), colliderTexture, 
-            QuadrantClicked(spawnPos, screenRes));
-        slime.SetupAnimator(6, 6, 1, new Vector2(20, 20), 1);
-        slimeList.Add(slime);
+        
     }
 
-    public void CreateInventory(Vector2 screenRes, Texture2D itemsAtlas, Texture2D inventoryTex, 
+    private List<Rectangle> CreateVacuumConeRecs(Vector2 mousePos, Vector2 screenRes)
+    {
+        List<Rectangle> vacuumConeRecs = new List<Rectangle>();
+        int quadrantClicked = QuadrantClicked(mousePos, screenRes);
+        switch (quadrantClicked)
+        {
+            case 1:
+                for(int i = 0; i < 6; i++)
+                {
+                    vacuumConeRecs.Add(new Rectangle(
+                        (int)(destinationRectangle.X + destinationRectangle.Width + 25 * i), 
+                        (int)(destinationRectangle.Y - 10 * i),
+                        25, 
+                        destinationRectangle.Height + 10 * i * 2));
+                }
+                break;
+            case 3:
+                for(int i = 0; i < 6; i++)
+                {
+                    vacuumConeRecs.Add(new Rectangle(
+                        (int)destinationRectangle.X - 25 * i, (int)destinationRectangle.Y - 10 * i,
+                        25, destinationRectangle.Height + 10 * i * 2));
+                }
+                break;
+            case 2:
+                for(int i = 0; i < 6; i++)
+                {
+                    vacuumConeRecs.Add(new Rectangle(
+                        (int)(destinationRectangle.X - 10 * i), (int)(destinationRectangle.Y - 25 * i),
+                        destinationRectangle.Width + 10 * i * 2, 25));
+                }
+                break;
+            case 4:
+                for(int i = 0; i < 6; i++)
+                {
+                    vacuumConeRecs.Add(new Rectangle(
+                        (int)(destinationRectangle.X - 10 * i), (int)destinationRectangle.Y + destinationRectangle.Height + 25 * i,
+                        destinationRectangle.Width + 10 * i * 2, 25));
+                }
+                break;
+        }
+        return vacuumConeRecs;
+    }
+
+    private void Shoot(List<Slime> slimes, Vector2 mousePos, Vector2 screenRes)
+    {
+        int activeSlot = inventory.activeSlot;
+        if (inventory.inventorySlots[activeSlot][1] >= 1)
+        {
+            // Shoot an item from active slot
+            SpawnSlime(slimeTextures[inventory.inventorySlots[activeSlot][0]], slimes, mousePos, screenRes);
+            inventory.UpdateInventory(activeSlot, inventory.inventorySlots[activeSlot][0], 
+                inventory.inventorySlots[activeSlot][1] - 1);
+            
+            // Check if the slot is not empty now
+            if (inventory.inventorySlots[activeSlot][1] <= 0)
+            {
+                inventory.UpdateInventory(activeSlot, inventory.inventorySlots[activeSlot][0] = 0, 
+                    inventory.inventorySlots[activeSlot][1] = 0);
+            }
+        }
+    }
+
+    public void Vacuum()
+    {
+        
+    }
+    
+
+    private void SpawnSlime(Texture2D slimeTex, List<Slime> slimeList, Vector2 spawnPos, Vector2 screenRes)
+    {
+        Slime slime = new Slime(slimeTex,
+            new Rectangle(destinationRectangle.X, destinationRectangle.Y, 22, 22),
+            new Rectangle(0, 0, 22, 22), 2, new Vector2(22, 22), colliderTexture);
+        slime.SetupAnimator(6, 6, 1, new Vector2(22, 22));
+        slime.ThrowSlime(QuadrantClicked(spawnPos, screenRes));
+        slimeList.Add(slime);
+    }
+    
+
+    public void CreateInventory(Vector2 screenRes, Texture2D itemsAtlas, Texture2D inventoryTex, SpriteFont font,
         Dictionary<string, int> itemsID)
     {
         inventory = new(new Rectangle((int)(screenRes.X / 2 - 150f), (int)(screenRes.Y - 100f), 
                 itemsAtlas.Width, itemsAtlas.Height),
             new Rectangle((int)(screenRes.X / 2 - 150f), (int)(screenRes.Y - 100f), itemsAtlas.Width, itemsAtlas.Height),
-            inventoryTex, itemsAtlas, itemsID);
+            inventoryTex, itemsAtlas, font, itemsID);
     }
     
     private int QuadrantClicked(Vector2 clickPos, Vector2 screenRes)
