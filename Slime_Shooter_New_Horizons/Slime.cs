@@ -8,6 +8,8 @@ public class Slime : Animator
 {
     private bool isThrowed = false;
     public bool IsVacuumed = false;
+    public int slimeID;
+    
     
     public Slime(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier, 
         Vector2 colliderSize, Texture2D colliderTexture) :

@@ -13,6 +13,30 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin ../../../../../pixel_arts/slime_rancehr/Corral/force_field_corral_prototype_anim.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../../../../../pixel_arts/slime_rancehr/Corral/force_field_corral_prototype_anim.png;force_field_corral_prototype_anim.png
+
+#begin ../../../../../pixel_arts/slime_rancehr/Corral/force_field_corral_prototype_anim.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../../../../../pixel_arts/slime_rancehr/Corral/force_field_corral_prototype_anim.png;force_field_corral_prototype_anim.png
+
 #begin ../../../../../pixel_arts/slime_rancehr/Slimes/rock_slime_new_spritesheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -60,18 +84,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:force_field_corral_prototype_anim_vertical.png
-
-#begin force_field_corral_prototype_anim.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:force_field_corral_prototype_anim.png
 
 #begin honey_slime_new_spritesheet.png
 /importer:TextureImporter

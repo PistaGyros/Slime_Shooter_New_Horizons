@@ -16,12 +16,13 @@ public class Inventory : UI
     private Rectangle backGroundPosition, forGroundPosition;
     private Texture2D backGroundTexture, atlasItemsTexture;
     private int itemTexSize = 22;
-    private int inventorySlotsSize = 4;
+    public int inventorySlotsSize = 4;
     private Dictionary<string, int> itemsID;
     private Dictionary<int, Rectangle> itemsIDTextures = new Dictionary<int, Rectangle>();
 
     public List<List<int>> inventorySlots = new List<List<int>>();
     public int activeSlot = 0;
+    public bool IsSlotAvailable;
     
     
     public Inventory(Rectangle backGroundRec, Rectangle forGroundPosition, Texture2D backGroundTexture, Texture2D forGroundTexture,
@@ -66,18 +67,35 @@ public class Inventory : UI
         for (int i = 0; i < inventorySlotsSize; i++)
         {
             List<int> inventorySlot = new List<int>();
-            inventorySlot.Add(2); // itemID
-            inventorySlot.Add(10); // amount
+            inventorySlot.Add(4); // itemID
+            inventorySlot.Add(1); // amount
             inventorySlots.Add(inventorySlot);
         }
     }
     
-    public void UpdateInventory(int inventoryPosition, int inventoryItemID, int inventoryItemAmount)
+    public void UpdateInventory(int inventoryPosition, int inventoryItemID, int inventoryChange)
     {
-        List<int> newInventorySlot = new List<int>();
-        newInventorySlot.Add(inventoryItemID);
-        newInventorySlot.Add(inventoryItemAmount);
-        inventorySlots[inventoryPosition] = newInventorySlot;
+        inventorySlots[inventoryPosition][0] = inventoryItemID;
+        inventorySlots[inventoryPosition][1] += inventoryChange;
+    }
+
+    public int WhichSlotIsAvailable()
+    {
+        int availableSlot = 0;
+        IsSlotAvailable = false;
+        // Find empty slot
+        for (int i = 0; i < inventorySlotsSize; i++)
+        {
+            if (inventorySlots[i][1] == 0)
+            {
+                // Slot i is available
+                availableSlot = i;
+                IsSlotAvailable = true;
+                break;
+            }
+        }
+        Console.WriteLine("Slot " + availableSlot + " is available");
+        return availableSlot;
     }
 
     public void ChangeActiveSlot(int newActiveSlot)

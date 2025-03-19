@@ -76,12 +76,13 @@ public class Player : Sprite
                 {
                     if (slime.destinationRectangle.Intersects(vacuumCone))
                     {
-                        Console.WriteLine("Slime has intersect with vacuum cone");
                         slime.vacuumTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
                         slime.IsVacuumed = true;
-                        if (destinationRectangle.Intersects(slime.destinationRectangle))
+                        int availableSlot = inventory.WhichSlotIsAvailable();
+                        if (destinationRectangle.Intersects(slime.destinationRectangle) && inventory.IsSlotAvailable)
                         {
-                            VacuumItemIntoVacTank();
+                            Console.WriteLine("Slime is vacuumed");
+                            inventory.UpdateInventory(availableSlot, slime.slimeID, 1);
                             vacuumedSlimeList.Add(slime);
                         }
                     }
@@ -131,11 +132,6 @@ public class Player : Sprite
         else if (keyboardState.IsKeyDown(Keys.D4))
             inventory.ChangeActiveSlot(4);
             
-    }
-
-    private void VacuumItemIntoVacTank()
-    {
-        
     }
 
     private List<Rectangle> CreateVacuumConeRecs(Vector2 mousePos, Vector2 screenRes)
@@ -188,9 +184,9 @@ public class Player : Sprite
         if (inventory.inventorySlots[activeSlot][1] >= 1)
         {
             // Shoot an item from active slot
-            SpawnSlime(slimeTextures[inventory.inventorySlots[activeSlot][0]], slimes, mousePos, screenRes);
-            inventory.UpdateInventory(activeSlot, inventory.inventorySlots[activeSlot][0], 
-                inventory.inventorySlots[activeSlot][1] - 1);
+            int slimeID = inventory.inventorySlots[activeSlot][0];
+            SpawnSlime(slimeTextures[slimeID], slimes, mousePos, screenRes, slimeID);
+            inventory.UpdateInventory(activeSlot, inventory.inventorySlots[activeSlot][0], -1);
             
             // Check if the slot is not empty now
             if (inventory.inventorySlots[activeSlot][1] <= 0)
@@ -200,18 +196,14 @@ public class Player : Sprite
             }
         }
     }
-
-    public void Vacuum()
-    {
-        
-    }
     
 
-    private void SpawnSlime(Texture2D slimeTex, List<Slime> slimeList, Vector2 spawnPos, Vector2 screenRes)
+    private void SpawnSlime(Texture2D slimeTex, List<Slime> slimeList, Vector2 spawnPos, Vector2 screenRes, int slimeID)
     {
         Slime slime = new Slime(slimeTex,
             new Rectangle(destinationRectangle.X, destinationRectangle.Y, 22, 22),
             new Rectangle(0, 0, 22, 22), 2, new Vector2(22, 22), colliderTexture);
+        slime.slimeID = slimeID;
         slime.SetupAnimator(6, 6, 1, new Vector2(22, 22));
         slime.ThrowSlime(QuadrantClicked(spawnPos, screenRes));
         slimeList.Add(slime);

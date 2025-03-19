@@ -34,30 +34,31 @@ public class Corral : Building
     private void CreateForceFields()
     {
         horizontalForceFieldUp = new CorralForceField(forceFieldHorizontalTex,
-            new Rectangle(destinationRectangle.X + 51, destinationRectangle.Y + 327, forceFieldHorizontalTex.Width, 
-                forceFieldHorizontalTex.Height / 6),
+            new Rectangle(destinationRectangle.X + 51, destinationRectangle.Y + 327, forceFieldHorizontalTex.Width / 6, 
+                forceFieldHorizontalTex.Height),
             new Rectangle(0, 0, forceFieldHorizontalTex.Width, forceFieldHorizontalTex.Height), 3, Vector2.Zero,
-            colliderTexture, 6, 1, 6, new Vector2(forceFieldHorizontalTex.Width, 
-                forceFieldHorizontalTex.Height / 6), 1f);
+            colliderTexture, 6, 6, 1, new Vector2(forceFieldHorizontalTex.Width / 6, 
+                forceFieldHorizontalTex.Height), 0.5f);
         forceFields.Add(horizontalForceFieldUp);
         horizontalForceFieldDown = new CorralForceField(forceFieldHorizontalTex,
-            new Rectangle(destinationRectangle.X + 51, destinationRectangle.Y + 24, forceFieldHorizontalTex.Width,
-                forceFieldHorizontalTex.Height / 6),
+            new Rectangle(destinationRectangle.X + 51, destinationRectangle.Y + 24, forceFieldHorizontalTex.Width / 6,
+                forceFieldHorizontalTex.Height),
             new Rectangle(0, 0, forceFieldHorizontalTex.Width, forceFieldHorizontalTex.Height), 3, Vector2.Zero,
-            colliderTexture, 6, 1, 6, new Vector2(forceFieldHorizontalTex.Width, forceFieldHorizontalTex.Height / 6), 1f);
+            colliderTexture, 6, 6, 1, new Vector2(forceFieldHorizontalTex.Width / 6, 
+                forceFieldHorizontalTex.Height), 0.5f);
         forceFields.Add(horizontalForceFieldDown);
 
         verticalForceFieldLeft = new CorralForceField(forceFieldVerticalTex,
             new Rectangle(destinationRectangle.X + 51, destinationRectangle.Y + 24, forceFieldVerticalTex.Width / 6,
                 forceFieldVerticalTex.Height), new Rectangle(0, 0, forceFieldVerticalTex.Width, forceFieldVerticalTex.Height), 
             3, Vector2.Zero, colliderTexture, 6, 6, 1, 
-            new Vector2(forceFieldVerticalTex.Width / 6, forceFieldVerticalTex.Height), 1f);
+            new Vector2(forceFieldVerticalTex.Width / 6, forceFieldVerticalTex.Height), 0.5f);
         forceFields.Add(verticalForceFieldLeft);
         verticalForceFieldRight = new CorralForceField(forceFieldVerticalTex,
             new Rectangle(destinationRectangle.X + 390, destinationRectangle.Y + 24, forceFieldVerticalTex.Width / 6,
                 forceFieldVerticalTex.Height),
             new Rectangle(0, 0, forceFieldVerticalTex.Width, forceFieldVerticalTex.Height), 3, Vector2.Zero,
-            colliderTexture, 6, 6, 1, new Vector2(forceFieldVerticalTex.Width / 6, forceFieldVerticalTex.Height), 1f);
+            colliderTexture, 6, 6, 1, new Vector2(forceFieldVerticalTex.Width / 6, forceFieldVerticalTex.Height), 0.5f);
         forceFields.Add(verticalForceFieldRight);
     }
 
