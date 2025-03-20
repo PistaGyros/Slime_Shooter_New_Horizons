@@ -117,7 +117,7 @@ public class Game1 : Game
         if (slimeList != null)
             foreach (var slime in slimeList)
             {
-                slime.Update(gameTime, player.destinationRectangle);
+                slime.Update(gameTime, player.destinationRectangle, slimeList);
             }
         
         corral.Update(gameTime);

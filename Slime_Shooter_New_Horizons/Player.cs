@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Slime_Shooter_New_Horizons;
 
-public class Player : Sprite
+public class Player : Animator
 {
     public bool IsRightButtonPressed;
         
@@ -49,7 +49,12 @@ public class Player : Sprite
             changeY += (int)(defaultSpeed * gameTime.ElapsedGameTime.Milliseconds);
         }
         destinationRectangle.Y += changeY;
-        
+        if (CheckForCollisionsWithSlimes(slimeList))
+        {
+            Console.WriteLine("Player collided with slime");
+            destinationRectangle.Y -= changeY;
+        }
+
 
         int changeX = 0;
         if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
@@ -63,6 +68,11 @@ public class Player : Sprite
             changeX += (int)(defaultSpeed * gameTime.ElapsedGameTime.Milliseconds);
         }
         destinationRectangle.X += changeX;
+        if (CheckForCollisionsWithSlimes(slimeList))
+        {
+            Console.WriteLine("Player collided with slime");
+            destinationRectangle.X -= changeX;
+        }
 
         if (Mouse.GetState().RightButton == ButtonState.Pressed)
         {
@@ -118,9 +128,8 @@ public class Player : Sprite
             Rectangle clickRec = new Rectangle((int)mousePos.X, (int)mousePos.Y, 5, 5);
             bool clickedOnSlot = false;
             int clickedSlot = 0;
-            for (int i = 0; i < inventory.inventorySlotsSize; i++)
+            for (int i = 0; i < inventory.InventorySlotsSize; i++)
             {
-                Console.WriteLine(inventory.slotsRectangles[i]);
                 if (inventory.slotsRectangles[i].Contains(clickRec))
                 {
                     clickedOnSlot = true;
@@ -261,5 +270,19 @@ public class Player : Sprite
                 quadrant = 4;
         }
         return quadrant;
+    }
+
+    private new bool CheckForCollisionsWithSlimes(List<Slime> slimeList)
+    {
+        bool collision = false;
+        foreach (var slime in slimeList)
+        {
+            if(destinationRectangle.Intersects(slime.destinationRectangle))
+            {
+                collision = true;
+            }
+        }
+
+        return collision;
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace Slime_Shooter_New_Horizons;
 
-public class Force
+public class Physics
 {
     private float time;
     public float vacuumTime;
@@ -13,11 +13,6 @@ public class Force
     public int initQuadrant;
     public float power = 100;
     public float gravityAcceleration;
-    
-    public Force()
-    {
-        
-    }
 
     public void Throw(Rectangle destinationRectangle)
     {

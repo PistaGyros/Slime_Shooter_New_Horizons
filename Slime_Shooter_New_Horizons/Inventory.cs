@@ -16,7 +16,8 @@ public class Inventory : UI
     private Rectangle backGroundPosition, forGroundPosition;
     private Texture2D backGroundTexture, atlasItemsTexture;
     private int itemTexSize = 22;
-    public int inventorySlotsSize = 4;
+    public int InventorySlotsSize = 4;
+    public int MaximumSlotAmount = 30;
     private Dictionary<string, int> itemsID;
     private Dictionary<int, Rectangle> itemsIDTextures = new Dictionary<int, Rectangle>();
 
@@ -65,11 +66,11 @@ public class Inventory : UI
     // Create blank inventory, list with 4 slots, each slot has and itemID and amount of that item
     private void CreateInventory()
     {
-        for (int i = 0; i < inventorySlotsSize; i++)
+        for (int i = 0; i < InventorySlotsSize; i++)
         {
             List<int> inventorySlot = new List<int>();
             inventorySlot.Add(4); // itemID
-            inventorySlot.Add(1); // amount
+            inventorySlot.Add(10); // amount
             inventorySlots.Add(inventorySlot);
             slotsRectangles.Add(new Rectangle());
         }
@@ -84,7 +85,7 @@ public class Inventory : UI
     public int WhichSlotIsAvailable(int itemID)
     {
         // Find if the item is not already in the inventory, if not ...
-        for (int i = 0; i < inventorySlotsSize; i++)
+        for (int i = 0; i < InventorySlotsSize; i++)
         {
             if (inventorySlots[i][0] == itemID)
             {
@@ -93,7 +94,7 @@ public class Inventory : UI
             }
         }
         // ... then find empty slot and if there is no available slot, then ...
-        for (int i = 0; i < inventorySlotsSize; i++)
+        for (int i = 0; i < InventorySlotsSize; i++)
         {
             if (inventorySlots[i][1] == 0)
             {
@@ -112,7 +113,7 @@ public class Inventory : UI
 
     private void DrawBg(SpriteBatch spriteBatch)
     {
-        for (int i = 0; i < inventorySlotsSize; i++)
+        for (int i = 0; i < InventorySlotsSize; i++)
         {
             float activeSlotScale = activeSlot == i ? 1.1f : 1;
             Vector2 position = new Vector2(

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Slime_Shooter_New_Horizons;
 
-public class Sprite : Force
+public class Sprite : Physics
 {
     public Texture2D texture;
     public Rectangle destinationRectangle, sourceRectangle;

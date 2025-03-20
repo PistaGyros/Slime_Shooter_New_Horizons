@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -108,5 +109,29 @@ public class Animator : Sprite
     public Rectangle GetFrame(int actualRow)
     {
         return new Rectangle(colPos * (int)size.X, actualRow * (int)size.Y, (int)size.X, (int)size.Y);
+    }
+
+    public bool CheckForCollisionsWithSlimes(List<Slime> slimeList)
+    {
+        foreach (var slime in slimeList)
+        {
+            if (this != slime) continue;
+            if(destinationRectangle.Intersects(slime.destinationRectangle))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
+    public bool CheckForCollisionsWithPlayer(Rectangle playerRec)
+    {
+        if(destinationRectangle.Intersects(playerRec))
+        {
+            return true;
+        }
+        
+        return false;    
     }
 }
