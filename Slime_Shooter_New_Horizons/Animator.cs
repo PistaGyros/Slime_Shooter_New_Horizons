@@ -94,14 +94,7 @@ public class Animator : Sprite
         
         if (colPos >= numCollums)
         {
-            //colPos = 0;
-            //currentRow++;
             ResetAnim();
-        }
-        
-        if (currentRow >= numRows)
-        {
-            
         }
     }
 

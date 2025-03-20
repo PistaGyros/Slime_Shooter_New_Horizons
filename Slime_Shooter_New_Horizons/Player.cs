@@ -78,8 +78,8 @@ public class Player : Sprite
                     {
                         slime.vacuumTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
                         slime.IsVacuumed = true;
-                        int availableSlot = inventory.WhichSlotIsAvailable();
-                        if (destinationRectangle.Intersects(slime.destinationRectangle) && inventory.IsSlotAvailable)
+                        int availableSlot = inventory.WhichSlotIsAvailable(slime.slimeID);
+                        if (destinationRectangle.Intersects(slime.destinationRectangle) && availableSlot != 69)
                         {
                             Console.WriteLine("Slime is vacuumed");
                             inventory.UpdateInventory(availableSlot, slime.slimeID, 1);
@@ -111,13 +111,31 @@ public class Player : Sprite
                 }
             }
         }
-            
-        if (slimeShootTimer <= 0 && Mouse.GetState().LeftButton == ButtonState.Pressed)
+
+        if (Mouse.GetState().LeftButton == ButtonState.Pressed)
         {
-            slimeShootTimer = 0.25f;
             Vector2 mousePos = Mouse.GetState().Position.ToVector2();
-            Shoot(slimeList, mousePos, screenRes);
-        }
+            Rectangle clickRec = new Rectangle((int)mousePos.X, (int)mousePos.Y, 5, 5);
+            bool clickedOnSlot = false;
+            int clickedSlot = 0;
+            for (int i = 0; i < inventory.inventorySlotsSize; i++)
+            {
+                Console.WriteLine(inventory.slotsRectangles[i]);
+                if (inventory.slotsRectangles[i].Contains(clickRec))
+                {
+                    clickedOnSlot = true;
+                    clickedSlot = i;
+                    break;
+                }
+            }
+            if (clickedOnSlot)
+                inventory.ChangeActiveSlot(clickedSlot + 1);
+            else if (slimeShootTimer <= 0 && Mouse.GetState().LeftButton == ButtonState.Pressed)
+            {
+                slimeShootTimer = 0.25f;
+                Shoot(slimeList, mousePos, screenRes);
+            }
+        }    
         slimeShootTimer -= gameTime.ElapsedGameTime.Milliseconds * 0.001f;
         
         if (keyboardState.IsKeyDown(Keys.C))

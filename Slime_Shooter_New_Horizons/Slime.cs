@@ -66,7 +66,7 @@ public class Slime : Animator
                 break;
             case 2:
                 quadrantVec = new Vector2(0, 1);
-                gravityAcceleration = 0f;
+                gravityAcceleration = 1f;
                 break;
             case 3:
                 quadrantVec = new Vector2(-1, 1);
@@ -74,7 +74,7 @@ public class Slime : Animator
                 break;
             case 4:
                 quadrantVec = new Vector2(0, -1);
-                gravityAcceleration = 0f;
+                gravityAcceleration = 1f;
                 break;
         }
 

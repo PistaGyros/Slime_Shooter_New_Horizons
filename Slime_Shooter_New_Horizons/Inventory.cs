@@ -21,6 +21,7 @@ public class Inventory : UI
     private Dictionary<int, Rectangle> itemsIDTextures = new Dictionary<int, Rectangle>();
 
     public List<List<int>> inventorySlots = new List<List<int>>();
+    public List<Rectangle> slotsRectangles = new List<Rectangle>();
     public int activeSlot = 0;
     public bool IsSlotAvailable;
     
@@ -70,6 +71,7 @@ public class Inventory : UI
             inventorySlot.Add(4); // itemID
             inventorySlot.Add(1); // amount
             inventorySlots.Add(inventorySlot);
+            slotsRectangles.Add(new Rectangle());
         }
     }
     
@@ -79,23 +81,28 @@ public class Inventory : UI
         inventorySlots[inventoryPosition][1] += inventoryChange;
     }
 
-    public int WhichSlotIsAvailable()
+    public int WhichSlotIsAvailable(int itemID)
     {
-        int availableSlot = 0;
-        IsSlotAvailable = false;
-        // Find empty slot
+        // Find if the item is not already in the inventory, if not ...
+        for (int i = 0; i < inventorySlotsSize; i++)
+        {
+            if (inventorySlots[i][0] == itemID)
+            {
+                // Slot i is available
+                return i;
+            }
+        }
+        // ... then find empty slot and if there is no available slot, then ...
         for (int i = 0; i < inventorySlotsSize; i++)
         {
             if (inventorySlots[i][1] == 0)
             {
                 // Slot i is available
-                availableSlot = i;
-                IsSlotAvailable = true;
-                break;
+                return i;
             }
         }
-        Console.WriteLine("Slot " + availableSlot + " is available");
-        return availableSlot;
+        // ... secret slot (there is no slot 69 [unfortunately], it's a condition)
+        return 69;
     }
 
     public void ChangeActiveSlot(int newActiveSlot)
@@ -113,6 +120,7 @@ public class Inventory : UI
             Rectangle newRec = new Rectangle((int)position.X, (int)position.Y, 
                 (int)(backGroundTexture.Width * sizeScaler * activeSlotScale), 
                 (int)(backGroundTexture.Height * sizeScaler * activeSlotScale));
+            slotsRectangles.Insert(i, newRec);
             spriteBatch.Draw(backGroundTexture, newRec, Color.White);
             DrawItem(spriteBatch, i, activeSlotScale, position);
         }
