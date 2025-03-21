@@ -25,30 +25,6 @@
 /processorParam:TextureFormat=Color
 /build:../../../../../pixel_arts/slime_rancehr/Corral/force_field_corral_prototype_anim.png;force_field_corral_prototype_anim.png
 
-#begin ../../../../../pixel_arts/slime_rancehr/Corral/force_field_corral_prototype_anim.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../../../../../pixel_arts/slime_rancehr/Corral/force_field_corral_prototype_anim.png;force_field_corral_prototype_anim.png
-
-#begin ../../../../../pixel_arts/slime_rancehr/Slimes/rock_slime_new_spritesheet.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../../../../../pixel_arts/slime_rancehr/Slimes/rock_slime_new_spritesheet.png;rock_slime_new_spritesheet.png
-
 #begin collider_texture.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -85,6 +61,18 @@
 /processorParam:TextureFormat=Color
 /build:force_field_corral_prototype_anim_vertical.png
 
+#begin force_field_corral_prototype_anim.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:force_field_corral_prototype_anim.png
+
 #begin honey_slime_new_spritesheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -120,6 +108,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:items_atlas.png
+
+#begin mrkva_veggie.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:mrkva_veggie.png
+
+#begin paradayka_veggie.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:paradayka_veggie.png
 
 #begin phospor_slime_new_spritesheet.png
 /importer:TextureImporter
@@ -193,6 +205,18 @@
 /processorParam:TextureFormat=Color
 /build:pink_slime.png
 
+#begin rock_slime_new_spritesheet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:rock_slime_new_spritesheet.png
+
 #begin rock_slime_new.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -204,6 +228,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:rock_slime_new.png
+
+#begin slivka_fruit.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:slivka_fruit.png
 
 #begin spr_player_1_left_idle.png
 /importer:TextureImporter
@@ -235,4 +271,16 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:UI_menu_font.spritefont;Bell MT.spritefont
+
+#begin yahoda_fruit.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:yahoda_fruit.png
 

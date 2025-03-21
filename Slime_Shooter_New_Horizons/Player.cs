@@ -238,12 +238,12 @@ public class Player : Animator
     
 
     public void CreateInventory(Vector2 screenRes, Texture2D itemsAtlas, Texture2D inventoryTex, SpriteFont font,
-        Dictionary<string, int> itemsID)
+        Dictionary<int, string> itemsNames, List<Rectangle> itemsIDTexturesRec)
     {
         inventory = new(new Rectangle((int)(screenRes.X / 2 - 150f), (int)(screenRes.Y - 100f), 
                 itemsAtlas.Width, itemsAtlas.Height),
             new Rectangle((int)(screenRes.X / 2 - 150f), (int)(screenRes.Y - 100f), itemsAtlas.Width, itemsAtlas.Height),
-            inventoryTex, itemsAtlas, font, itemsID);
+            inventoryTex, itemsAtlas, font, itemsNames, itemsIDTexturesRec);
     }
     
     private int QuadrantClicked(Vector2 clickPos, Vector2 screenRes)

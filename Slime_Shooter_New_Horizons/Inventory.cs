@@ -15,11 +15,10 @@ public class Inventory : UI
     private SpriteFont font;
     private Rectangle backGroundPosition, forGroundPosition;
     private Texture2D backGroundTexture, atlasItemsTexture;
-    private int itemTexSize = 22;
     public int InventorySlotsSize = 4;
     public int MaximumSlotAmount = 30;
-    private Dictionary<string, int> itemsID;
-    private Dictionary<int, Rectangle> itemsIDTextures = new Dictionary<int, Rectangle>();
+    private Dictionary<int, string> itemsNames;
+    private List<Rectangle> itemsIDTexturesRec;
 
     public List<List<int>> inventorySlots = new List<List<int>>();
     public List<Rectangle> slotsRectangles = new List<Rectangle>();
@@ -28,15 +27,15 @@ public class Inventory : UI
     
     
     public Inventory(Rectangle backGroundRec, Rectangle forGroundPosition, Texture2D backGroundTexture, Texture2D forGroundTexture,
-        SpriteFont font, Dictionary<string, int> itemsID) : base(backGroundRec, backGroundTexture, forGroundTexture, font)
+        SpriteFont font, Dictionary<int, string> itemsNames, List<Rectangle> itemsIDTexturesRec) : base(backGroundRec, backGroundTexture, forGroundTexture, font)
     {
         this.backGroundPosition = backGroundRec;
         this.forGroundPosition = forGroundPosition;
         this.backGroundTexture = backGroundTexture;
         this.atlasItemsTexture = forGroundTexture;
         this.font = font;
-        this.itemsID = itemsID;
-        AssignTexturesToIDs();
+        this.itemsNames = itemsNames;
+        this.itemsIDTexturesRec = itemsIDTexturesRec;
         CreateInventory();
     }
 
@@ -45,22 +44,9 @@ public class Inventory : UI
         this.sizeScaler = sizeScaler;
     }
 
-    public new virtual void Draw(SpriteBatch spriteBatch)
+    public new virtual void Draw(SpriteBatch spriteBatch, Vector2 screenRes)
     {
-        DrawBg(spriteBatch);
-    }
-    
-    private void AssignTexturesToIDs()
-    {
-        int id = 0;
-        for (int y = 0; y < atlasItemsTexture.Height / itemTexSize; y++)
-        {
-            for (int x = 0; x < atlasItemsTexture.Width / itemTexSize; x++)
-            {
-                itemsIDTextures.Add(id, new Rectangle(x * itemTexSize, y * itemTexSize, itemTexSize, itemTexSize));
-                id++;
-            }
-        }
+        DrawBg(spriteBatch, screenRes);
     }
 
     // Create blank inventory, list with 4 slots, each slot has and itemID and amount of that item
@@ -69,7 +55,7 @@ public class Inventory : UI
         for (int i = 0; i < InventorySlotsSize; i++)
         {
             List<int> inventorySlot = new List<int>();
-            inventorySlot.Add(4); // itemID
+            inventorySlot.Add(i + 1); // itemID
             inventorySlot.Add(10); // amount
             inventorySlots.Add(inventorySlot);
             slotsRectangles.Add(new Rectangle());
@@ -111,7 +97,7 @@ public class Inventory : UI
         activeSlot = newActiveSlot - 1;
     }
 
-    private void DrawBg(SpriteBatch spriteBatch)
+    private void DrawBg(SpriteBatch spriteBatch, Vector2 screenRes)
     {
         for (int i = 0; i < InventorySlotsSize; i++)
         {
@@ -125,27 +111,34 @@ public class Inventory : UI
             spriteBatch.Draw(backGroundTexture, newRec, Color.White);
             DrawItem(spriteBatch, i, activeSlotScale, position);
         }
+        DrawItemName(spriteBatch, inventorySlots[activeSlot][0], screenRes);
     }
     
     private void DrawItem(SpriteBatch spriteBatch, int i, float activeSlotScale, Vector2 bgPosition)
     {
         Vector2 position = new Vector2(
-            bgPosition.X + backGroundTexture.Width * sizeScaler * activeSlotScale / 2 - itemTexSize * sizeScaler * activeSlotScale / 2,
-            forGroundPosition.Y);
+            bgPosition.X + backGroundTexture.Width * sizeScaler * activeSlotScale / 2 - itemsIDTexturesRec[inventorySlots[i][0]].Width * sizeScaler * activeSlotScale / 2,
+            bgPosition.Y + backGroundTexture.Height * sizeScaler * activeSlotScale / 2 - itemsIDTexturesRec[inventorySlots[i][0]].Height * sizeScaler * activeSlotScale / 2);
         Rectangle newRec = new Rectangle((int)position.X, (int)position.Y, 
-            (int)(itemTexSize * sizeScaler * activeSlotScale), (int)(itemTexSize * sizeScaler * activeSlotScale));
+            (int)(itemsIDTexturesRec[inventorySlots[i][0]].Width * sizeScaler * activeSlotScale), (int)(itemsIDTexturesRec[inventorySlots[i][0]].Height * sizeScaler * activeSlotScale));
         if (inventorySlots[i][1] >= 1)
         {
-            spriteBatch.Draw(atlasItemsTexture, newRec, itemsIDTextures[inventorySlots[i][0]], Color.White);
-            DrawText(spriteBatch, inventorySlots[i][1], bgPosition, activeSlotScale);
+            spriteBatch.Draw(atlasItemsTexture, newRec, itemsIDTexturesRec[inventorySlots[i][0]], Color.White);
+            DrawNums(spriteBatch, inventorySlots[i][1], bgPosition, activeSlotScale);
         }
     }
 
-    private void DrawText(SpriteBatch spriteBatch, int amountOfItems, Vector2 bgPosition, float activeSlotScale)
+    private void DrawNums(SpriteBatch spriteBatch, int amountOfItems, Vector2 bgPosition, float activeSlotScale)
     {
         int padding = 10;
         Vector2 numPosition = new Vector2(bgPosition.X + backGroundTexture.Width * sizeScaler * activeSlotScale / 2 + padding, 
             bgPosition.Y);
         spriteBatch.DrawString(font, amountOfItems.ToString(), numPosition, Color.Black);
+    }
+
+    private void DrawItemName(SpriteBatch spriteBatch, int itemID, Vector2 screenRes)
+    {
+        Vector2 nameTextPos = new Vector2(screenRes.X / 2 - itemsNames[itemID].Length, screenRes.Y - 50 * sizeScaler);
+        spriteBatch.DrawString(font, itemsNames[itemID], nameTextPos, Color.Black);
     }
 }

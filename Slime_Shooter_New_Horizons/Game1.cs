@@ -17,9 +17,10 @@ public class Game1 : Game
     private Texture2D itemsAtlas;
     private Texture2D inventoryTex;
     private Texture2D colliderTexture;
-    private List<Texture2D> slimeTextures;
+    private List<Texture2D> listTextures;
     private List<string> itemsNames;
-    private Dictionary<string, int> itemsID;
+    private Dictionary<int, string> itemsID;
+    private List<Rectangle> itemsIDTexturesRec;
     
     private List<Slime> slimeList;
 
@@ -48,13 +49,23 @@ public class Game1 : Game
         // UI
         itemsNames = new List<string>()
         {
-            "Deep Nothingness", "Pink Slime", "Rock Slime", "Tabby Slime", "Fosfor slime", "Honey Slime"
+            "Deep Nothingness", "Pink Slime", "Rock Slime", "Tabby Slime", "Fosfor Slime", "Honey Slime", "Slivka",
+            "Yahoda", "Mrkva", "Paradayka"
         };
-        itemsID = new Dictionary<string, int>();
+        itemsID = new Dictionary<int, string>();
         for (int i = 0; i < itemsNames.Count; i++)
         {
-            itemsID[itemsNames[i]] = i;
+            itemsID[i] = itemsNames[i];
         }
+
+        itemsIDTexturesRec = new List<Rectangle>()
+        {
+            new Rectangle(0, 0, 22, 22), new Rectangle(25, 0, 16, 11), 
+            new Rectangle(47, 0, 16, 15), new Rectangle(67, 0, 20, 14),
+            new Rectangle(88, 0, 22, 13), new Rectangle(113, 0, 16, 11),
+            new Rectangle(140, 0, 6, 8), new Rectangle(161, 0, 8, 9),
+            new Rectangle(184, 0, 6, 12), new Rectangle(205, 0, 8, 9)
+        };
         
         slimeList = new List<Slime>();
 
@@ -67,14 +78,18 @@ public class Game1 : Game
 
         // TODO: use this.Content to load your game content here
 
-        slimeTextures = new List<Texture2D>()
+        listTextures = new List<Texture2D>()
         {
             null, 
             Content.Load<Texture2D>("pink_slime_new_spritesheet"),
             Content.Load<Texture2D>("rock_slime_new_spritesheet"),
             Content.Load<Texture2D>("tabby_slime_new_spritesheet"),
             Content.Load<Texture2D>("phospor_slime_new_spritesheet"),
-            Content.Load<Texture2D>("honey_slime_new_spritesheet")
+            Content.Load<Texture2D>("honey_slime_new_spritesheet"),
+            Content.Load<Texture2D>("slivka_fruit"),
+            Content.Load<Texture2D>("yahoda_fruit"),
+            Content.Load<Texture2D>("mrkva_veggie"),
+            Content.Load<Texture2D>("paradayka_veggie")
         };
         
         colliderTexture = Content.Load<Texture2D>("collider_texture");
@@ -87,8 +102,8 @@ public class Game1 : Game
             new Rectangle(0, 0, playerTexture.Width, playerTexture.Height), 
             1, new Vector2(playerTexture.Width * 5, playerTexture.Height * 5), colliderTexture);
         SpriteFont uiFont = Content.Load<SpriteFont>("Bell MT");
-        player.CreateInventory(screenRes, itemsAtlas, inventoryTex, uiFont, itemsID);
-        player.slimeTextures = slimeTextures;
+        player.CreateInventory(screenRes, itemsAtlas, inventoryTex, uiFont, itemsID, itemsIDTexturesRec);
+        player.slimeTextures = listTextures;
         
 
         Texture2D corralTex = Content.Load<Texture2D>("corral_deactivated");
@@ -148,7 +163,7 @@ public class Game1 : Game
             fence.Draw(_spriteBatch, followCamera.position);
         }
         
-        player.inventory.Draw(_spriteBatch);
+        player.inventory.Draw(_spriteBatch, screenRes);
         
         _spriteBatch.End();
 
