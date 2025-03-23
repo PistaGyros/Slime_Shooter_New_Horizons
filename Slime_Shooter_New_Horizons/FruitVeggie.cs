@@ -75,9 +75,9 @@ public class FruitVeggie(
                 {
                     collision = true;
                     collidedRectangle = fruitVeggie.GetCollisionRectangle();
-                    this.isThrowed = false;
+                    isThrowed = false;
+                    fruitVeggie.isThrowed = false;
                     Console.WriteLine("FruitVeggie has collided with fruitVeggie");
-                    break;
                 }
             }
         }

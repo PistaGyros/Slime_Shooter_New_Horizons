@@ -286,20 +286,20 @@ public class Game1 : Game
         player.Update(gameTime, slimeList, plortsList, fruitsVeggiesList, followCamera.position, 
             new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
         
-        followCamera.FollowTarget(player.destinationRectangle,
+        followCamera.FollowTarget(player.GetCollisionRectangle(),
             new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
         
         if (slimeList != null)
             foreach (var slime in slimeList)
             {
-                slime.Update(gameTime, player.destinationRectangle, slimeList);
+                slime.Update(gameTime, player.GetCollisionRectangle(), slimeList);
             }
 
         if (plortsList != null)
         {
             foreach (var plort in plortsList)
             {
-                plort.Update(gameTime, player.destinationRectangle, slimeList, plortsList);
+                plort.Update(gameTime, player.GetCollisionRectangle(), slimeList, plortsList);
             }
         }
 
@@ -307,7 +307,7 @@ public class Game1 : Game
         {
             foreach (var fruitVeggie in fruitsVeggiesList)
             {
-                fruitVeggie.Update(gameTime, player.destinationRectangle, fruitsVeggiesList);
+                fruitVeggie.Update(gameTime, player.GetCollisionRectangle(), fruitsVeggiesList);
             }
         }
         

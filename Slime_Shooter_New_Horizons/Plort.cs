@@ -27,8 +27,9 @@ public class Plort(
 
     public new void Update(GameTime gameTime, Rectangle playerRec, List<Slime> slimeList, List<Plort> plortsList)
     {
+        Console.WriteLine(isThrowed);
         Rectangle collidedObjectRec = new();
-        var outputOfChecking = CheckForCollisionsWithSlimesPlortsFruitsVeggies(slimeList, plortsList);
+        var outputOfChecking = CheckForCollisionsWithSlimesPlorts(slimeList, plortsList);
         
         if (outputOfChecking.Item1)
         {
@@ -63,7 +64,7 @@ public class Plort(
         destinationRectangle.Y += (int)pointVec.Y;
     }
     
-    public new (bool, Rectangle) CheckForCollisionsWithSlimesPlortsFruitsVeggies(
+    public new (bool, Rectangle) CheckForCollisionsWithSlimesPlorts(
         List<Slime> slimeList, List<Plort> plortsList)
     {
         bool collision = false;
@@ -75,9 +76,9 @@ public class Plort(
                 {
                     collision = true;
                     collidedRectangle = plort.GetCollisionRectangle();
-                    this.isThrowed = false;
+                    isThrowed = false;
+                    plort.isThrowed = false;
                     Console.WriteLine("Plort has collided with plort");
-                    break;
                 }
         }
         foreach (var slime in slimeList)
@@ -86,9 +87,8 @@ public class Plort(
             {
                 collision = true;
                 collidedRectangle = slime.GetCollisionRectangle();
-                this.isThrowed = false;
+                isThrowed = false;
                 Console.WriteLine("Plort has collided with slime");
-                break;
             }
         }
         return (collision, collidedRectangle);

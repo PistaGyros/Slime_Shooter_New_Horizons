@@ -56,9 +56,9 @@ public class Inventory : UI
         slotsRectangles.Add(new Rectangle());
         inventorySlots.Add(new List<int>(){4, 10});
         slotsRectangles.Add(new Rectangle());
-        inventorySlots.Add(new List<int>(){5, 10});
+        inventorySlots.Add(new List<int>(){13, 10});
         slotsRectangles.Add(new Rectangle());
-        inventorySlots.Add(new List<int>(){22, 10});
+        inventorySlots.Add(new List<int>(){23, 10});
         slotsRectangles.Add(new Rectangle());
     }
     

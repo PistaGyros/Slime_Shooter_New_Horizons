@@ -22,10 +22,10 @@ public class Physics
 
     public Rectangle Vacuum(Rectangle vacuumerRec, Rectangle vacuumedRec, GameTime gameTime)
     {
-        Vector2 pointVec = new Vector2(vacuumerRec.X + vacuumerRec.Width - (vacuumedRec.X + vacuumedRec.Width), 
-            vacuumerRec.Y + vacuumerRec.Height - (vacuumedRec.Y + vacuumedRec.Height));
-        float x = vacuumedRec.X + pointVec.X * vacuumTime * (float)gameTime.ElapsedGameTime.TotalSeconds;
-        float y = vacuumedRec.Y + pointVec.Y * vacuumTime * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        Vector2 pointVec = new Vector2(vacuumerRec.X + (vacuumerRec.Width / 2) - (vacuumedRec.X + vacuumedRec.Width / 2), 
+            vacuumerRec.Y + (vacuumerRec.Height / 2) - (vacuumedRec.Y + vacuumedRec.Height / 2));
+        double x = vacuumedRec.X + pointVec.X * vacuumTime * gameTime.ElapsedGameTime.TotalSeconds;
+        double y = vacuumedRec.Y + pointVec.Y * vacuumTime * gameTime.ElapsedGameTime.TotalSeconds;
         vacuumedRec.X = (int)x;
         vacuumedRec.Y = (int)y;
         return vacuumedRec;

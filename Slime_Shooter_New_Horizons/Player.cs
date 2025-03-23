@@ -70,11 +70,11 @@ public class Player : Animator
         // VACUUM
         if (Mouse.GetState().RightButton == ButtonState.Pressed)
         {
-            Vacuum(gameTime, slimeList, plortsList, screenRes);
+            Vacuum(gameTime, slimeList, plortsList, fruitsVeggiesList, screenRes);
         }
         else if (Mouse.GetState().RightButton == ButtonState.Released)
         {
-            StopVacuum(slimeList, plortsList, screenRes);
+            StopVacuum(slimeList, plortsList, fruitsVeggiesList, screenRes);
         }
 
         if (Mouse.GetState().LeftButton == ButtonState.Pressed)
@@ -160,7 +160,8 @@ public class Player : Animator
         return vacuumConeRecs;
     }
 
-    private void Vacuum(GameTime gameTime, List<Slime> slimeList, List<Plort> plortsList, Vector2 screenRes)
+    private void Vacuum(GameTime gameTime, List<Slime> slimeList, List<Plort> plortsList, 
+        List<FruitVeggie> fruitVeggiesList, Vector2 screenRes)
     {
         List<Slime> vacuumedSlimeList = new List<Slime>();
         List<Plort> vacuumedPlortList = new List<Plort>();
@@ -202,6 +203,22 @@ public class Player : Animator
                     }
                 }
             }
+
+            foreach (var fruitVeggie in fruitVeggiesList)
+            {
+                if (fruitVeggie.GetCollisionRectangle().Intersects(vacuumCone))
+                {
+                    fruitVeggie.vacuumTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    fruitVeggie.IsVacuumed = true;
+                    int availableSlot = inventory.WhichSlotIsAvailable(fruitVeggie.fruitVeggieID);
+                    if (GetCollisionRectangle().Intersects(fruitVeggie.GetCollisionRectangle()) && availableSlot != 69)
+                    {
+                        Console.WriteLine("Plort is vacuumed");
+                        inventory.UpdateInventory(availableSlot, fruitVeggie.fruitVeggieID, 1);
+                        vacuumedFruitVeggieList.Add(fruitVeggie);
+                    }
+                }
+            }
             
             if (vacuumedSlimeList != null)
                 foreach (var vacuumedSlime in vacuumedSlimeList)
@@ -213,10 +230,19 @@ public class Player : Animator
                 {
                     plortsList.Remove(vacuumedPlort);
                 }
+
+            if (vacuumedFruitVeggieList != null)
+            {
+                foreach (var fruitVeggie in vacuumedFruitVeggieList)
+                {
+                    fruitVeggiesList.Remove(fruitVeggie);
+                }
+            }
         }
     }
 
-    private void StopVacuum(List<Slime> slimeList, List<Plort> plortsList, Vector2 screenRes)
+    private void StopVacuum(List<Slime> slimeList, List<Plort> plortsList, List<FruitVeggie> fruitVeggiesList, 
+        Vector2 screenRes)
     {
         Vector2 mousePos = Mouse.GetState().Position.ToVector2();
         List<Rectangle> vacuumConeRecs = CreateVacuumConeRecs(mousePos, screenRes);
@@ -225,7 +251,7 @@ public class Player : Animator
         {
             foreach (var slime in slimeList)
             {
-                if (slime.GetCollisionRectangle().Intersects(vacuumCone))
+                if (!slime.GetCollisionRectangle().Intersects(vacuumCone))
                 {
                     slime.vacuumTime = 0;
                     slime.IsVacuumed = false;
@@ -234,10 +260,19 @@ public class Player : Animator
 
             foreach (var plort in plortsList)
             {
-                if (plort.GetCollisionRectangle().Intersects(vacuumCone))
+                if (!plort.GetCollisionRectangle().Intersects(vacuumCone))
                 {
                     plort.vacuumTime = 0;
                     plort.IsVacuumed = false;
+                }
+            }
+
+            foreach (var fruitVeggie in fruitVeggiesList)
+            {
+                if (!fruitVeggie.GetCollisionRectangle().Intersects(vacuumCone))
+                {
+                    fruitVeggie.vacuumTime = 0;
+                    fruitVeggie.IsVacuumed = false;
                 }
             }
         }
