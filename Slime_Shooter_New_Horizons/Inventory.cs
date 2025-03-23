@@ -55,7 +55,7 @@ public class Inventory : UI
         for (int i = 0; i < InventorySlotsSize; i++)
         {
             List<int> inventorySlot = new List<int>();
-            inventorySlot.Add(i + 1); // itemID
+            inventorySlot.Add(12); // itemID
             inventorySlot.Add(10); // amount
             inventorySlots.Add(inventorySlot);
             slotsRectangles.Add(new Rectangle());

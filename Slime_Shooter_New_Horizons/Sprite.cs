@@ -9,22 +9,23 @@ namespace Slime_Shooter_New_Horizons;
 public class Sprite : Physics
 {
     public Texture2D texture;
-    public Rectangle destinationRectangle, sourceRectangle;
+    public Rectangle destinationRectangle, sourceRectangle, colliderRectangle;
     public float scaleMultiplier;
 
     private Vector2 colliderSize;
     private Texture2D colliderTexture;
     private bool colliderVisible = false;
+    
+    public bool isThrowed = false;
+    public bool IsVacuumed = false;
 
-    public Sprite(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier, 
-        Vector2 colliderSize, Texture2D colliderTexture)
+    public Sprite(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, Rectangle colliderRectangle, float scaleMultiplier)
     {
         this.texture = texture;
         this.destinationRectangle = destinationRectangle;
         this.sourceRectangle = sourceRectangle;
+        this.colliderRectangle = colliderRectangle;
         this.scaleMultiplier = scaleMultiplier;
-        this.colliderSize = colliderSize;
-        this.colliderTexture = colliderTexture;
     }
 
     public Sprite(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier)
@@ -40,8 +41,31 @@ public class Sprite : Physics
         colliderVisible = true;
     }
 
-    public new void Update(GameTime gameTime)
+    public new void Update(GameTime gameTime, Rectangle playerRec)
     {
+        UpdateSprite(gameTime, playerRec);
+    }
+
+    public void UpdateSprite(GameTime gameTime, Rectangle playerRec)
+    {
+        if (IsVacuumed)
+        {
+            destinationRectangle = Vacuum(playerRec, destinationRectangle, gameTime);
+        }
+        else if (isThrowed)
+        {
+            destinationRectangle = Fly(gameTime, destinationRectangle);
+            
+            if (initQuadrant == 1 | initQuadrant == 3 && destinationRectangle.Y >= initPos.Y + 46)
+            {
+                isThrowed = false;
+            }
+            else if ((initQuadrant == 4 || initQuadrant == 2) &&
+                     (destinationRectangle.Y >= initPos.Y + 146 || destinationRectangle.Y <= initPos.Y - 146))
+            {
+                isThrowed = false;
+            }
+        }
     }
 
     public virtual void Draw(SpriteBatch spriteBatch, Vector2 offset)
@@ -53,20 +77,11 @@ public class Sprite : Physics
             destinationRectangle.Height * (int)scaleMultiplier);
         
         spriteBatch.Draw(texture, dest, sourceRectangle, Color.White);
-
-        /**if (colliderVisible)
-        {
-            spriteBatch.Draw(colliderTexture, destinationRectangle, 
-                new Rectangle(0, 0, colliderTexture.Width, colliderTexture.Height), Color.White);
-        }**/
     }
     
-    public Rectangle GetCollisionRectangle
+    public Rectangle GetCollisionRectangle()
     {
-        get
-        {
-            return new Rectangle(destinationRectangle.X + destinationRectangle.Width / 2, 
-                destinationRectangle.Y + destinationRectangle.Height / 2, (int)colliderSize.X, (int)colliderSize.Y);
-        }
+        return new Rectangle(destinationRectangle.X + colliderRectangle.X, destinationRectangle.Y + colliderRectangle.Y,
+            colliderRectangle.Width, colliderRectangle.Height);
     }
 }

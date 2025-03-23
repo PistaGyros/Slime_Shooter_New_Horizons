@@ -145,6 +145,18 @@
 /processorParam:TextureFormat=Color
 /build:phospor_slime_new_spritesheet.png
 
+#begin pink_plort.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:pink_plort.png
+
 #begin pink_slime_jumping_spritesheet-export.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -204,6 +216,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:pink_slime.png
+
+#begin rock_plort.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:rock_plort.png
 
 #begin rock_slime_new_spritesheet.png
 /importer:TextureImporter

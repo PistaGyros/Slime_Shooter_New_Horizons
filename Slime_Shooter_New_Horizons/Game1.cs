@@ -21,11 +21,14 @@ public class Game1 : Game
     private List<string> itemsNames;
     private Dictionary<int, string> itemsID;
     private List<Rectangle> itemsIDTexturesRec;
+    private List<Vector2> objectsColSize;
+    private List<List<List<Vector2>>> animationOffSets;
+    private List<List<List<Rectangle>>> objectsColRecs;
     
     private List<Slime> slimeList;
+    private List<Plort> plortsList;
 
     private FollowCamera followCamera;
-    private Inventory inventory;
 
     private Player player;
     private Corral corral;
@@ -49,8 +52,13 @@ public class Game1 : Game
         // UI
         itemsNames = new List<string>()
         {
-            "Deep Nothingness", "Pink Slime", "Rock Slime", "Tabby Slime", "Fosfor Slime", "Honey Slime", "Slivka",
-            "Yahoda", "Mrkva", "Paradayka"
+            "Deep Nothingness", 
+            // Slimes
+            "Pink Slime", "Rock Slime", "Tabby Slime", "Fosfor Slime", "Honey Slime", "", "", "", "", "",
+            // Plorts
+            "", "Pink Plort", "Rock Plort", "", "", "", "", "", "", "",
+            // Fruits and veggies
+            "", "Slivka", "Yahoda", "Mrkva", "Paradayka"
         };
         itemsID = new Dictionary<int, string>();
         for (int i = 0; i < itemsNames.Count; i++)
@@ -60,14 +68,155 @@ public class Game1 : Game
 
         itemsIDTexturesRec = new List<Rectangle>()
         {
-            new Rectangle(0, 0, 22, 22), new Rectangle(25, 0, 16, 11), 
-            new Rectangle(47, 0, 16, 15), new Rectangle(67, 0, 20, 14),
-            new Rectangle(88, 0, 22, 13), new Rectangle(113, 0, 16, 11),
-            new Rectangle(140, 0, 6, 8), new Rectangle(161, 0, 8, 9),
-            new Rectangle(184, 0, 6, 12), new Rectangle(205, 0, 8, 9)
+            new Rectangle(0, 0, 22, 22), 
+            // Slimes
+            new Rectangle(25, 0, 16, 11), new Rectangle(47, 0, 16, 15), 
+            new Rectangle(67, 0, 20, 14), new Rectangle(88, 0, 22, 13), 
+            new Rectangle(113, 0, 16, 11), new Rectangle(), new Rectangle(),new Rectangle(),new Rectangle(),
+            new Rectangle(),
+            // Plorts
+            new Rectangle(), new Rectangle(28, 22, 10, 10), new Rectangle(51, 22, 10, 10), 
+            new Rectangle(), new Rectangle(), new Rectangle(), new Rectangle(), new Rectangle(), new Rectangle(), new Rectangle(),
+            // Fruits and vegies
+            new Rectangle(), new Rectangle(30, 44, 6, 8), new Rectangle(51, 44, 8, 9),
+            new Rectangle(74, 44, 6, 12), new Rectangle(95, 44, 8, 9)
         };
+
+        
+        // Lists for collider offsets, it goes by objectID then animation row and then specific frame from the row
+        objectsColRecs = new List<List<List<Rectangle>>>()
+        {
+            // Empty object col
+            new List<List<Rectangle>>(){new List<Rectangle>(){new Rectangle()}},
+            // Pink Slime object colliders
+            new List<List<Rectangle>>()
+            {
+                new List<Rectangle>(){new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11),
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11), 
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11)},
+                new List<Rectangle>(){new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11),
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11), 
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11)},
+                new List<Rectangle>(){new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11),
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11), 
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11)},
+                new List<Rectangle>(){new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11),
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11), 
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11)}
+            },
+            
+            // Rock Slime object colliders
+            new List<List<Rectangle>>()
+            {
+                new List<Rectangle>()
+                {
+                    new Rectangle(3, 7, 16, 15), new Rectangle(3, 7, 16, 15),
+                    new Rectangle(3, 7, 16, 15), new Rectangle(3, 7, 16, 15), 
+                    new Rectangle(3, 7, 16, 15), new Rectangle(3, 7, 16, 15)
+                    
+                },
+                new List<Rectangle>()
+                {
+                    new Rectangle(3, 7, 16, 15), new Rectangle(3, 7, 16, 15),
+                    new Rectangle(3, 7, 16, 15), new Rectangle(3, 7, 16, 15), 
+                    new Rectangle(3, 7, 16, 15), new Rectangle(3, 7, 16, 15)
+                    
+                },
+                new List<Rectangle>()
+                {
+                    new Rectangle(3, 7, 16, 15), new Rectangle(3, 7, 16, 15),
+                    new Rectangle(3, 7, 16, 15), new Rectangle(3, 7, 16, 15), 
+                    new Rectangle(3, 7, 16, 15), new Rectangle(3, 7, 16, 15)
+                    
+                },
+                new List<Rectangle>()
+                {
+                    new Rectangle(3, 7, 16, 15), new Rectangle(3, 7, 16, 15),
+                    new Rectangle(3, 7, 16, 15), new Rectangle(3, 7, 16, 15), 
+                    new Rectangle(3, 7, 16, 15), new Rectangle(3, 7, 16, 15)
+                    
+                }
+            },
+            
+            // Tabby Slime object colliders
+            new List<List<Rectangle>>()
+            {
+                new List<Rectangle>()
+                {
+                    new Rectangle(1, 8, 20, 14), new Rectangle(1, 8, 20, 14),
+                    new Rectangle(1, 8, 20, 14), new Rectangle(1, 8, 20, 14),
+                    new Rectangle(1, 8, 20, 14), new Rectangle(1, 8, 20, 14)
+                },
+                new List<Rectangle>()
+                {
+                    new Rectangle(1, 8, 20, 14), new Rectangle(1, 8, 20, 14),
+                    new Rectangle(1, 8, 20, 14), new Rectangle(1, 8, 20, 14),
+                    new Rectangle(1, 8, 20, 14), new Rectangle(1, 8, 20, 14)
+                },
+                new List<Rectangle>()
+                {
+                    new Rectangle(1, 8, 20, 14), new Rectangle(1, 8, 20, 14),
+                    new Rectangle(1, 8, 20, 14), new Rectangle(1, 8, 20, 14),
+                    new Rectangle(1, 8, 20, 14), new Rectangle(1, 8, 20, 14)
+                },
+                new List<Rectangle>()
+                {
+                    new Rectangle(1, 8, 20, 14), new Rectangle(1, 8, 20, 14),
+                    new Rectangle(1, 8, 20, 14), new Rectangle(1, 8, 20, 14),
+                    new Rectangle(1, 8, 20, 14), new Rectangle(1, 8, 20, 14)
+                }
+            },
+            
+            // Fosfor Slime object colliders
+            new List<List<Rectangle>>()
+            {
+                new List<Rectangle>()
+                {
+                    new Rectangle(0, 9, 22, 13), new Rectangle(0, 9, 22, 13),
+                    new Rectangle(0, 9, 22, 13), new Rectangle(0, 9, 22, 13),
+                    new Rectangle(0, 9, 22, 13), new Rectangle(0, 9, 22, 13)
+                },
+                new List<Rectangle>()
+                {
+                    new Rectangle(0, 9, 22, 13), new Rectangle(0, 9, 22, 13),
+                    new Rectangle(0, 9, 22, 13), new Rectangle(0, 9, 22, 13),
+                    new Rectangle(0, 9, 22, 13), new Rectangle(0, 9, 22, 13)
+                },
+                new List<Rectangle>()
+                {
+                    new Rectangle(0, 9, 22, 13), new Rectangle(0, 9, 22, 13),
+                    new Rectangle(0, 9, 22, 13), new Rectangle(0, 9, 22, 13),
+                    new Rectangle(0, 9, 22, 13), new Rectangle(0, 9, 22, 13)
+                },
+                new List<Rectangle>()
+                {
+                    new Rectangle(0, 9, 22, 13), new Rectangle(0, 9, 22, 13),
+                    new Rectangle(0, 9, 22, 13), new Rectangle(0, 9, 22, 13),
+                    new Rectangle(0, 9, 22, 13), new Rectangle(0, 9, 22, 13)
+                }
+            },
+            
+            // Honey Slime object colliders
+            new List<List<Rectangle>>()
+            {
+                new List<Rectangle>(){new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11),
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11), 
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11)},
+                new List<Rectangle>(){new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11),
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11), 
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11)},
+                new List<Rectangle>(){new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11),
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11), 
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11)},
+                new List<Rectangle>(){new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11),
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11), 
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11)}
+            }
+        };
+
         
         slimeList = new List<Slime>();
+        plortsList = new List<Plort>();
 
         base.Initialize();
     }
@@ -81,11 +230,20 @@ public class Game1 : Game
         listTextures = new List<Texture2D>()
         {
             null, 
+            // Slimes
             Content.Load<Texture2D>("pink_slime_new_spritesheet"),
             Content.Load<Texture2D>("rock_slime_new_spritesheet"),
             Content.Load<Texture2D>("tabby_slime_new_spritesheet"),
             Content.Load<Texture2D>("phospor_slime_new_spritesheet"),
             Content.Load<Texture2D>("honey_slime_new_spritesheet"),
+            null, null, null, null, null, 
+            //Plorts
+            null,
+            Content.Load<Texture2D>("pink_plort"),
+            Content.Load<Texture2D>("rock_plort"),
+            null, null, null, null, null, null, null,
+            // Fruits and veggies
+            null,
             Content.Load<Texture2D>("slivka_fruit"),
             Content.Load<Texture2D>("yahoda_fruit"),
             Content.Load<Texture2D>("mrkva_veggie"),
@@ -100,10 +258,10 @@ public class Game1 : Game
         Texture2D playerTexture = Content.Load<Texture2D>("spr_player_1_left_idle");
         player = new Player(playerTexture, new Rectangle(0, 0, playerTexture.Width * 5, playerTexture.Height * 5), 
             new Rectangle(0, 0, playerTexture.Width, playerTexture.Height), 
-            1, new Vector2(playerTexture.Width * 5, playerTexture.Height * 5), colliderTexture);
+            1, objectsColRecs);
         SpriteFont uiFont = Content.Load<SpriteFont>("Bell MT");
         player.CreateInventory(screenRes, itemsAtlas, inventoryTex, uiFont, itemsID, itemsIDTexturesRec);
-        player.slimeTextures = listTextures;
+        player.objectsTextures = listTextures;
         
 
         Texture2D corralTex = Content.Load<Texture2D>("corral_deactivated");
@@ -123,7 +281,7 @@ public class Game1 : Game
 
         // TODO: Add your update logic here
         
-        player.Update(gameTime, slimeList, followCamera.position, 
+        player.Update(gameTime, slimeList, plortsList, followCamera.position, 
             new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
         
         followCamera.FollowTarget(player.destinationRectangle,
@@ -134,6 +292,14 @@ public class Game1 : Game
             {
                 slime.Update(gameTime, player.destinationRectangle, slimeList);
             }
+
+        if (plortsList != null)
+        {
+            foreach (var plort in plortsList)
+            {
+                plort.Update(gameTime, player.destinationRectangle);
+            }
+        }
         
         corral.Update(gameTime);
 
@@ -153,6 +319,14 @@ public class Game1 : Game
             {
                 slime.Draw(_spriteBatch, followCamera.position);
             }
+
+        if (plortsList != null)
+        {
+            foreach (var plort in plortsList)
+            {
+                plort.Draw(_spriteBatch, followCamera.position);
+            }
+        }
         
         corral.Draw(_spriteBatch, followCamera.position);
         

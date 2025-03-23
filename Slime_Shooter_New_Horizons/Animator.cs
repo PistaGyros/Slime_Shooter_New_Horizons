@@ -13,38 +13,60 @@ public class Animator : Sprite
     public Vector2 size;
     public float counter;
     private float animSpeedMultiplier = 1;
+    public List<List<Rectangle>> objectColRecs;
     
     public int currentFrame;
     public int colPos;
-    public int currentRow;
+    public int currentRow = 0;
     
     
-    public Animator(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier,
-        Vector2 colliderSize, Texture2D colliderTexture, int numFrames, int numCollums, int numRows, Vector2 size, float animSpeedMultiplier) :
-        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize, colliderTexture)
+    public Animator(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, List<List<Rectangle>> objectColRecs,
+        float scaleMultiplier, int numFrames, int numCollums, int numRows, Vector2 size, float animSpeedMultiplier) :
+        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier)
     {
         this.numFrames = numFrames;
         this.numCollums = numCollums;
         this.numRows = numRows;
         this.size = size;
         this.animSpeedMultiplier = animSpeedMultiplier;
+        this.objectColRecs = objectColRecs;
     }
     
-    public Animator(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier,
-        Vector2 colliderSize, Texture2D colliderTexture, int numFrames, int numCollums, int numRows, Vector2 size) :
-        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize, colliderTexture)
+    public Animator(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle,
+        float scaleMultiplier, int numFrames, int numCollums, Vector2 size, float animSpeedMultiplier) :
+        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier)
     {
         this.numFrames = numFrames;
         this.numCollums = numCollums;
-        this.numRows = numRows;
+        this.size = size;
+        this.animSpeedMultiplier = animSpeedMultiplier;
+    }
+    
+    public Animator(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, List<List<Rectangle>> objectColRecs,
+        float scaleMultiplier, int numFrames, int numCollums, Vector2 size) :
+        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier)
+    {
+        this.numFrames = numFrames;
+        this.numCollums = numCollums;
+        this.size = size;
+        this.objectColRecs = objectColRecs;
+    }
+    
+    public Animator(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle,
+        float scaleMultiplier, int numFrames, int numCollums, Vector2 size) :
+        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier)
+    {
+        this.numFrames = numFrames;
+        this.numCollums = numCollums;
         this.size = size;
     }
     
-    public Animator(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier,
-        Vector2 colliderSize, Texture2D colliderTexture) : 
-        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize, colliderTexture)
+    public Animator(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, List<List<Rectangle>> objectColRecs,
+        float scaleMultiplier) : 
+        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier)
     {
         size = new Vector2(sourceRectangle.Width, sourceRectangle.Height);
+        this.objectColRecs = objectColRecs;
     }
     
     public Animator(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier) : 
@@ -53,13 +75,25 @@ public class Animator : Sprite
         size = new Vector2(sourceRectangle.Width, sourceRectangle.Height);
     }
 
-    public void SetupAnimator(int numFrames, int numCollums, int numRows, Vector2 size, float animSpeedMultiplier = 1)
+    public void SetupAnimator(int numFrames, int numCollums, Vector2 size, float animSpeedMultiplier = 1)
     {
         this.numFrames = numFrames;
         this.numCollums = numCollums;
-        this.numRows = numRows;
         this.size = size;
         this.animSpeedMultiplier = animSpeedMultiplier;
+    }
+
+    public void ChangeAnimation(int actualRow)
+    {
+        this.currentRow = actualRow;
+    }
+    
+    public new Rectangle GetCollisionRectangle()
+    {
+        return new Rectangle(destinationRectangle.X + objectColRecs[currentRow][colPos].X * (int)scaleMultiplier,
+            destinationRectangle.Y + objectColRecs[currentRow][colPos].Y * (int)scaleMultiplier,
+            objectColRecs[currentRow][colPos].Width * (int)scaleMultiplier, 
+            objectColRecs[currentRow][colPos].Height * (int)scaleMultiplier);
     }
 
     public new void Update(GameTime gameTime)
@@ -103,12 +137,11 @@ public class Animator : Sprite
     {
         currentFrame = 0;
         colPos = 0;
-        currentRow = 0;
     }
 
     public Rectangle GetFrame(int actualRow)
     {
-        return new Rectangle(colPos * (int)size.X, actualRow * (int)size.Y, (int)size.X, (int)size.Y);
+        return new Rectangle((int)(colPos * size.X), (int)(actualRow * size.Y), (int)size.X, (int)size.Y);
     }
 
     public bool CheckForCollisionsWithSlimes(List<Slime> slimeList)
@@ -116,7 +149,7 @@ public class Animator : Sprite
         foreach (var slime in slimeList)
         {
             if (this != slime) continue;
-            if(destinationRectangle.Intersects(slime.destinationRectangle))
+            if(GetCollisionRectangle().Intersects(slime.GetCollisionRectangle()))
             {
                 return true;
             }
@@ -127,7 +160,7 @@ public class Animator : Sprite
     
     public bool CheckForCollisionsWithPlayer(Rectangle playerRec)
     {
-        if(destinationRectangle.Intersects(playerRec))
+        if(GetCollisionRectangle().Intersects(playerRec))
         {
             return true;
         }

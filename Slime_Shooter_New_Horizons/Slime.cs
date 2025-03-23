@@ -7,22 +7,13 @@ namespace Slime_Shooter_New_Horizons;
 
 public class Slime : Animator
 {
-    public bool isThrowed = false;
-    public bool IsVacuumed = false;
     public int slimeID;
     private bool isCollidingWithSlime = false;
-    
-    
-    public Slime(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier, 
-        Vector2 colliderSize, Texture2D colliderTexture) :
-        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize, colliderTexture)
-    {
-    }
 
-    public Slime(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier, 
-        Vector2 colliderSize, Texture2D colliderTexture, int numFrames, int numCollums, int numRows, Vector2 size, 
-        int animSpeedMultiplier) : base(texture, destinationRectangle, sourceRectangle, 
-        scaleMultiplier, colliderSize, colliderTexture, numFrames, numCollums, numRows, size, animSpeedMultiplier)
+
+    public Slime(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle,
+        List<List<Rectangle>> objectsColRecs, float scaleMultiplier) :
+        base(texture, destinationRectangle, sourceRectangle, objectsColRecs, scaleMultiplier)
     {
     }
 
@@ -60,31 +51,14 @@ public class Slime : Animator
 
         else if (!isCollidingWithSlime)
         {
-            if (IsVacuumed)
-            {
-                destinationRectangle = Vacuum(playerRec, destinationRectangle, gameTime);
-            }
-            else if (isThrowed)
-            {
-                destinationRectangle = Fly(gameTime, destinationRectangle);
-            
-                if (initQuadrant == 1 | initQuadrant == 3 && destinationRectangle.Y >= initPos.Y + 46)
-                {
-                    isThrowed = false;
-                }
-                else if ((initQuadrant == 4 || initQuadrant == 2) &&
-                         (destinationRectangle.Y >= initPos.Y + 146 || destinationRectangle.Y <= initPos.Y - 146))
-                {
-                    isThrowed = false;
-                }
-            }
+            UpdateSprite(gameTime, playerRec);
         }
     }
 
     private void BounceAwayFromSlime(Rectangle badSlime)
     {
-        Vector2 centerDestRec = new Vector2(destinationRectangle.X + destinationRectangle.Width / 2,
-            destinationRectangle.Y + destinationRectangle.Height / 2);
+        Vector2 centerDestRec = new Vector2(GetCollisionRectangle().X + GetCollisionRectangle().Width / 2,
+            GetCollisionRectangle().Y + GetCollisionRectangle().Height / 2);
         Vector2 centerBadSlimeRec = new Vector2(badSlime.X + badSlime.Width / 2, badSlime.Y + badSlime.Height / 2);
         Vector2 pointVec = new Vector2(centerDestRec.X - centerBadSlimeRec.X, centerDestRec.Y - centerBadSlimeRec.Y);
         destinationRectangle.X += (int)pointVec.X;
@@ -98,41 +72,14 @@ public class Slime : Animator
         foreach (var slime in slimeList)
         {
             if (this != slime)
-                if(destinationRectangle.Intersects(slime.destinationRectangle))
+                if(GetCollisionRectangle().Intersects(slime.GetCollisionRectangle()))
                 {
                     collision = true;
-                    collidedRectangle = slime.destinationRectangle;
+                    collidedRectangle = slime.GetCollisionRectangle();
                     slime.isThrowed = false;
                 }
         }
 
         return (collision, collidedRectangle);
-    }
-    
-    
-    private Vector2 DecideWhatinitQuadrant(int quadrantSpawned)
-    {
-        Vector2 quadrantVec = Vector2.Zero;
-        switch (quadrantSpawned)
-        {
-            case 1:
-                quadrantVec = new Vector2(1, 1);
-                gravityAcceleration = 100f;
-                break;
-            case 2:
-                quadrantVec = new Vector2(0, 1);
-                gravityAcceleration = 1f;
-                break;
-            case 3:
-                quadrantVec = new Vector2(-1, 1);
-                gravityAcceleration = 100f;
-                break;
-            case 4:
-                quadrantVec = new Vector2(0, -1);
-                gravityAcceleration = 1f;
-                break;
-        }
-
-        return quadrantVec;
     }
 }

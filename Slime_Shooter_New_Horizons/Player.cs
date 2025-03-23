@@ -15,26 +15,26 @@ public class Player : Animator
         
     private float defaultSpeed = 0.3f;
 
-    private Texture2D colliderTexture;
+    private List<List<List<Rectangle>>> objectsColRecs;
 
     public Texture2D playerTexture;
-    public List<Texture2D> slimeTextures;
+    public List<Texture2D> objectsTextures;
     
     private float slimeShootTimer;
     public Inventory inventory;
     
     public PlayerOrientation playerOrientation;
     
-    public Player(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, float scaleMultiplier, 
-        Vector2 colliderSize, Texture2D colliderTexture) : 
-        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, colliderSize, colliderTexture)
+    public Player(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle,
+        float scaleMultiplier, List<List<List<Rectangle>>> objectsColRecs) : 
+        base(texture, destinationRectangle, sourceRectangle, scaleMultiplier)
     {
-        this.colliderTexture = colliderTexture;
+        this.objectsColRecs = objectsColRecs;
     }
     
     
     
-    public virtual void Update(GameTime gameTime, List<Slime> slimeList, Vector2 offset, Vector2 screenRes)
+    public new virtual void Update(GameTime gameTime, List<Slime> slimeList, List<Plort> plortsList, Vector2 offset, Vector2 screenRes)
     {
         KeyboardState keyboardState = Keyboard.GetState();
         int changeY = 0;
@@ -43,7 +43,7 @@ public class Player : Animator
             playerOrientation = PlayerOrientation.Up;
             changeY -= (int)(defaultSpeed * gameTime.ElapsedGameTime.Milliseconds);
         }
-        if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
+        else if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
         {
             playerOrientation = PlayerOrientation.Down;
             changeY += (int)(defaultSpeed * gameTime.ElapsedGameTime.Milliseconds);
@@ -62,7 +62,7 @@ public class Player : Animator
             playerOrientation = PlayerOrientation.Left;
             changeX -= (int)(defaultSpeed * gameTime.ElapsedGameTime.Milliseconds);
         }
-        if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
+        else if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
         {
             playerOrientation = PlayerOrientation.Right;
             changeX += (int)(defaultSpeed * gameTime.ElapsedGameTime.Milliseconds);
@@ -74,52 +74,14 @@ public class Player : Animator
             destinationRectangle.X -= changeX;
         }
 
+        // VACUUM
         if (Mouse.GetState().RightButton == ButtonState.Pressed)
         {
-            List<Slime> vacuumedSlimeList = new List<Slime>();
-            Vector2 mousePos = Mouse.GetState().Position.ToVector2();
-            List<Rectangle> vacuumConeRecs = CreateVacuumConeRecs(mousePos, screenRes);
-            // Check for vacuum collisions with slimes
-            foreach (var vacuumCone in vacuumConeRecs)
-            {
-                foreach (var slime in slimeList)
-                {
-                    if (slime.destinationRectangle.Intersects(vacuumCone))
-                    {
-                        slime.vacuumTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                        slime.IsVacuumed = true;
-                        int availableSlot = inventory.WhichSlotIsAvailable(slime.slimeID);
-                        if (destinationRectangle.Intersects(slime.destinationRectangle) && availableSlot != 69)
-                        {
-                            Console.WriteLine("Slime is vacuumed");
-                            inventory.UpdateInventory(availableSlot, slime.slimeID, 1);
-                            vacuumedSlimeList.Add(slime);
-                        }
-                    }
-                }
-                if (vacuumedSlimeList != null)
-                    foreach (var vacuumedSlime in vacuumedSlimeList)
-                    {
-                        slimeList.Remove(vacuumedSlime);
-                    }
-            }
+            Vacuum(gameTime, slimeList, plortsList, screenRes);
         }
         else if (Mouse.GetState().RightButton == ButtonState.Released)
         {
-            Vector2 mousePos = Mouse.GetState().Position.ToVector2();
-            List<Rectangle> vacuumConeRecs = CreateVacuumConeRecs(mousePos, screenRes);
-            // Check for vacuum collisions with slimes
-            foreach (var vacuumCone in vacuumConeRecs)
-            {
-                foreach (var slime in slimeList)
-                {
-                    if (slime.destinationRectangle.Intersects(vacuumCone))
-                    {
-                        slime.vacuumTime = 0;
-                        slime.IsVacuumed = false;
-                    }
-                }
-            }
+            StopVacuum(slimeList, plortsList, screenRes);
         }
 
         if (Mouse.GetState().LeftButton == ButtonState.Pressed)
@@ -142,7 +104,7 @@ public class Player : Animator
             else if (slimeShootTimer <= 0 && Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
                 slimeShootTimer = 0.25f;
-                Shoot(slimeList, mousePos, screenRes);
+                Shoot(slimeList, plortsList, mousePos, screenRes);
             }
         }    
         slimeShootTimer -= gameTime.ElapsedGameTime.Milliseconds * 0.001f;
@@ -205,14 +167,98 @@ public class Player : Animator
         return vacuumConeRecs;
     }
 
-    private void Shoot(List<Slime> slimes, Vector2 mousePos, Vector2 screenRes)
+    private void Vacuum(GameTime gameTime, List<Slime> slimeList, List<Plort> plortsList, Vector2 screenRes)
+    {
+        List<Slime> vacuumedSlimeList = new List<Slime>();
+        List<Plort> vacuumedPlortList = new List<Plort>();
+        List<FruitVeggie> vacuumedFruitVeggieList = new List<FruitVeggie>();
+        Vector2 mousePos = Mouse.GetState().Position.ToVector2();
+        List<Rectangle> vacuumConeRecs = CreateVacuumConeRecs(mousePos, screenRes);
+        
+        // Check for vacuum collisions with slimes and/or plorts, fruits and veggies
+        foreach (var vacuumCone in vacuumConeRecs)
+        {
+            foreach (var slime in slimeList)
+            {
+                if (slime.GetCollisionRectangle().Intersects(vacuumCone))
+                {
+                    slime.vacuumTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    slime.IsVacuumed = true;
+                    int availableSlot = inventory.WhichSlotIsAvailable(slime.slimeID);
+                    if (GetCollisionRectangle().Intersects(slime.GetCollisionRectangle()) && availableSlot != 69)
+                    {
+                        Console.WriteLine("Slime is vacuumed");
+                        inventory.UpdateInventory(availableSlot, slime.slimeID, 1);
+                        vacuumedSlimeList.Add(slime);
+                    }
+                }
+            }
+
+            foreach (var plort in plortsList)
+            {
+                if (plort.GetCollisionRectangle().Intersects(vacuumCone))
+                {
+                    plort.vacuumTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    plort.IsVacuumed = true;
+                    int availableSlot = inventory.WhichSlotIsAvailable(plort.plortID);
+                    if (GetCollisionRectangle().Intersects(plort.GetCollisionRectangle()) && availableSlot != 69)
+                    {
+                        Console.WriteLine("Plort is vacuumed");
+                        inventory.UpdateInventory(availableSlot, plort.plortID, 1);
+                        vacuumedPlortList.Add(plort);
+                    }
+                }
+            }
+            
+            if (vacuumedSlimeList != null)
+                foreach (var vacuumedSlime in vacuumedSlimeList)
+                {
+                    slimeList.Remove(vacuumedSlime);
+                }
+            if (vacuumedPlortList != null)
+                foreach (var vacuumedPlort in vacuumedPlortList)
+                {
+                    plortsList.Remove(vacuumedPlort);
+                }
+        }
+    }
+
+    private void StopVacuum(List<Slime> slimeList, List<Plort> plortsList, Vector2 screenRes)
+    {
+        Vector2 mousePos = Mouse.GetState().Position.ToVector2();
+        List<Rectangle> vacuumConeRecs = CreateVacuumConeRecs(mousePos, screenRes);
+        // Check for vacuum collisions with slimes and/or plorts, fruits and veggies
+        foreach (var vacuumCone in vacuumConeRecs)
+        {
+            foreach (var slime in slimeList)
+            {
+                if (slime.GetCollisionRectangle().Intersects(vacuumCone))
+                {
+                    slime.vacuumTime = 0;
+                    slime.IsVacuumed = false;
+                }
+            }
+
+            foreach (var plort in plortsList)
+            {
+                if (plort.GetCollisionRectangle().Intersects(vacuumCone))
+                {
+                    plort.vacuumTime = 0;
+                    plort.IsVacuumed = false;
+                }
+            }
+        }
+    }
+
+    private void Shoot(List<Slime> slimes, List<Plort> plorts, Vector2 mousePos, Vector2 screenRes)
     {
         int activeSlot = inventory.activeSlot;
         if (inventory.inventorySlots[activeSlot][1] >= 1)
         {
             // Shoot an item from active slot
-            int slimeID = inventory.inventorySlots[activeSlot][0];
-            SpawnSlime(slimeTextures[slimeID], slimes, mousePos, screenRes, slimeID);
+            int objectID = inventory.inventorySlots[activeSlot][0];
+            // TODO: add feature to be able to throw any item from inventory
+            DecideWhatTypeOfObjectToShoot(objectID, slimes, plorts, mousePos, screenRes);
             inventory.UpdateInventory(activeSlot, inventory.inventorySlots[activeSlot][0], -1);
             
             // Check if the slot is not empty now
@@ -223,17 +269,41 @@ public class Player : Animator
             }
         }
     }
+
+    private void DecideWhatTypeOfObjectToShoot(int objectID, List<Slime> slimes, List<Plort> plortsList, Vector2 mousePos, Vector2 screenRes)
+    {
+        if (objectID > 0 && objectID < 10)
+            SpawnSlime(objectsTextures[objectID], slimes, mousePos, screenRes, objectID);
+        else if (objectID > 9 && objectID < 21)
+            SpawnPlort(objectsTextures[objectID], plortsList, mousePos, screenRes, objectID);
+        else if (objectID > 20 && objectID < 31){}
+            //SpawnFruitOrVeggie();
+    }
     
 
     private void SpawnSlime(Texture2D slimeTex, List<Slime> slimeList, Vector2 spawnPos, Vector2 screenRes, int slimeID)
     {
         Slime slime = new Slime(slimeTex,
             new Rectangle(destinationRectangle.X, destinationRectangle.Y, 22, 22),
-            new Rectangle(0, 0, 22, 22), 2, new Vector2(22, 22), colliderTexture);
+            new Rectangle(0, 0, 22, 22), objectsColRecs[slimeID], 2);
         slime.slimeID = slimeID;
-        slime.SetupAnimator(6, 6, 1, new Vector2(22, 22));
+        slime.SetupAnimator(6, 6, new Vector2(22, 22));
         slime.ThrowSlime(QuadrantClicked(spawnPos, screenRes));
         slimeList.Add(slime);
+    }
+
+    private void SpawnPlort(Texture2D plortTex, List<Plort> plortsList, Vector2 spawnPos, Vector2 screenRes, int plortID)
+    {
+        Plort plort = new Plort(plortID, plortTex, 
+            new Rectangle(destinationRectangle.X, destinationRectangle.Y, plortTex.Width, plortTex.Height),
+            new Rectangle(0, 0, plortTex.Width, plortTex.Height), 2);
+        plort.ThrowPlort(QuadrantClicked(spawnPos, screenRes));
+        plortsList.Add(plort);
+    }
+
+    private void SpawnFruitOrVeggie(Texture2D fruitVeggieTex, List<FruitVeggie> fruitVeggieList)
+    {
+        
     }
     
 
@@ -277,12 +347,19 @@ public class Player : Animator
         bool collision = false;
         foreach (var slime in slimeList)
         {
-            if(destinationRectangle.Intersects(slime.destinationRectangle))
+            if(destinationRectangle.Intersects(slime.GetCollisionRectangle()))
             {
                 collision = true;
             }
         }
 
         return collision;
+    }
+    
+    // TODO: In future remove this, when added animation spritesheet for player character
+    public new Rectangle GetCollisionRectangle()
+    {
+        return new Rectangle(destinationRectangle.X * (int)scaleMultiplier, destinationRectangle.Y * (int)scaleMultiplier, 
+            destinationRectangle.Width * (int)scaleMultiplier, destinationRectangle.Height * (int)scaleMultiplier);
     }
 }

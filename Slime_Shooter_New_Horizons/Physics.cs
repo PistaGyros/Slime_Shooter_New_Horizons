@@ -22,7 +22,8 @@ public class Physics
 
     public Rectangle Vacuum(Rectangle vacuumerRec, Rectangle vacuumedRec, GameTime gameTime)
     {
-        Vector2 pointVec = new Vector2(vacuumerRec.X - vacuumedRec.X, vacuumerRec.Y - vacuumedRec.Y);
+        Vector2 pointVec = new Vector2(vacuumerRec.X + vacuumerRec.Width - (vacuumedRec.X + vacuumedRec.Width), 
+            vacuumerRec.Y + vacuumerRec.Height - (vacuumedRec.Y + vacuumedRec.Height));
         float x = vacuumedRec.X + pointVec.X * vacuumTime * (float)gameTime.ElapsedGameTime.TotalSeconds;
         float y = vacuumedRec.Y + pointVec.Y * vacuumTime * (float)gameTime.ElapsedGameTime.TotalSeconds;
         vacuumedRec.X = (int)x;
@@ -40,6 +41,32 @@ public class Physics
         destinationRectangle.X = (int)newX;
         destinationRectangle.Y = (int)newY;
         return new Rectangle(destinationRectangle.X, destinationRectangle.Y, destinationRectangle.Width, destinationRectangle.Height);
+    }
+    
+    public Vector2 DecideWhatinitQuadrant(int quadrantSpawned)
+    {
+        Vector2 quadrantVec = Vector2.Zero;
+        switch (quadrantSpawned)
+        {
+            case 1:
+                quadrantVec = new Vector2(1, 1);
+                gravityAcceleration = 100f;
+                break;
+            case 2:
+                quadrantVec = new Vector2(0, 1);
+                gravityAcceleration = 0f;
+                break;
+            case 3:
+                quadrantVec = new Vector2(-1, 1);
+                gravityAcceleration = 100f;
+                break;
+            case 4:
+                quadrantVec = new Vector2(0, -1);
+                gravityAcceleration = 0f;
+                break;
+        }
+
+        return quadrantVec;
     }
     
     private float KinematicEquation(float acceleration, float velocity, float position, float time)
