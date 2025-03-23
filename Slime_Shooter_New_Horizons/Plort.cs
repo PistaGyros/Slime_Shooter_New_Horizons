@@ -9,6 +9,7 @@ namespace Slime_Shooter_New_Horizons;
 public class Plort : Sprite
 {
     public int plortID;
+    public bool isCollidingWithObject;
     
     public Plort(int plortID, Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle,
         float scaleMultiplier) : base(texture, destinationRectangle, sourceRectangle, scaleMultiplier)
@@ -24,9 +25,74 @@ public class Plort : Sprite
         velocity *= DecideWhatinitQuadrant(quadrantSpawned);
     }
 
-    public new void Update(GameTime gameTime, Rectangle playerRec)
+    public new void Update(GameTime gameTime, Rectangle playerRec, List<Slime> slimeList, List<Plort> plortsList)
     {
-        UpdateSprite(gameTime, playerRec);
+        Rectangle collidedObjectRec = new();
+        var outputOfChecking = CheckForCollisionsWithSlimesPlortsFruitsVeggies(slimeList, plortsList);
+        
+        if (outputOfChecking.Item1)
+        {
+            IsVacuumed = false;
+            isThrowed = false;
+            isCollidingWithObject = true;
+            collidedObjectRec = outputOfChecking.Item2;
+        }
+        else
+        {
+            isCollidingWithObject = false;
+        }
+
+        if (isCollidingWithObject)
+        {
+            BounceAwayFromSlimePlortFruitVeggie(collidedObjectRec);
+        }
+
+        else if (!isCollidingWithObject)
+        {
+            UpdateSprite(gameTime, playerRec);
+        }
+    }
+    
+    private void BounceAwayFromSlimePlortFruitVeggie(Rectangle badObject)
+    {
+        Vector2 centerDestRec = new Vector2(GetCollisionRectangle().X + GetCollisionRectangle().Width / 2,
+            GetCollisionRectangle().Y + GetCollisionRectangle().Height / 2);
+        Vector2 centerBadObjectRec = new Vector2(badObject.X + badObject.Width / 2, badObject.Y + badObject.Height / 2);
+        Vector2 pointVec = new Vector2(centerDestRec.X - centerBadObjectRec.X, centerDestRec.Y - centerBadObjectRec.Y);
+        destinationRectangle.X += (int)pointVec.X;
+        destinationRectangle.Y += (int)pointVec.Y;
+    }
+    
+    public (bool, Rectangle) CheckForCollisionsWithSlimesPlortsFruitsVeggies(
+        List<Slime> slimeList, List<Plort> plortsList)
+    {
+        bool collision = false;
+        Rectangle collidedRectangle = new Rectangle();
+        foreach (var plort in plortsList)
+        {
+            if (this != plort)
+                if(GetCollisionRectangle().Intersects(plort.GetCollisionRectangle()))
+                {
+                    collision = true;
+                    collidedRectangle = plort.GetCollisionRectangle();
+                    this.isThrowed = false;
+                    Console.WriteLine("Plort has collided with plort");
+                    break;
+                }
+        }
+        foreach (var slime in slimeList)
+        {
+            if(GetCollisionRectangle().Intersects(slime.GetCollisionRectangle()))
+            {
+                collision = true;
+                collidedRectangle = slime.GetCollisionRectangle();
+                this.isThrowed = false;
+                Console.WriteLine("Plort has collided with slime");
+                break;
+            }
+        }
+        return (collision, collidedRectangle);
+        
     }
     
     public new Rectangle GetCollisionRectangle()

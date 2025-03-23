@@ -285,7 +285,7 @@ public class Player : Animator
     {
         Slime slime = new Slime(slimeTex,
             new Rectangle(destinationRectangle.X, destinationRectangle.Y, 22, 22),
-            new Rectangle(0, 0, 22, 22), objectsColRecs[slimeID], 2);
+            new Rectangle(0, 0, 22, 22), objectsColRecs[slimeID], 3);
         slime.slimeID = slimeID;
         slime.SetupAnimator(6, 6, new Vector2(22, 22));
         slime.ThrowSlime(QuadrantClicked(spawnPos, screenRes));

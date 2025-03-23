@@ -297,7 +297,7 @@ public class Game1 : Game
         {
             foreach (var plort in plortsList)
             {
-                plort.Update(gameTime, player.destinationRectangle);
+                plort.Update(gameTime, player.destinationRectangle, slimeList, plortsList);
             }
         }
         
