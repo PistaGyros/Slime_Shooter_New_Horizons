@@ -15,6 +15,14 @@ public class Slime(
 {
     public int slimeID;
     private bool isCollidingWithSlime = false;
+    public List<Texture2D> plortsTexs = new List<Texture2D>();
+
+    public int Hunger = 30;
+    public bool hasCollidedWithFood;
+    private bool isEating = false;
+    private float eatingTime = 2.0f;
+    private float eatingTimer = 0.0f;
+    private FruitVeggie food;
 
 
     public void ThrowSlime(int quadrantSpawned)
@@ -26,23 +34,52 @@ public class Slime(
     }
     
 
-    public new void Update(GameTime gameTime, Rectangle playerRec, List<Slime> slimeList)
+    public new void Update(GameTime gameTime, Rectangle playerRec, List<Slime> slimeList, List<Plort> plortsList,
+        List<FruitVeggie> fruitVeggieList)
     {
+        Hunger += (int)gameTime.ElapsedGameTime.TotalSeconds;
         Rectangle collidedSlimeRec = new();
         UpdateAnimator(gameTime);
-        var outputOfChecking = CheckForCollisionsWithSlimes(slimeList);
+        var outputOfSlimesChecking = CheckForCollisionsWithSlimes(slimeList);
+        var outputOfFoodChecking = CheckForCollisionsWithFood(fruitVeggieList);
         
-        if (outputOfChecking.Item1)
+        if (outputOfSlimesChecking.Item1)
         {
             IsVacuumed = false;
             isThrowed = false;
             isCollidingWithSlime = true;
-            collidedSlimeRec = outputOfChecking.Item2;
+            collidedSlimeRec = outputOfSlimesChecking.Item2;
         }
         else
         {
             isCollidingWithSlime = false;
         }
+
+        if (!hasCollidedWithFood && Hunger >= 30)
+        {
+
+            if (outputOfFoodChecking.Item1)
+            {
+                hasCollidedWithFood = true;
+                food = outputOfFoodChecking.Item2;
+                CatchFood();
+            }
+            else
+            {
+                hasCollidedWithFood = false;
+            }
+        }
+
+        if (isEating)
+        {
+            CatchFood();
+            eatingTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (eatingTimer >= eatingTime)
+            {
+                EatFood(plortsList, fruitVeggieList);
+            }
+        }
+        
 
         if (isCollidingWithSlime)
         {
@@ -81,5 +118,54 @@ public class Slime(
         }
 
         return (collision, collidedRectangle);
+    }
+
+    public new (bool, FruitVeggie) CheckForCollisionsWithFood(List<FruitVeggie> fruitVeggieList)
+    {
+        bool collision = false;
+        FruitVeggie collidedFood = null;
+        foreach (var fruitVeggie in fruitVeggieList)
+        {
+            if (GetCollisionRectangle().Contains(fruitVeggie.GetCollisionRectangle()))
+            {
+                collision = true;
+                collidedFood = fruitVeggie;
+            }
+
+            collidedFood = fruitVeggie;
+        }
+        return (collision, collidedFood);
+    }
+
+    private void CatchFood()
+    {
+        food.isThrowed = false;
+        food.IsVacuumed = false;
+        Rectangle slimeCollRec = GetCollisionRectangle();
+        isEating = true;
+        food.destinationRectangle.X = slimeCollRec.X + slimeCollRec.Width / 2 - food.destinationRectangle.Width / 2;
+        food.destinationRectangle.Y = slimeCollRec.Y + slimeCollRec.Height / 2 - food.destinationRectangle.Height / 2;
+        Console.WriteLine(food.destinationRectangle);
+    }
+
+    private void EatFood(List<Plort> plortsList, List<FruitVeggie> fruitVeggiesList)
+    {
+        Hunger = 0;
+        isEating = false;
+        hasCollidedWithFood = false;
+        fruitVeggiesList.Remove(food);
+        DropPlort(slimeID + 11, plortsList);
+    }
+
+    private void DropPlort(int plortID, List<Plort> plortsList)
+    {
+        Texture2D plortTexture = plortsTexs[plortID];
+        Plort droppedPlort = new Plort(plortID, plortTexture,
+            new Rectangle(destinationRectangle.X + destinationRectangle.Width / 2, destinationRectangle.Y, 
+                plortTexture.Width, plortTexture.Height),
+            new Rectangle(0, 0, plortTexture.Width, plortTexture.Height), 2);
+        Random rnd = new Random();
+        droppedPlort.ThrowPlort(rnd.Next(1, 5));
+        plortsList.Add(droppedPlort);
     }
 }

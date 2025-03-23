@@ -27,7 +27,6 @@ public class Plort(
 
     public new void Update(GameTime gameTime, Rectangle playerRec, List<Slime> slimeList, List<Plort> plortsList)
     {
-        Console.WriteLine(isThrowed);
         Rectangle collidedObjectRec = new();
         var outputOfChecking = CheckForCollisionsWithSlimesPlorts(slimeList, plortsList);
         
@@ -78,7 +77,6 @@ public class Plort(
                     collidedRectangle = plort.GetCollisionRectangle();
                     isThrowed = false;
                     plort.isThrowed = false;
-                    Console.WriteLine("Plort has collided with plort");
                 }
         }
         foreach (var slime in slimeList)
@@ -88,7 +86,6 @@ public class Plort(
                 collision = true;
                 collidedRectangle = slime.GetCollisionRectangle();
                 isThrowed = false;
-                Console.WriteLine("Plort has collided with slime");
             }
         }
         return (collision, collidedRectangle);

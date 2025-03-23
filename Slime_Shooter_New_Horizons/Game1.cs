@@ -53,11 +53,10 @@ public class Game1 : Game
         // UI
         itemsNames = new List<string>()
         {
-            "Deep Nothingness", 
             // Slimes
-            "Pink Slime", "Rock Slime", "Tabby Slime", "Fosfor Slime", "Honey Slime", "", "", "", "", "",
+            "Deep Nothingness", "Pink Slime", "Rock Slime", "Tabby Slime", "Fosfor Slime", "Honey Slime", "", "", "", "", "",
             // Plorts
-            "", "Pink Plort", "Rock Plort", "", "", "", "", "", "", "",
+            "", "Pink Plort", "Rock Plort", "Tabby Plort", "Fosfor Plort", "Honey Plort", "", "", "", "",
             // Fruits and veggies
             "", "Slivka", "Yahoda", "Mrkva", "Paradayka"
         };
@@ -77,7 +76,8 @@ public class Game1 : Game
             new Rectangle(),
             // Plorts
             new Rectangle(), new Rectangle(28, 22, 10, 10), new Rectangle(51, 22, 10, 10), 
-            new Rectangle(), new Rectangle(), new Rectangle(), new Rectangle(), new Rectangle(), new Rectangle(), new Rectangle(),
+            new Rectangle(72, 22, 10, 10), new Rectangle(94, 22, 10, 10), new Rectangle(116, 22, 10, 10), 
+            new Rectangle(), new Rectangle(), new Rectangle(), new Rectangle(),
             // Fruits and vegies
             new Rectangle(), new Rectangle(30, 44, 6, 8), new Rectangle(51, 44, 8, 9),
             new Rectangle(74, 44, 6, 12), new Rectangle(95, 44, 8, 9)
@@ -243,7 +243,9 @@ public class Game1 : Game
             null,
             Content.Load<Texture2D>("pink_plort"),
             Content.Load<Texture2D>("rock_plort"),
-            null, null, null, null, null, null, null,
+            Content.Load<Texture2D>("tabby_plort"), 
+            Content.Load<Texture2D>("phospor_plort"),
+            Content.Load<Texture2D>("honey_plort"), null, null, null, null,
             // Fruits and veggies
             null,
             Content.Load<Texture2D>("slivka_fruit"),
@@ -292,7 +294,7 @@ public class Game1 : Game
         if (slimeList != null)
             foreach (var slime in slimeList)
             {
-                slime.Update(gameTime, player.GetCollisionRectangle(), slimeList);
+                slime.Update(gameTime, player.GetCollisionRectangle(), slimeList, plortsList, fruitsVeggiesList);
             }
 
         if (plortsList != null)

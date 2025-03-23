@@ -52,11 +52,11 @@ public class Inventory : UI
     // Create blank inventory, list with 4 slots, each slot has and itemID and amount of that item
     private void CreateInventory()
     {
-        inventorySlots.Add(new List<int>(){3, 10}); // itemID, amount of item
+        inventorySlots.Add(new List<int>(){2, 10}); // itemID, amount of item
+        slotsRectangles.Add(new Rectangle());
+        inventorySlots.Add(new List<int>(){3, 10});
         slotsRectangles.Add(new Rectangle());
         inventorySlots.Add(new List<int>(){4, 10});
-        slotsRectangles.Add(new Rectangle());
-        inventorySlots.Add(new List<int>(){13, 10});
         slotsRectangles.Add(new Rectangle());
         inventorySlots.Add(new List<int>(){23, 10});
         slotsRectangles.Add(new Rectangle());

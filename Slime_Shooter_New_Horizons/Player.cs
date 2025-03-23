@@ -14,6 +14,7 @@ public class Player : Animator
     public bool IsRightButtonPressed;
         
     private float defaultSpeed = 0.3f;
+    private int lastScrollWheel;
 
     private List<List<List<Rectangle>>> objectsColRecs;
 
@@ -105,6 +106,21 @@ public class Player : Animator
         if (keyboardState.IsKeyDown(Keys.C))
             ShowCollider();
         
+        if (Mouse.GetState().ScrollWheelValue > lastScrollWheel)
+        {
+            if (inventory.activeSlot != 0)
+            {
+                inventory.ChangeActiveSlot(inventory.activeSlot + 1 - 1);
+            }
+                
+        }
+        else if (Mouse.GetState().ScrollWheelValue < lastScrollWheel)
+            if (inventory.activeSlot != 3)
+            {
+                inventory.ChangeActiveSlot(inventory.activeSlot + 1 + 1);
+            }
+                
+            
         if (keyboardState.IsKeyDown(Keys.D1))
             inventory.ChangeActiveSlot(1);
         else if (keyboardState.IsKeyDown(Keys.D2))
@@ -113,7 +129,8 @@ public class Player : Animator
             inventory.ChangeActiveSlot(3);
         else if (keyboardState.IsKeyDown(Keys.D4))
             inventory.ChangeActiveSlot(4);
-            
+
+        lastScrollWheel = Mouse.GetState().ScrollWheelValue;
     }
 
     private List<Rectangle> CreateVacuumConeRecs(Vector2 mousePos, Vector2 screenRes)
@@ -213,7 +230,7 @@ public class Player : Animator
                     int availableSlot = inventory.WhichSlotIsAvailable(fruitVeggie.fruitVeggieID);
                     if (GetCollisionRectangle().Intersects(fruitVeggie.GetCollisionRectangle()) && availableSlot != 69)
                     {
-                        Console.WriteLine("Plort is vacuumed");
+                        Console.WriteLine("Fruit or veggie is vacuumed");
                         inventory.UpdateInventory(availableSlot, fruitVeggie.fruitVeggieID, 1);
                         vacuumedFruitVeggieList.Add(fruitVeggie);
                     }
@@ -317,6 +334,7 @@ public class Player : Animator
             new Rectangle(destinationRectangle.X, destinationRectangle.Y, 22, 22),
             new Rectangle(0, 0, 22, 22), objectsColRecs[slimeID], 3);
         slime.slimeID = slimeID;
+        slime.plortsTexs = objectsTextures;
         slime.SetupAnimator(6, 6, new Vector2(22, 22));
         slime.ThrowSlime(QuadrantClicked(spawnPos, screenRes));
         slimeList.Add(slime);

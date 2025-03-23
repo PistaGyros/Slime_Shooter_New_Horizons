@@ -6,16 +6,21 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Slime_Shooter_New_Horizons;
 
-public class FruitVeggie(
-    int fruitVeggieId,
-    Texture2D texture,
-    Rectangle destinationRectangle,
-    Rectangle sourceRectangle,
-    float scaleMultiplier)
-    : Sprite(texture, destinationRectangle, sourceRectangle, scaleMultiplier)
+public class FruitVeggie : Sprite
 {
-    public int fruitVeggieID = fruitVeggieId;
+    public int fruitVeggieID;
     public bool isCollidingWithObject;
+    
+    
+    public FruitVeggie(int fruitVeggieId,
+        Texture2D texture,
+        Rectangle destinationRectangle,
+        Rectangle sourceRectangle,
+        float scaleMultiplier)
+        : base(texture, destinationRectangle, sourceRectangle, scaleMultiplier)
+    {
+        this.fruitVeggieID = fruitVeggieId;
+    }
 
     public void ThrowFruitVeggie(int quadrantSpawned)
     {
@@ -67,6 +72,7 @@ public class FruitVeggie(
     {
         bool collision = false;
         Rectangle collidedRectangle = new Rectangle();
+        
         foreach (var fruitVeggie in fruitVeggiesList)
         {
             if (this != fruitVeggie)
@@ -77,7 +83,6 @@ public class FruitVeggie(
                     collidedRectangle = fruitVeggie.GetCollisionRectangle();
                     isThrowed = false;
                     fruitVeggie.isThrowed = false;
-                    Console.WriteLine("FruitVeggie has collided with fruitVeggie");
                 }
             }
         }
