@@ -27,6 +27,7 @@ public class Game1 : Game
     
     private List<Slime> slimeList;
     private List<Plort> plortsList;
+    private List<FruitVeggie> fruitsVeggiesList;
 
     private FollowCamera followCamera;
 
@@ -217,6 +218,7 @@ public class Game1 : Game
         
         slimeList = new List<Slime>();
         plortsList = new List<Plort>();
+        fruitsVeggiesList = new List<FruitVeggie>();
 
         base.Initialize();
     }
@@ -281,7 +283,7 @@ public class Game1 : Game
 
         // TODO: Add your update logic here
         
-        player.Update(gameTime, slimeList, plortsList, followCamera.position, 
+        player.Update(gameTime, slimeList, plortsList, fruitsVeggiesList, followCamera.position, 
             new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
         
         followCamera.FollowTarget(player.destinationRectangle,
@@ -298,6 +300,14 @@ public class Game1 : Game
             foreach (var plort in plortsList)
             {
                 plort.Update(gameTime, player.destinationRectangle, slimeList, plortsList);
+            }
+        }
+
+        if (fruitsVeggiesList != null)
+        {
+            foreach (var fruitVeggie in fruitsVeggiesList)
+            {
+                fruitVeggie.Update(gameTime, player.destinationRectangle, fruitsVeggiesList);
             }
         }
         
@@ -325,6 +335,14 @@ public class Game1 : Game
             foreach (var plort in plortsList)
             {
                 plort.Draw(_spriteBatch, followCamera.position);
+            }
+        }
+
+        if (fruitsVeggiesList != null)
+        {
+            foreach (var fruitVeggie in fruitsVeggiesList)
+            {
+                fruitVeggie.Draw(_spriteBatch, followCamera.position);
             }
         }
         

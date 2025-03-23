@@ -5,17 +5,17 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Slime_Shooter_New_Horizons;
 
-public class Slime : Animator
+public class Slime(
+    Texture2D texture,
+    Rectangle destinationRectangle,
+    Rectangle sourceRectangle,
+    List<List<Rectangle>> objectsColRecs,
+    float scaleMultiplier)
+    : Animator(texture, destinationRectangle, sourceRectangle, objectsColRecs, scaleMultiplier)
 {
     public int slimeID;
     private bool isCollidingWithSlime = false;
 
-
-    public Slime(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle,
-        List<List<Rectangle>> objectsColRecs, float scaleMultiplier) :
-        base(texture, destinationRectangle, sourceRectangle, objectsColRecs, scaleMultiplier)
-    {
-    }
 
     public void ThrowSlime(int quadrantSpawned)
     {

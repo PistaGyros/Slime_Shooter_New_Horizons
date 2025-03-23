@@ -34,7 +34,8 @@ public class Player : Animator
     
     
     
-    public new virtual void Update(GameTime gameTime, List<Slime> slimeList, List<Plort> plortsList, Vector2 offset, Vector2 screenRes)
+    public new virtual void Update(GameTime gameTime, List<Slime> slimeList, List<Plort> plortsList, 
+        List<FruitVeggie> fruitsVeggiesList, Vector2 offset, Vector2 screenRes)
     {
         KeyboardState keyboardState = Keyboard.GetState();
         int changeY = 0;
@@ -49,11 +50,7 @@ public class Player : Animator
             changeY += (int)(defaultSpeed * gameTime.ElapsedGameTime.Milliseconds);
         }
         destinationRectangle.Y += changeY;
-        if (CheckForCollisionsWithSlimes(slimeList))
-        {
-            Console.WriteLine("Player collided with slime");
-            destinationRectangle.Y -= changeY;
-        }
+        
 
 
         int changeX = 0;
@@ -68,11 +65,7 @@ public class Player : Animator
             changeX += (int)(defaultSpeed * gameTime.ElapsedGameTime.Milliseconds);
         }
         destinationRectangle.X += changeX;
-        if (CheckForCollisionsWithSlimes(slimeList))
-        {
-            Console.WriteLine("Player collided with slime");
-            destinationRectangle.X -= changeX;
-        }
+        
 
         // VACUUM
         if (Mouse.GetState().RightButton == ButtonState.Pressed)
@@ -103,11 +96,11 @@ public class Player : Animator
                 inventory.ChangeActiveSlot(clickedSlot + 1);
             else if (slimeShootTimer <= 0 && Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
-                slimeShootTimer = 0.25f;
-                Shoot(slimeList, plortsList, mousePos, screenRes);
+                slimeShootTimer = 0.5f;
+                Shoot(slimeList, plortsList, fruitsVeggiesList, mousePos, screenRes);
             }
         }    
-        slimeShootTimer -= gameTime.ElapsedGameTime.Milliseconds * 0.001f;
+        slimeShootTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
         
         if (keyboardState.IsKeyDown(Keys.C))
             ShowCollider();
@@ -250,7 +243,8 @@ public class Player : Animator
         }
     }
 
-    private void Shoot(List<Slime> slimes, List<Plort> plorts, Vector2 mousePos, Vector2 screenRes)
+    private void Shoot(List<Slime> slimes, List<Plort> plorts, List<FruitVeggie> fruitsVeggies, Vector2 mousePos, 
+        Vector2 screenRes)
     {
         int activeSlot = inventory.activeSlot;
         if (inventory.inventorySlots[activeSlot][1] >= 1)
@@ -258,7 +252,7 @@ public class Player : Animator
             // Shoot an item from active slot
             int objectID = inventory.inventorySlots[activeSlot][0];
             // TODO: add feature to be able to throw any item from inventory
-            DecideWhatTypeOfObjectToShoot(objectID, slimes, plorts, mousePos, screenRes);
+            DecideWhatTypeOfObjectToShoot(objectID, slimes, plorts, fruitsVeggies, mousePos, screenRes);
             inventory.UpdateInventory(activeSlot, inventory.inventorySlots[activeSlot][0], -1);
             
             // Check if the slot is not empty now
@@ -270,14 +264,15 @@ public class Player : Animator
         }
     }
 
-    private void DecideWhatTypeOfObjectToShoot(int objectID, List<Slime> slimes, List<Plort> plortsList, Vector2 mousePos, Vector2 screenRes)
+    private void DecideWhatTypeOfObjectToShoot(int objectID, List<Slime> slimes, List<Plort> plortsList, 
+        List<FruitVeggie> fruitVeggiesList, Vector2 mousePos, Vector2 screenRes)
     {
         if (objectID > 0 && objectID < 10)
             SpawnSlime(objectsTextures[objectID], slimes, mousePos, screenRes, objectID);
         else if (objectID > 9 && objectID < 21)
             SpawnPlort(objectsTextures[objectID], plortsList, mousePos, screenRes, objectID);
-        else if (objectID > 20 && objectID < 31){}
-            //SpawnFruitOrVeggie();
+        else if (objectID > 20 && objectID < 31)
+            SpawnFruitOrVeggie(objectsTextures[objectID], fruitVeggiesList, mousePos, screenRes, objectID);
     }
     
 
@@ -301,9 +296,14 @@ public class Player : Animator
         plortsList.Add(plort);
     }
 
-    private void SpawnFruitOrVeggie(Texture2D fruitVeggieTex, List<FruitVeggie> fruitVeggieList)
+    private void SpawnFruitOrVeggie(Texture2D fruitVeggieTex, List<FruitVeggie> fruitVeggieList, Vector2 spawnPos, 
+        Vector2 screenRes, int objectID)
     {
-        
+        FruitVeggie fruitVeggie = new FruitVeggie(objectID, fruitVeggieTex, 
+            new Rectangle(destinationRectangle.X, destinationRectangle.Y, fruitVeggieTex.Width, fruitVeggieTex.Height),
+            new Rectangle(0, 0, fruitVeggieTex.Width, fruitVeggieTex.Height), 2);
+        fruitVeggie.ThrowFruitVeggie(QuadrantClicked(spawnPos, screenRes));
+        fruitVeggieList.Add(fruitVeggie);
     }
     
 

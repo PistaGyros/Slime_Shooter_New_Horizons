@@ -79,7 +79,7 @@ public class Sprite : Physics
         spriteBatch.Draw(texture, dest, sourceRectangle, Color.White);
     }
     
-    public Rectangle GetCollisionRectangle()
+    public virtual Rectangle GetCollisionRectangle()
     {
         return new Rectangle(destinationRectangle.X + colliderRectangle.X, destinationRectangle.Y + colliderRectangle.Y,
             colliderRectangle.Width, colliderRectangle.Height);

@@ -6,17 +6,17 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Slime_Shooter_New_Horizons;
 
-public class Plort : Sprite
+public class Plort(
+    int plortId,
+    Texture2D texture,
+    Rectangle destinationRectangle,
+    Rectangle sourceRectangle,
+    float scaleMultiplier)
+    : Sprite(texture, destinationRectangle, sourceRectangle, scaleMultiplier)
 {
-    public int plortID;
+    public int plortID = plortId;
     public bool isCollidingWithObject;
-    
-    public Plort(int plortID, Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle,
-        float scaleMultiplier) : base(texture, destinationRectangle, sourceRectangle, scaleMultiplier)
-    {
-        this.plortID = plortID;
-    }
-    
+
     public void ThrowPlort(int quadrantSpawned)
     {
         Throw(destinationRectangle);
@@ -53,7 +53,7 @@ public class Plort : Sprite
         }
     }
     
-    private void BounceAwayFromSlimePlortFruitVeggie(Rectangle badObject)
+    public new void BounceAwayFromSlimePlortFruitVeggie(Rectangle badObject)
     {
         Vector2 centerDestRec = new Vector2(GetCollisionRectangle().X + GetCollisionRectangle().Width / 2,
             GetCollisionRectangle().Y + GetCollisionRectangle().Height / 2);
@@ -63,7 +63,7 @@ public class Plort : Sprite
         destinationRectangle.Y += (int)pointVec.Y;
     }
     
-    public (bool, Rectangle) CheckForCollisionsWithSlimesPlortsFruitsVeggies(
+    public new (bool, Rectangle) CheckForCollisionsWithSlimesPlortsFruitsVeggies(
         List<Slime> slimeList, List<Plort> plortsList)
     {
         bool collision = false;

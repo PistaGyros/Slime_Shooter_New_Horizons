@@ -90,10 +90,11 @@ public class Animator : Sprite
     
     public new Rectangle GetCollisionRectangle()
     {
-        return new Rectangle(destinationRectangle.X + objectColRecs[currentRow][colPos].X * (int)scaleMultiplier,
-            destinationRectangle.Y + objectColRecs[currentRow][colPos].Y * (int)scaleMultiplier,
-            objectColRecs[currentRow][colPos].Width * (int)scaleMultiplier, 
-            objectColRecs[currentRow][colPos].Height * (int)scaleMultiplier);
+        Rectangle colliderRec = objectColRecs[currentRow][colPos];
+        return new Rectangle(destinationRectangle.X + colliderRec.X * (int)scaleMultiplier,
+            destinationRectangle.Y + colliderRec.Y * (int)scaleMultiplier,
+            colliderRec.Width * (int)scaleMultiplier, 
+            colliderRec.Height * (int)scaleMultiplier);
     }
 
     public new void Update(GameTime gameTime)
