@@ -5,13 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Slime_Shooter_New_Horizons;
 
-public class Slime(
-    Texture2D texture,
-    Rectangle destinationRectangle,
-    Rectangle sourceRectangle,
-    List<List<Rectangle>> objectsColRecs,
-    float scaleMultiplier)
-    : Animator(texture, destinationRectangle, sourceRectangle, objectsColRecs, scaleMultiplier)
+public class Slime : Animator
 {
     public int slimeID;
     private bool isCollidingWithSlime = false;
@@ -24,6 +18,17 @@ public class Slime(
     private float eatingTimer = 0.0f;
     private FruitVeggie food;
 
+    
+    public Slime(int slimeID,
+        Texture2D texture,
+        Rectangle destinationRectangle,
+        Rectangle sourceRectangle,
+        List<List<Rectangle>> objectsColRecs,
+        float scaleMultiplier) : base(texture, destinationRectangle, sourceRectangle, objectsColRecs, scaleMultiplier)
+    {
+        this.slimeID = slimeID;
+    }
+    
 
     public void ThrowSlime(int quadrantSpawned)
     {
@@ -34,14 +39,13 @@ public class Slime(
     }
     
 
-    public new void Update(GameTime gameTime, Rectangle playerRec, List<Slime> slimeList, List<Plort> plortsList,
-        List<FruitVeggie> fruitVeggieList)
+    public new void Update(GameTime gameTime, Rectangle playerRec)
     {
         Hunger += (int)gameTime.ElapsedGameTime.TotalSeconds;
         Rectangle collidedSlimeRec = new();
         UpdateAnimator(gameTime);
-        var outputOfSlimesChecking = CheckForCollisionsWithSlimes(slimeList);
-        var outputOfFoodChecking = CheckForCollisionsWithFood(fruitVeggieList);
+        var outputOfSlimesChecking = CheckForCollisionsWithSlimes();
+        var outputOfFoodChecking = CheckForCollisionsWithFood();
         
         if (outputOfSlimesChecking.Item1)
         {
@@ -76,7 +80,7 @@ public class Slime(
             eatingTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (eatingTimer >= eatingTime)
             {
-                EatFood(plortsList, fruitVeggieList);
+                EatFood();
             }
         }
         
@@ -102,11 +106,11 @@ public class Slime(
         destinationRectangle.Y += (int)pointVec.Y;
     }
     
-    public new (bool, Rectangle) CheckForCollisionsWithSlimes(List<Slime> slimeList)
+    public new (bool, Rectangle) CheckForCollisionsWithSlimes()
     {
         bool collision = false;
         Rectangle collidedRectangle = new Rectangle();
-        foreach (var slime in slimeList)
+        foreach (var slime in slimesList)
         {
             if (this != slime)
                 if(GetCollisionRectangle().Intersects(slime.GetCollisionRectangle()))
@@ -120,11 +124,11 @@ public class Slime(
         return (collision, collidedRectangle);
     }
 
-    public new (bool, FruitVeggie) CheckForCollisionsWithFood(List<FruitVeggie> fruitVeggieList)
+    public new (bool, FruitVeggie) CheckForCollisionsWithFood()
     {
         bool collision = false;
         FruitVeggie collidedFood = null;
-        foreach (var fruitVeggie in fruitVeggieList)
+        foreach (var fruitVeggie in fruitsVeggiesList)
         {
             if (GetCollisionRectangle().Contains(fruitVeggie.GetCollisionRectangle()))
             {
@@ -148,16 +152,16 @@ public class Slime(
         Console.WriteLine(food.destinationRectangle);
     }
 
-    private void EatFood(List<Plort> plortsList, List<FruitVeggie> fruitVeggiesList)
+    private void EatFood()
     {
         Hunger = 0;
         isEating = false;
         hasCollidedWithFood = false;
-        fruitVeggiesList.Remove(food);
-        DropPlort(slimeID + 11, plortsList);
+        fruitsVeggiesList.Remove(food);
+        DropPlort(slimeID + 11);
     }
 
-    private void DropPlort(int plortID, List<Plort> plortsList)
+    private void DropPlort(int plortID)
     {
         Texture2D plortTexture = plortsTexs[plortID];
         Plort droppedPlort = new Plort(plortID, plortTexture,

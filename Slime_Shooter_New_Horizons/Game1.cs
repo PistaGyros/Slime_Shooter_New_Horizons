@@ -28,11 +28,13 @@ public class Game1 : Game
     private List<Slime> slimeList;
     private List<Plort> plortsList;
     private List<FruitVeggie> fruitsVeggiesList;
+    private List<int> sellPrices;
 
     private FollowCamera followCamera;
 
     private Player player;
     private Corral corral;
+    private PlortCollector plortSellPoint;
 
     public Game1()
     {
@@ -81,6 +83,11 @@ public class Game1 : Game
             // Fruits and vegies
             new Rectangle(), new Rectangle(30, 44, 6, 8), new Rectangle(51, 44, 8, 9),
             new Rectangle(74, 44, 6, 12), new Rectangle(95, 44, 8, 9)
+        };
+
+        sellPrices = new List<int>()
+        {
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 22, 22, 22, 45
         };
 
         
@@ -266,8 +273,9 @@ public class Game1 : Game
         SpriteFont uiFont = Content.Load<SpriteFont>("Bell MT");
         player.CreateInventory(screenRes, itemsAtlas, inventoryTex, uiFont, itemsID, itemsIDTexturesRec);
         player.objectsTextures = listTextures;
+        player.SetLists(slimeList, plortsList, fruitsVeggiesList);
         
-
+        // Init of corral
         Texture2D corralTex = Content.Load<Texture2D>("corral_deactivated");
         Texture2D forceFieldTexHorizontal = Content.Load<Texture2D>("force_field_corral_prototype_anim");
         Texture2D forceFieldTexVertical = Content.Load<Texture2D>("force_field_corral_prototype_anim_vertical");
@@ -275,7 +283,16 @@ public class Game1 : Game
             new Rectangle(0, 0, corralTex.Width, corralTex.Height),
             new Rectangle(0, 0, corralTex.Width, corralTex.Height),
             3, colliderTexture, forceFieldTexHorizontal, forceFieldTexVertical);
-
+        
+        // Init of plort collectors/sell point
+        Texture2D plortCollectorTex = Content.Load<Texture2D>("plort_collector");
+        plortSellPoint = new PlortCollector(plortCollectorTex,
+            new Rectangle(50, -300, plortCollectorTex.Width, plortCollectorTex.Height),
+            new Rectangle(0, 0, plortCollectorTex.Width, plortCollectorTex.Height), 3);
+        plortSellPoint.player = player;
+        plortSellPoint.plortsList = plortsList;
+        plortSellPoint.sellPrices = sellPrices;
+        
     }
 
     protected override void Update(GameTime gameTime)
@@ -285,8 +302,7 @@ public class Game1 : Game
 
         // TODO: Add your update logic here
         
-        player.Update(gameTime, slimeList, plortsList, fruitsVeggiesList, followCamera.position, 
-            new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
+        player.Update(gameTime, new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
         
         followCamera.FollowTarget(player.GetCollisionRectangle(),
             new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
@@ -294,14 +310,14 @@ public class Game1 : Game
         if (slimeList != null)
             foreach (var slime in slimeList)
             {
-                slime.Update(gameTime, player.GetCollisionRectangle(), slimeList, plortsList, fruitsVeggiesList);
+                slime.Update(gameTime, player.GetCollisionRectangle());
             }
 
         if (plortsList != null)
         {
             foreach (var plort in plortsList)
             {
-                plort.Update(gameTime, player.GetCollisionRectangle(), slimeList, plortsList);
+                plort.Update(gameTime, player.GetCollisionRectangle());
             }
         }
 
@@ -309,11 +325,12 @@ public class Game1 : Game
         {
             foreach (var fruitVeggie in fruitsVeggiesList)
             {
-                fruitVeggie.Update(gameTime, player.GetCollisionRectangle(), fruitsVeggiesList);
+                fruitVeggie.Update(gameTime, player.GetCollisionRectangle());
             }
         }
         
         corral.Update(gameTime);
+        plortSellPoint.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -326,6 +343,8 @@ public class Game1 : Game
         
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
+        plortSellPoint.Draw(_spriteBatch, followCamera.position);
+        
         if (slimeList != null)
             foreach (var slime in slimeList)
             {

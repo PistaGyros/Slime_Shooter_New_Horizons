@@ -12,6 +12,10 @@ public class Sprite : Physics
     public Rectangle destinationRectangle, sourceRectangle, colliderRectangle;
     public float scaleMultiplier;
 
+    public List<Slime> slimesList;
+    public List<Plort> plortsList;
+    public List<FruitVeggie> fruitsVeggiesList;
+
     private Vector2 colliderSize;
     private Texture2D colliderTexture;
     private bool colliderVisible = false;
@@ -34,6 +38,13 @@ public class Sprite : Physics
         this.destinationRectangle = destinationRectangle;
         this.sourceRectangle = sourceRectangle;
         this.scaleMultiplier = scaleMultiplier;
+    }
+    
+    public void SetLists(List<Slime> slimesList, List<Plort> plortsList, List<FruitVeggie> fruitVeggiesList)
+    {
+        this.slimesList = slimesList;
+        this.plortsList = plortsList;
+        this.fruitsVeggiesList = fruitVeggiesList;
     }
     
     public void ShowCollider()

@@ -145,9 +145,9 @@ public class Animator : Sprite
         return new Rectangle((int)(colPos * size.X), (int)(actualRow * size.Y), (int)size.X, (int)size.Y);
     }
 
-    public bool CheckForCollisionsWithSlimes(List<Slime> slimeList)
+    public bool CheckForCollisionsWithSlimes()
     {
-        foreach (var slime in slimeList)
+        foreach (var slime in slimesList)
         {
             if (this != slime) continue;
             if(GetCollisionRectangle().Intersects(slime.GetCollisionRectangle()))

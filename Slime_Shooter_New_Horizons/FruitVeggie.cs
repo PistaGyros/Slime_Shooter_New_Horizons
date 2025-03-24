@@ -30,10 +30,10 @@ public class FruitVeggie : Sprite
         velocity *= DecideWhatinitQuadrant(quadrantSpawned);
     }
 
-    public new void Update(GameTime gameTime, Rectangle playerRec, List<FruitVeggie> fruitVeggiesList)
+    public new void Update(GameTime gameTime, Rectangle playerRec)
     {
         Rectangle collidedObjectRec = new();
-        var outputOfChecking = CheckForCollisionsWithFruitsVeggies(fruitVeggiesList);
+        var outputOfChecking = CheckForCollisionsWithFruitsVeggies();
         
         if (outputOfChecking.Item1)
         {
@@ -68,12 +68,12 @@ public class FruitVeggie : Sprite
         destinationRectangle.Y += (int)(pointVec.Y / 2);
     }
     
-    public new (bool, Rectangle) CheckForCollisionsWithFruitsVeggies(List<FruitVeggie> fruitVeggiesList)
+    public new (bool, Rectangle) CheckForCollisionsWithFruitsVeggies()
     {
         bool collision = false;
         Rectangle collidedRectangle = new Rectangle();
         
-        foreach (var fruitVeggie in fruitVeggiesList)
+        foreach (var fruitVeggie in fruitsVeggiesList)
         {
             if (this != fruitVeggie)
             {
