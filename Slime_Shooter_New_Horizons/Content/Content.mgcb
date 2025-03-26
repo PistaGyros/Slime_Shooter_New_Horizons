@@ -181,7 +181,7 @@
 /processorParam:TextureFormat=Color
 /build:pink_plort.png
 
-#begin pink_slime_jumping_spritesheet-export.png
+#begin pink_slime_new_spritesheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -191,9 +191,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:pink_slime_jumping_spritesheet-export.png
+/build:pink_slime_new_spritesheet.png
 
-#begin pink_slime_jumping_spritesheet.png
+#begin pink_slime_new_spritesheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -203,7 +203,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:pink_slime_jumping_spritesheet.png
+/build:pink_slime_new_spritesheet.png
 
 #begin pink_slime_new_spritesheet.png
 /importer:TextureImporter
@@ -228,18 +228,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:pink_slime_new.png
-
-#begin pink_slime.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:pink_slime.png
 
 #begin plort_collector.png
 /importer:TextureImporter

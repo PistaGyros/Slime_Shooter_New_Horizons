@@ -119,7 +119,7 @@ public class Animator : Sprite
             (int)offset.Y + destinationRectangle.Y,
             (int)(destinationRectangle.Width * scaleMultiplier),
             (int)(destinationRectangle.Height * scaleMultiplier));
-        
+
         spriteBatch.Draw(texture, dest, GetFrame(currentRow), Color.White);
     }
 

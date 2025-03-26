@@ -333,7 +333,7 @@ public class Player : Animator
             new Rectangle(0, 0, 22, 22), objectsColRecs[slimeID], 3);
         slime.plortsTexs = objectsTextures;
         slime.SetLists(slimesList, plortsList, fruitsVeggiesList);
-        slime.SetupAnimator(6, 6, new Vector2(22, 22));
+        slime.SetupAnimator(6, 6, new Vector2(22, 22), 0.9f);
         slime.ThrowSlime(QuadrantClicked(spawnPos, screenRes));
         slimesList.Add(slime);
     }

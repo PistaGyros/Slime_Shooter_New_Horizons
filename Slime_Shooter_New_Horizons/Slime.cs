@@ -18,6 +18,8 @@ public class Slime : Animator
     private float eatingTimer = 0.0f;
     private FruitVeggie food;
 
+    private SlimeOrientation ESlimeOrientation;
+    public SlimeStatus ESlimeStatus;
     
     public Slime(int slimeID,
         Texture2D texture,
@@ -93,6 +95,27 @@ public class Slime : Animator
         else if (!isCollidingWithSlime)
         {
             UpdateSprite(gameTime, playerRec);
+        }
+    }
+    
+    public new virtual void Draw(SpriteBatch spriteBatch, Vector2 offset)
+    {
+        Rectangle dest = new Rectangle(
+            (int)offset.X + destinationRectangle.X,
+            (int)offset.Y + destinationRectangle.Y,
+            (int)(destinationRectangle.Width * scaleMultiplier),
+            (int)(destinationRectangle.Height * scaleMultiplier));
+
+        switch (ESlimeOrientation)
+        {
+            case SlimeOrientation.Left:
+                spriteBatch.Draw(texture, dest, GetFrame(currentRow), Color.White,
+                    0f, Vector2.Zero, SpriteEffects.None, 0);
+                break;
+            case SlimeOrientation.Right:
+                spriteBatch.Draw(texture, dest, GetFrame(currentRow), Color.White,
+                    0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                break;
         }
     }
 
