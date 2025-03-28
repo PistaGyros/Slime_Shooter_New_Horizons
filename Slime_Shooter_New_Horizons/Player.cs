@@ -13,8 +13,12 @@ public class Player : Animator
 {
     public bool IsRightButtonPressed;
     public int coins = 0;
-        
+    public double Stamina = 100;
+    public double Health = 100;
+
+    private bool isWalking;
     private float defaultSpeed = 0.3f;
+    private float sprintSpeed;
     private int lastScrollWheel;
     
     private List<List<List<Rectangle>>> objectsColRecs;
@@ -24,6 +28,7 @@ public class Player : Animator
     
     private float slimeShootTimer;
     public Inventory inventory;
+    public StatusBars StatusBarsUi;
     
     public PlayerOrientation playerOrientation;
     
@@ -37,18 +42,27 @@ public class Player : Animator
     public new virtual void Update(GameTime gameTime, Vector2 screenRes)
     {
         KeyboardState keyboardState = Keyboard.GetState();
+        Console.WriteLine(Stamina);
+        
+        Sprint(gameTime, keyboardState);
+        
         int changeY = 0;
         if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
         {
             playerOrientation = PlayerOrientation.Up;
-            changeY -= (int)(defaultSpeed * gameTime.ElapsedGameTime.Milliseconds);
+            changeY -= (int)(defaultSpeed * sprintSpeed * gameTime.ElapsedGameTime.Milliseconds);
+            isWalking = true;
         }
         else if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
         {
             playerOrientation = PlayerOrientation.Down;
-            changeY += (int)(defaultSpeed * gameTime.ElapsedGameTime.Milliseconds);
+            changeY += (int)(defaultSpeed * sprintSpeed * gameTime.ElapsedGameTime.Milliseconds);
+            isWalking = true;
         }
+        else
+            isWalking = false;
         destinationRectangle.Y += changeY;
+        
         
 
 
@@ -56,12 +70,14 @@ public class Player : Animator
         if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
         {
             playerOrientation = PlayerOrientation.Left;
-            changeX -= (int)(defaultSpeed * gameTime.ElapsedGameTime.Milliseconds);
+            changeX -= (int)(defaultSpeed * sprintSpeed * gameTime.ElapsedGameTime.Milliseconds);
+            isWalking = true;
         }
         else if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
         {
             playerOrientation = PlayerOrientation.Right;
-            changeX += (int)(defaultSpeed * gameTime.ElapsedGameTime.Milliseconds);
+            changeX += (int)(defaultSpeed * sprintSpeed * gameTime.ElapsedGameTime.Milliseconds);
+            isWalking = true;
         }
         destinationRectangle.X += changeX;
         
@@ -129,6 +145,21 @@ public class Player : Animator
             inventory.ChangeActiveSlot(4);
 
         lastScrollWheel = Mouse.GetState().ScrollWheelValue;
+    }
+
+    private void Sprint(GameTime gameTime, KeyboardState keyboardState)
+    {
+        if (isWalking && Stamina > 0 && keyboardState.IsKeyDown(Keys.LeftShift))
+        {
+            sprintSpeed = 1.5f;
+            Stamina -= gameTime.TotalGameTime.TotalSeconds / 15;
+        }
+        else
+        {
+            if (Stamina < 100)
+                Stamina += gameTime.TotalGameTime.TotalSeconds / 10;
+            sprintSpeed = 1;
+        }
     }
 
     private List<Rectangle> CreateVacuumConeRecs(Vector2 mousePos, Vector2 screenRes)

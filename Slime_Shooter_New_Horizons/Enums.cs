@@ -25,7 +25,6 @@ public enum SlimeOrientation
 public enum SlimeStatus
 {
     Idle,
-    Walking,
-    Jumping,
-    BeingVacuumed
+    BeingVacuumed,
+    Jumping
 }

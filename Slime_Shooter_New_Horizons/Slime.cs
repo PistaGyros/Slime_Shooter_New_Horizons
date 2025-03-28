@@ -18,7 +18,7 @@ public class Slime : Animator
     private float eatingTimer = 0.0f;
     private FruitVeggie food;
 
-    private SlimeOrientation ESlimeOrientation;
+    public SlimeOrientation ESlimeOrientation;
     public SlimeStatus ESlimeStatus;
     
     public Slime(int slimeID,
@@ -115,6 +115,23 @@ public class Slime : Animator
             case SlimeOrientation.Right:
                 spriteBatch.Draw(texture, dest, GetFrame(currentRow), Color.White,
                     0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0);
+                break;
+        }
+    }
+
+    public void ChangeActiveAnimRow(SlimeStatus newSlimeStatus)
+    {
+        ESlimeStatus = newSlimeStatus;
+        switch (ESlimeStatus)
+        {
+            case SlimeStatus.Idle:
+                currentRow = 0;
+                break;
+            case SlimeStatus.BeingVacuumed:
+                currentRow = 1;
+                break;
+            case SlimeStatus.Jumping:
+                currentRow = 2;
                 break;
         }
     }
