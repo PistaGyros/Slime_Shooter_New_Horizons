@@ -18,6 +18,8 @@ public class Game1 : Game
     private Texture2D inventoryTex;
     private Texture2D colliderTexture;
     private List<Texture2D> listTextures;
+    private Texture2D staminaHealthFGTexture;
+    private Texture2D coinTex;
     private List<string> itemsNames;
     private Dictionary<int, string> itemsID;
     private List<Rectangle> itemsIDTexturesRec;
@@ -264,6 +266,8 @@ public class Game1 : Game
         colliderTexture = Content.Load<Texture2D>("collider_texture");
         inventoryTex = Content.Load<Texture2D>("inventory");
         itemsAtlas = Content.Load<Texture2D>("items_atlas");
+        staminaHealthFGTexture = Content.Load<Texture2D>("stamina_health_forGroundTex");
+        coinTex = Content.Load<Texture2D>("coin_tex");
         
         
         Texture2D playerTexture = Content.Load<Texture2D>("spr_player_1_left_idle");
@@ -272,6 +276,7 @@ public class Game1 : Game
             1, objectsColRecs);
         SpriteFont uiFont = Content.Load<SpriteFont>("Bell MT");
         player.CreateInventory(screenRes, itemsAtlas, inventoryTex, uiFont, itemsID, itemsIDTexturesRec);
+        player.CreateStatusBar(screenRes, staminaHealthFGTexture, staminaHealthFGTexture, coinTex, uiFont);
         player.objectsTextures = listTextures;
         player.SetLists(slimeList, plortsList, fruitsVeggiesList);
         
@@ -377,6 +382,7 @@ public class Game1 : Game
         }
         
         player.inventory.Draw(_spriteBatch, screenRes);
+        player.StatusBarsUi.Draw(_spriteBatch);
         
         _spriteBatch.End();
 

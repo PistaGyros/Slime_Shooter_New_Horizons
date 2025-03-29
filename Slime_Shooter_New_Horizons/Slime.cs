@@ -189,7 +189,6 @@ public class Slime : Animator
         isEating = true;
         food.destinationRectangle.X = slimeCollRec.X + slimeCollRec.Width / 2 - food.destinationRectangle.Width / 2;
         food.destinationRectangle.Y = slimeCollRec.Y + slimeCollRec.Height / 2 - food.destinationRectangle.Height / 2;
-        Console.WriteLine(food.destinationRectangle);
     }
 
     private void EatFood()

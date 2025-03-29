@@ -13,12 +13,15 @@ public class Player : Animator
 {
     public bool IsRightButtonPressed;
     public int coins = 0;
+    private double staminaMax = 100;
     public double Stamina = 100;
+    private double healthMax = 100;
     public double Health = 100;
 
     private bool isWalking;
     private float defaultSpeed = 0.3f;
     private float sprintSpeed;
+    private double sprintDelay;
     private int lastScrollWheel;
     
     private List<List<List<Rectangle>>> objectsColRecs;
@@ -42,10 +45,6 @@ public class Player : Animator
     public new virtual void Update(GameTime gameTime, Vector2 screenRes)
     {
         KeyboardState keyboardState = Keyboard.GetState();
-        Console.WriteLine(Stamina);
-        
-        Sprint(gameTime, keyboardState);
-        
         int changeY = 0;
         if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
         {
@@ -80,6 +79,7 @@ public class Player : Animator
             isWalking = true;
         }
         destinationRectangle.X += changeX;
+        Sprint(gameTime, keyboardState);
         
 
         // VACUUM
@@ -145,6 +145,8 @@ public class Player : Animator
             inventory.ChangeActiveSlot(4);
 
         lastScrollWheel = Mouse.GetState().ScrollWheelValue;
+        
+        StatusBarsUi.Update(gameTime, coins, (int)Stamina, (int)Health);
     }
 
     private void Sprint(GameTime gameTime, KeyboardState keyboardState)
@@ -152,12 +154,19 @@ public class Player : Animator
         if (isWalking && Stamina > 0 && keyboardState.IsKeyDown(Keys.LeftShift))
         {
             sprintSpeed = 1.5f;
-            Stamina -= gameTime.TotalGameTime.TotalSeconds / 15;
+            Stamina -= (double)gameTime.ElapsedGameTime.Milliseconds / 50;
         }
         else
         {
-            if (Stamina < 100)
-                Stamina += gameTime.TotalGameTime.TotalSeconds / 10;
+            sprintDelay += (double)gameTime.ElapsedGameTime.Milliseconds / 1000;
+            Console.WriteLine(sprintDelay);
+            if (sprintDelay > 3 && Stamina < 100)
+                Stamina += (double)gameTime.ElapsedGameTime.Milliseconds / 25;
+            else if (Stamina >= staminaMax)
+            {
+                sprintDelay = 0;
+                Stamina = staminaMax;
+            }
             sprintSpeed = 1;
         }
     }
@@ -398,6 +407,13 @@ public class Player : Animator
                 itemsAtlas.Width, itemsAtlas.Height),
             new Rectangle((int)(screenRes.X / 2 - 150f), (int)(screenRes.Y - 100f), itemsAtlas.Width, itemsAtlas.Height),
             inventoryTex, itemsAtlas, font, itemsNames, itemsIDTexturesRec);
+    }
+
+    public void CreateStatusBar(Vector2 screenRes, Texture2D bgTexture, Texture2D fgTexture, Texture2D coinTex,
+        SpriteFont font)
+    {
+        Vector2 statusBarPos = new Vector2(screenRes.X - 300, screenRes.Y - 100f);
+        StatusBarsUi = new StatusBars(statusBarPos, bgTexture, fgTexture, font, coinTex);
     }
     
     private int QuadrantClicked(Vector2 clickPos, Vector2 screenRes)
