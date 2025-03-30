@@ -2,10 +2,10 @@
 
 public enum PlayerOrientation
 {
-    Down,
     Right,
+    Up,
     Left,
-    Up
+    Down
 }
 
 public enum PlayerStatus
@@ -19,7 +19,7 @@ public enum PlayerStatus
 public enum SlimeOrientation
 {
     Left,
-    Right
+    Right,
 }
 
 public enum SlimeStatus
@@ -27,4 +27,13 @@ public enum SlimeStatus
     Idle,
     BeingVacuumed,
     Jumping
+}
+
+public enum PlotTypes
+{
+    Empty,
+    Corral,
+    Garden,
+    Pond,
+    Storage
 }

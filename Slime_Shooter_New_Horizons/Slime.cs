@@ -9,6 +9,7 @@ public class Slime : Animator
 {
     public int slimeID;
     private bool isCollidingWithSlime = false;
+    private bool isWithinCorral;
     public List<Texture2D> plortsTexs = new List<Texture2D>();
 
     public int Hunger = 30;

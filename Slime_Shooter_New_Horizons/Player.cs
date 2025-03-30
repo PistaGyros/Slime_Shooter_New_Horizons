@@ -12,6 +12,7 @@ namespace Slime_Shooter_New_Horizons;
 public class Player : Animator
 {
     public bool IsRightButtonPressed;
+    public bool canMove = true;
     public int coins = 0;
     private double staminaMax = 100;
     public double Stamina = 100;
@@ -23,17 +24,18 @@ public class Player : Animator
     private float sprintSpeed;
     private double sprintDelay;
     private int lastScrollWheel;
+    private float slimeShootTimer;
     
     private List<List<List<Rectangle>>> objectsColRecs;
 
     public Texture2D playerTexture;
     public List<Texture2D> objectsTextures;
     
-    private float slimeShootTimer;
     public Inventory inventory;
     public StatusBars StatusBarsUi;
     
     public PlayerOrientation playerOrientation;
+    public Rectangle interactRec;
     
     public Player(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle,
         float scaleMultiplier, List<List<List<Rectangle>>> objectsColRecs) : 
@@ -45,106 +47,109 @@ public class Player : Animator
     public new virtual void Update(GameTime gameTime, Vector2 screenRes)
     {
         KeyboardState keyboardState = Keyboard.GetState();
-        int changeY = 0;
-        if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
+        if (canMove)
         {
-            playerOrientation = PlayerOrientation.Up;
-            changeY -= (int)(defaultSpeed * sprintSpeed * gameTime.ElapsedGameTime.Milliseconds);
-            isWalking = true;
-        }
-        else if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
-        {
-            playerOrientation = PlayerOrientation.Down;
-            changeY += (int)(defaultSpeed * sprintSpeed * gameTime.ElapsedGameTime.Milliseconds);
-            isWalking = true;
-        }
-        else
-            isWalking = false;
-        destinationRectangle.Y += changeY;
-        
-        
-
-
-        int changeX = 0;
-        if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
-        {
-            playerOrientation = PlayerOrientation.Left;
-            changeX -= (int)(defaultSpeed * sprintSpeed * gameTime.ElapsedGameTime.Milliseconds);
-            isWalking = true;
-        }
-        else if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
-        {
-            playerOrientation = PlayerOrientation.Right;
-            changeX += (int)(defaultSpeed * sprintSpeed * gameTime.ElapsedGameTime.Milliseconds);
-            isWalking = true;
-        }
-        destinationRectangle.X += changeX;
-        Sprint(gameTime, keyboardState);
-        
-
-        // VACUUM
-        if (Mouse.GetState().RightButton == ButtonState.Pressed)
-        {
-            Vacuum(gameTime, screenRes);
-        }
-        else if (Mouse.GetState().RightButton == ButtonState.Released)
-        {
-            StopVacuum(screenRes);
-        }
-
-        if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-        {
-            Vector2 mousePos = Mouse.GetState().Position.ToVector2();
-            Rectangle clickRec = new Rectangle((int)mousePos.X, (int)mousePos.Y, 5, 5);
-            bool clickedOnSlot = false;
-            int clickedSlot = 0;
-            for (int i = 0; i < inventory.InventorySlotsSize; i++)
+            int changeY = 0;
+            if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
             {
-                if (inventory.slotsRectangles[i].Contains(clickRec))
+                playerOrientation = PlayerOrientation.Up;
+                changeY -= (int)(defaultSpeed * sprintSpeed * gameTime.ElapsedGameTime.Milliseconds);
+                isWalking = true;
+            }
+            else if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
+            {
+                playerOrientation = PlayerOrientation.Down;
+                changeY += (int)(defaultSpeed * sprintSpeed * gameTime.ElapsedGameTime.Milliseconds);
+                isWalking = true;
+            }
+            else
+                isWalking = false;
+            destinationRectangle.Y += changeY;
+
+
+            int changeX = 0;
+            if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
+            {
+                playerOrientation = PlayerOrientation.Left;
+                changeX -= (int)(defaultSpeed * sprintSpeed * gameTime.ElapsedGameTime.Milliseconds);
+                isWalking = true;
+            }
+            else if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
+            {
+                playerOrientation = PlayerOrientation.Right;
+                changeX += (int)(defaultSpeed * sprintSpeed * gameTime.ElapsedGameTime.Milliseconds);
+                isWalking = true;
+            }
+            destinationRectangle.X += changeX;
+            Sprint(gameTime, keyboardState);
+            
+            // VACUUM
+            if (Mouse.GetState().RightButton == ButtonState.Pressed)
+            {
+                Vacuum(gameTime, screenRes);
+            }
+            else if (Mouse.GetState().RightButton == ButtonState.Released)
+            {
+                StopVacuum(screenRes);
+            }
+
+            if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+            {
+                Vector2 mousePos = Mouse.GetState().Position.ToVector2();
+                Rectangle clickRec = new Rectangle((int)mousePos.X, (int)mousePos.Y, 5, 5);
+                bool clickedOnSlot = false;
+                int clickedSlot = 0;
+                for (int i = 0; i < inventory.InventorySlotsSize; i++)
                 {
-                    clickedOnSlot = true;
-                    clickedSlot = i;
-                    break;
+                    if (inventory.slotsRectangles[i].Contains(clickRec))
+                    {
+                        clickedOnSlot = true;
+                        clickedSlot = i;
+                        break;
+                    }
+                }
+                if (clickedOnSlot)
+                    inventory.ChangeActiveSlot(clickedSlot + 1);
+                else if (slimeShootTimer <= 0 && Mouse.GetState().LeftButton == ButtonState.Pressed)
+                {
+                    slimeShootTimer = 0.5f;
+                    Shoot(mousePos, screenRes);
                 }
             }
-            if (clickedOnSlot)
-                inventory.ChangeActiveSlot(clickedSlot + 1);
-            else if (slimeShootTimer <= 0 && Mouse.GetState().LeftButton == ButtonState.Pressed)
-            {
-                slimeShootTimer = 0.5f;
-                Shoot(mousePos, screenRes);
-            }
-        }    
-        slimeShootTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+            
+            if (keyboardState.IsKeyDown(Keys.C))
+                ShowCollider();
         
-        if (keyboardState.IsKeyDown(Keys.C))
-            ShowCollider();
-        
-        if (Mouse.GetState().ScrollWheelValue > lastScrollWheel)
-        {
-            if (inventory.activeSlot != 0)
+            if (Mouse.GetState().ScrollWheelValue > lastScrollWheel)
             {
-                inventory.ChangeActiveSlot(inventory.activeSlot + 1 - 1);
-            }
+                if (inventory.activeSlot != 0)
+                {
+                    inventory.ChangeActiveSlot(inventory.activeSlot + 1 - 1);
+                }
                 
-        }
-        else if (Mouse.GetState().ScrollWheelValue < lastScrollWheel)
-            if (inventory.activeSlot != 3)
-            {
-                inventory.ChangeActiveSlot(inventory.activeSlot + 1 + 1);
             }
+            else if (Mouse.GetState().ScrollWheelValue < lastScrollWheel)
+                if (inventory.activeSlot != 3)
+                {
+                    inventory.ChangeActiveSlot(inventory.activeSlot + 1 + 1);
+                }
                 
             
-        if (keyboardState.IsKeyDown(Keys.D1))
-            inventory.ChangeActiveSlot(1);
-        else if (keyboardState.IsKeyDown(Keys.D2))
-            inventory.ChangeActiveSlot(2);
-        else if (keyboardState.IsKeyDown(Keys.D3))
-            inventory.ChangeActiveSlot(3);
-        else if (keyboardState.IsKeyDown(Keys.D4))
-            inventory.ChangeActiveSlot(4);
+            if (keyboardState.IsKeyDown(Keys.D1))
+                inventory.ChangeActiveSlot(1);
+            else if (keyboardState.IsKeyDown(Keys.D2))
+                inventory.ChangeActiveSlot(2);
+            else if (keyboardState.IsKeyDown(Keys.D3))
+                inventory.ChangeActiveSlot(3);
+            else if (keyboardState.IsKeyDown(Keys.D4))
+                inventory.ChangeActiveSlot(4);
 
-        lastScrollWheel = Mouse.GetState().ScrollWheelValue;
+            lastScrollWheel = Mouse.GetState().ScrollWheelValue;
+        }
+        
+        slimeShootTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        interactRec = CreateInteractiveRectangle();
         
         StatusBarsUi.Update(gameTime, coins, (int)Stamina, (int)Health);
     }
@@ -159,7 +164,6 @@ public class Player : Animator
         else
         {
             sprintDelay += (double)gameTime.ElapsedGameTime.Milliseconds / 1000;
-            Console.WriteLine(sprintDelay);
             if (sprintDelay > 3 && Stamina < 100)
                 Stamina += (double)gameTime.ElapsedGameTime.Milliseconds / 25;
             else if (Stamina >= staminaMax)
@@ -169,6 +173,33 @@ public class Player : Animator
             }
             sprintSpeed = 1;
         }
+    }
+
+    private Rectangle CreateInteractiveRectangle()
+    {
+        Rectangle rect = new Rectangle(0, 0, 
+            (int)((float)GetCollisionRectangle().Width * 2 * scaleMultiplier),
+            (int)((float)GetCollisionRectangle().Height / 2 * scaleMultiplier));
+        switch (playerOrientation)
+        {
+            case PlayerOrientation.Right:
+                rect.X = GetCollisionRectangle().X + GetCollisionRectangle().Width;
+                rect.Y = (int)(GetCollisionRectangle().Y + (float)GetCollisionRectangle().Height / 3);
+                break;
+            case PlayerOrientation.Up:
+                rect.X = (int)(GetCollisionRectangle().X + (float)GetCollisionRectangle().X / 3);
+                rect.Y = GetCollisionRectangle().Y + rect.Height;
+                break;
+            case PlayerOrientation.Left:
+                rect.X = GetCollisionRectangle().X - rect.Width;
+                rect.Y = (int)(GetCollisionRectangle().Y + (float)GetCollisionRectangle().Height / 3);
+                break;
+            case PlayerOrientation.Down:
+                rect.X = (int)(GetCollisionRectangle().X + (float)GetCollisionRectangle().X / 3);
+                rect.Y = GetCollisionRectangle().Y + GetCollisionRectangle().Height;
+                break;
+        }
+        return rect;
     }
 
     private List<Rectangle> CreateVacuumConeRecs(Vector2 mousePos, Vector2 screenRes)

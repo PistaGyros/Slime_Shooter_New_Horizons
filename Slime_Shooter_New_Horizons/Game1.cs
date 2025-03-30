@@ -26,11 +26,12 @@ public class Game1 : Game
     private List<Vector2> objectsColSize;
     private List<List<List<Vector2>>> animationOffSets;
     private List<List<List<Rectangle>>> objectsColRecs;
+    private List<int> sellPrices;
     
     private List<Slime> slimeList;
     private List<Plort> plortsList;
     private List<FruitVeggie> fruitsVeggiesList;
-    private List<int> sellPrices;
+    private List<PlotBuilding> plotsList;
 
     private FollowCamera followCamera;
 
@@ -228,6 +229,7 @@ public class Game1 : Game
         slimeList = new List<Slime>();
         plortsList = new List<Plort>();
         fruitsVeggiesList = new List<FruitVeggie>();
+        plotsList = new();
 
         base.Initialize();
     }
@@ -283,7 +285,7 @@ public class Game1 : Game
         // Init of corral
         Texture2D corralTex = Content.Load<Texture2D>("corral_deactivated");
         Texture2D forceFieldTexHorizontal = Content.Load<Texture2D>("force_field_corral_prototype_anim");
-        Texture2D forceFieldTexVertical = Content.Load<Texture2D>("force_field_corral_prototype_anim_vertical");
+        Texture2D forceFieldTexVertical = Content.Load<Texture2D>("force_field_corral_prototype_vertical_anim");
         corral = new Corral(corralTex,
             new Rectangle(0, 0, corralTex.Width, corralTex.Height),
             new Rectangle(0, 0, corralTex.Width, corralTex.Height),
@@ -297,12 +299,21 @@ public class Game1 : Game
         plortSellPoint.player = player;
         plortSellPoint.plortsList = plortsList;
         plortSellPoint.sellPrices = sellPrices;
+
+        Texture2D plotTex = Content.Load<Texture2D>("empty_plot");
+        for (int i = 0; i < 5; i++)
+        {
+            plotsList.Add(new PlotBuilding(plotTex,
+                new Rectangle(0 + 1000 * i, 0, plotTex.Width, plotTex.Height),
+                new Rectangle(0, 0, plotTex.Width, plotTex.Height),
+                3, player, staminaHealthFGTexture, uiFont));
+        }
         
     }
 
     protected override void Update(GameTime gameTime)
     {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
             Exit();
 
         // TODO: Add your update logic here
@@ -331,6 +342,14 @@ public class Game1 : Game
             foreach (var fruitVeggie in fruitsVeggiesList)
             {
                 fruitVeggie.Update(gameTime, player.GetCollisionRectangle());
+            }
+        }
+
+        if (plotsList != null)
+        {
+            foreach (var plot in plotsList)
+            {
+                plot.Update(gameTime, screenRes);
             }
         }
         
@@ -371,6 +390,14 @@ public class Game1 : Game
                 fruitVeggie.Draw(_spriteBatch, followCamera.position);
             }
         }
+
+        if (plotsList != null)
+        {
+            foreach (var plot in plotsList)
+            {
+                plot.Draw(_spriteBatch, followCamera.position);
+            }
+        }
         
         corral.Draw(_spriteBatch, followCamera.position);
         
@@ -383,6 +410,7 @@ public class Game1 : Game
         
         player.inventory.Draw(_spriteBatch, screenRes);
         player.StatusBarsUi.Draw(_spriteBatch);
+        
         
         _spriteBatch.End();
 
