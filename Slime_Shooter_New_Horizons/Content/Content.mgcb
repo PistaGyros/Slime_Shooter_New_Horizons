@@ -325,18 +325,6 @@
 /processorParam:TextureFormat=Color
 /build:spr_player_1_left_idle.png
 
-#begin stamina_health_forGroundTex.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:stamina_health_forGroundTex.png
-
 #begin tabby_plort.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -367,6 +355,18 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:UI_menu_font.spritefont;Bell MT.spritefont
+
+#begin UI_tex.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI_tex.png
 
 #begin yahoda_fruit.png
 /importer:TextureImporter

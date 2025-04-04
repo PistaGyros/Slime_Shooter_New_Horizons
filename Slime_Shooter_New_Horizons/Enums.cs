@@ -29,6 +29,12 @@ public enum SlimeStatus
     Jumping
 }
 
+public enum PlotMenu
+{
+    Start,
+    Upgrades
+}
+
 public enum PlotTypes
 {
     Empty,
@@ -36,4 +42,20 @@ public enum PlotTypes
     Garden,
     Pond,
     Storage
+}
+
+public enum CorralUpgrades
+{
+    None,
+    AutoFeeder,
+    AutoCollector,
+    SunProtection
+}
+
+public enum GardenUpgrades
+{
+    None,
+    Sprinkler,
+    Fertilizer,
+    AutoPicker
 }

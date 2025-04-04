@@ -8,13 +8,12 @@ namespace Slime_Shooter_New_Horizons;
 
 public class Corral : Building
 {
-    public Rectangle destinationRectangle;
-    public Rectangle sourceRectangle;
+    //public Rectangle destinationRectangle;
+    //public Rectangle sourceRectangle;
 
     private Texture2D collarTex;
     private Texture2D forceFieldHorizontalTex;
     private Texture2D forceFieldVerticalTex;
-    private Texture2D colliderTexture;
     private CorralForceField horizontalForceFieldUp;
     private CorralForceField horizontalForceFieldDown;
     private CorralForceField verticalForceFieldLeft;
@@ -28,7 +27,15 @@ public class Corral : Building
     {
         this.forceFieldHorizontalTex = forceFieldHorizontalTex;
         this.forceFieldVerticalTex = forceFieldVerticalTex;
-        this.colliderTexture = colliderTexture;
+        CreateForceFields();
+    }
+    
+    public Corral(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle,
+        float scaleMultiplier, Texture2D forceFieldHorizontalTex, Texture2D forceFieldVerticalTex) : 
+        base (texture, destinationRectangle, sourceRectangle, scaleMultiplier)
+    {
+        this.forceFieldHorizontalTex = forceFieldHorizontalTex;
+        this.forceFieldVerticalTex = forceFieldVerticalTex;
         CreateForceFields();
     }
 
@@ -50,7 +57,6 @@ public class Corral : Building
             4, 4, new Vector2((float)forceFieldHorizontalTex.Width / 4, forceFieldHorizontalTex.Height), 
             0.5f);
         forceFields.Add(horizontalForceFieldDown);
-        
         
         ForceFieldRectangles.Add(horizontalForceFieldUp.destinationRectangle);
         ForceFieldRectangles.Add(horizontalForceFieldDown.destinationRectangle);

@@ -10,7 +10,7 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private Vector2 screenRes = new Vector2(1280, 720);
+    private Vector2 screenRes = new Vector2(1600, 900);
 
     
     // UI related
@@ -27,16 +27,18 @@ public class Game1 : Game
     private List<List<List<Vector2>>> animationOffSets;
     private List<List<List<Rectangle>>> objectsColRecs;
     private List<int> sellPrices;
+    private List<int> purchasePlotFacilitiesPrices;
     
     private List<Slime> slimeList;
     private List<Plort> plortsList;
     private List<FruitVeggie> fruitsVeggiesList;
     private List<PlotBuilding> plotsList;
+    private List<Corral> corralsList;
 
     private FollowCamera followCamera;
 
     private Player player;
-    private Corral corral;
+    //private Corral corral;
     private PlortCollector plortSellPoint;
 
     public Game1()
@@ -88,9 +90,15 @@ public class Game1 : Game
             new Rectangle(74, 44, 6, 12), new Rectangle(95, 44, 8, 9)
         };
 
+        // Price for which can player sold an item based on their objectID in the plot seller
         sellPrices = new List<int>()
         {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 22, 22, 22, 45
+        };
+
+        purchasePlotFacilitiesPrices = new()
+        {
+            250, 250
         };
 
         
@@ -230,6 +238,7 @@ public class Game1 : Game
         plortsList = new List<Plort>();
         fruitsVeggiesList = new List<FruitVeggie>();
         plotsList = new();
+        corralsList = new();
 
         base.Initialize();
     }
@@ -250,7 +259,7 @@ public class Game1 : Game
             Content.Load<Texture2D>("phospor_slime_new_spritesheet"),
             Content.Load<Texture2D>("honey_slime_new_spritesheet"),
             null, null, null, null, null, 
-            //Plorts
+            // Plorts
             null,
             Content.Load<Texture2D>("pink_plort"),
             Content.Load<Texture2D>("rock_plort"),
@@ -268,7 +277,7 @@ public class Game1 : Game
         colliderTexture = Content.Load<Texture2D>("collider_texture");
         inventoryTex = Content.Load<Texture2D>("inventory");
         itemsAtlas = Content.Load<Texture2D>("items_atlas");
-        staminaHealthFGTexture = Content.Load<Texture2D>("stamina_health_forGroundTex");
+        staminaHealthFGTexture = Content.Load<Texture2D>("UI_tex");
         coinTex = Content.Load<Texture2D>("coin_tex");
         
         
@@ -286,10 +295,11 @@ public class Game1 : Game
         Texture2D corralTex = Content.Load<Texture2D>("corral_deactivated");
         Texture2D forceFieldTexHorizontal = Content.Load<Texture2D>("force_field_corral_prototype_anim");
         Texture2D forceFieldTexVertical = Content.Load<Texture2D>("force_field_corral_prototype_vertical_anim");
-        corral = new Corral(corralTex,
+        Corral corral = new Corral(corralTex,
             new Rectangle(0, 0, corralTex.Width, corralTex.Height),
             new Rectangle(0, 0, corralTex.Width, corralTex.Height),
-            3, colliderTexture, forceFieldTexHorizontal, forceFieldTexVertical);
+            3, forceFieldTexHorizontal, forceFieldTexVertical);
+        corralsList.Add(corral);
         
         // Init of plort collectors/sell point
         Texture2D plortCollectorTex = Content.Load<Texture2D>("plort_collector");
@@ -303,10 +313,12 @@ public class Game1 : Game
         Texture2D plotTex = Content.Load<Texture2D>("empty_plot");
         for (int i = 0; i < 5; i++)
         {
-            plotsList.Add(new PlotBuilding(plotTex,
+            PlotBuilding plot = new PlotBuilding(plotTex,
                 new Rectangle(0 + 1000 * i, 0, plotTex.Width, plotTex.Height),
                 new Rectangle(0, 0, plotTex.Width, plotTex.Height),
-                3, player, staminaHealthFGTexture, uiFont));
+                3, player, staminaHealthFGTexture, uiFont, Content, corralsList);
+            plot.purchasePlotFacilitiesPrices = purchasePlotFacilitiesPrices;
+            plotsList.Add(plot);
         }
         
     }
@@ -352,8 +364,15 @@ public class Game1 : Game
                 plot.Update(gameTime, screenRes);
             }
         }
+
+        if (corralsList != null)
+        {
+            foreach (var corral in corralsList)
+            {
+                corral.Update(gameTime);
+            }
+        }
         
-        corral.Update(gameTime);
         plortSellPoint.Update(gameTime);
 
         base.Update(gameTime);
@@ -396,20 +415,37 @@ public class Game1 : Game
             foreach (var plot in plotsList)
             {
                 plot.Draw(_spriteBatch, followCamera.position);
+                plot.plotMenu?.Draw(_spriteBatch);
             }
         }
         
-        corral.Draw(_spriteBatch, followCamera.position);
+        if (corralsList != null)
+        {
+            foreach (var corral in corralsList)
+            {
+                corral.Draw(_spriteBatch, followCamera.position);
+                foreach (var fence in corral.forceFields)
+                {
+                    fence.Draw(_spriteBatch, followCamera.position);
+                }
+            }
+        }
+        
         
         player.Draw(_spriteBatch, followCamera.position);
         
-        foreach (var fence in corral.forceFields)
-        {
-            fence.Draw(_spriteBatch, followCamera.position);
-        }
+        
         
         player.inventory.Draw(_spriteBatch, screenRes);
         player.StatusBarsUi.Draw(_spriteBatch);
+        
+        if (plotsList != null)
+        {
+            foreach (var plot in plotsList)
+            {
+                plot.plotMenu?.Draw(_spriteBatch);
+            }
+        }
         
         
         _spriteBatch.End();

@@ -13,7 +13,7 @@ public class Player : Animator
 {
     public bool IsRightButtonPressed;
     public bool canMove = true;
-    public int coins = 0;
+    public int coins = 500;
     private double staminaMax = 100;
     public double Stamina = 100;
     private double healthMax = 100;
@@ -24,7 +24,7 @@ public class Player : Animator
     private float sprintSpeed;
     private double sprintDelay;
     private int lastScrollWheel;
-    private float slimeShootTimer;
+    public float slimeShootTimer;
     
     private List<List<List<Rectangle>>> objectsColRecs;
 
@@ -373,7 +373,6 @@ public class Player : Animator
         {
             // Shoot an item from active slot
             int objectID = inventory.inventorySlots[activeSlot][0];
-            // TODO: add feature to be able to throw any item from inventory
             DecideWhatTypeOfObjectToShoot(objectID, mousePos, screenRes);
             inventory.UpdateInventory(activeSlot, inventory.inventorySlots[activeSlot][0], -1);
             
