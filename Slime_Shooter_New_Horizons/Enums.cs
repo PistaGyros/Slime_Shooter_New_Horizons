@@ -59,3 +59,9 @@ public enum GardenUpgrades
     Fertilizer,
     AutoPicker
 }
+
+public enum ForceFieldTypes
+{
+    Vertical,
+    Horizontal
+}

@@ -9,6 +9,7 @@ public class Slime : Animator
 {
     public int slimeID;
     private bool isCollidingWithSlime = false;
+    private bool isEnteringCorral;
     private bool isWithinCorral;
     public List<Texture2D> plortsTexs = new List<Texture2D>();
 
@@ -18,7 +19,9 @@ public class Slime : Animator
     private float eatingTime = 2.0f;
     private float eatingTimer = 0.0f;
     private FruitVeggie food;
-
+    public List<PlotBuilding> plotsList;
+    private Corral itsCorral;
+        
     public SlimeOrientation ESlimeOrientation;
     public SlimeStatus ESlimeStatus;
     
@@ -49,6 +52,7 @@ public class Slime : Animator
         UpdateAnimator(gameTime);
         var outputOfSlimesChecking = CheckForCollisionsWithSlimes();
         var outputOfFoodChecking = CheckForCollisionsWithFood();
+        var outputOfCorralChecking = CheckForCollisionsWithCorral();
         
         if (outputOfSlimesChecking.Item1)
         {
@@ -75,6 +79,19 @@ public class Slime : Animator
             {
                 hasCollidedWithFood = false;
             }
+        }
+
+        if (!isEnteringCorral && outputOfCorralChecking.Item1)
+        {
+            Console.WriteLine("Is entering corral");
+            isEnteringCorral = true;
+        }
+        else if (isEnteringCorral && !outputOfCorralChecking.Item1)
+        {
+            Console.WriteLine("Slime has entered corral");
+            isEnteringCorral = false;
+            isWithinCorral = true;
+            itsCorral = outputOfCorralChecking.Item2;
         }
 
         if (isEating)
@@ -106,6 +123,9 @@ public class Slime : Animator
             (int)offset.Y + destinationRectangle.Y,
             (int)(destinationRectangle.Width * scaleMultiplier),
             (int)(destinationRectangle.Height * scaleMultiplier));
+
+        // TODO: Figure out enums for flipping slime
+        SpriteEffects slimeOrientation = SpriteEffects.None;
 
         switch (ESlimeOrientation)
         {
@@ -180,6 +200,27 @@ public class Slime : Animator
             collidedFood = fruitVeggie;
         }
         return (collision, collidedFood);
+    }
+    
+    public new (bool, Corral corral) CheckForCollisionsWithCorral()
+    {
+        bool collision = false;
+        Corral corral = null;
+        foreach (var plot in plotsList)
+        {
+            if (plot.plotsCorral != null)
+            {
+                foreach (var corralFence in plot.plotsCorral.forceFields)
+                {
+                    if(GetCollisionRectangle().Intersects(corralFence.GetCollisionRectangle()))
+                    {
+                        collision = true;
+                        corral = plot.plotsCorral;
+                    }    
+                }   
+            }
+        }
+        return (collision, corral);
     }
 
     private void CatchFood()

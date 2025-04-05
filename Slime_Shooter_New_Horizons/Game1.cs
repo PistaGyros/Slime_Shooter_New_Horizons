@@ -290,6 +290,7 @@ public class Game1 : Game
         player.CreateStatusBar(screenRes, staminaHealthFGTexture, staminaHealthFGTexture, coinTex, uiFont);
         player.objectsTextures = listTextures;
         player.SetLists(slimeList, plortsList, fruitsVeggiesList);
+        player.plots = plotsList;
         
         // Init of corral
         Texture2D corralTex = Content.Load<Texture2D>("corral_deactivated");

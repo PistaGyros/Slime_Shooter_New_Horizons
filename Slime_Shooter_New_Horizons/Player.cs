@@ -30,6 +30,7 @@ public class Player : Animator
 
     public Texture2D playerTexture;
     public List<Texture2D> objectsTextures;
+    public List<PlotBuilding> plots;
     
     public Inventory inventory;
     public StatusBars StatusBarsUi;
@@ -405,6 +406,7 @@ public class Player : Animator
         slime.SetLists(slimesList, plortsList, fruitsVeggiesList);
         slime.SetupAnimator(6, 6, new Vector2(22, 22), 0.9f);
         slime.ThrowSlime(QuadrantClicked(spawnPos, screenRes));
+        slime.plotsList = plots;
         slimesList.Add(slime);
     }
 

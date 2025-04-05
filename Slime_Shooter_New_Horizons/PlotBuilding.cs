@@ -11,7 +11,7 @@ public class PlotBuilding : Building
 {
     private ContentManager content;
     private Player player;
-    private Corral plotsCorral;
+    public Corral plotsCorral;
     private List<Corral> corralsList;
     public PlotMenuDefault plotMenu;
     public List<int> purchasePlotFacilitiesPrices;
