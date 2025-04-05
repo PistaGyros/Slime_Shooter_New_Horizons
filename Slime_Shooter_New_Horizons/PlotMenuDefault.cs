@@ -109,7 +109,7 @@ public class PlotMenuDefault : UI
         {
             case PlotTypes.Empty:
                 // Draw facility
-                DrawFacilities(spriteBatch);
+                DrawFacilitiesMenu(spriteBatch);
                 if (errorMessageEventInvoked)
                     DrawErrorMessage(spriteBatch);
                 break;
@@ -141,7 +141,7 @@ public class PlotMenuDefault : UI
             0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0f);
     }
 
-    private void DrawFacilities(SpriteBatch spriteBatch)
+    private void DrawFacilitiesMenu(SpriteBatch spriteBatch)
     {
         // Draw text
         string text = facilitiesNames[selectedFacility];
@@ -166,6 +166,11 @@ public class PlotMenuDefault : UI
                 // Draw storage
                 break;
         }
+    }
+
+    private void DrawCorralUpgradeMenu()
+    {
+        
     }
 
     private void DrawErrorMessage(SpriteBatch spriteBatch)

@@ -150,8 +150,10 @@ public void PurchaseBtnWasPressed(int selectedFacility)
         Texture2D forceFieldTexHorizontal = content.Load<Texture2D>("force_field_corral_prototype_anim");
         Texture2D forceFieldTexVertical = content.Load<Texture2D>("force_field_corral_prototype_vertical_anim");
         plotsCorral = new Corral(corralTex,
-            new Rectangle(destRec.X, destRec.Y, corralTex.Width, corralTex.Height),
-            new Rectangle(0, 0, corralTex.Width, corralTex.Height),
+            new Rectangle((int)(destRec.X + 6 * scaleMultiplier), (int)(destRec.Y - 37 * scaleMultiplier),
+                corralTex.Width, corralTex.Height),
+            new Rectangle(0, 0, 
+                corralTex.Width, corralTex.Height),
             3, forceFieldTexHorizontal, forceFieldTexVertical);
         corralsList.Add(plotsCorral);
     }
