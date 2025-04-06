@@ -282,7 +282,7 @@ public class Game1 : Game
         
         
         Texture2D playerTexture = Content.Load<Texture2D>("spr_player_1_left_idle");
-        player = new Player(playerTexture, new Rectangle(0, 0, playerTexture.Width * 5, playerTexture.Height * 5), 
+        player = new Player(playerTexture, new Rectangle(100, 100, playerTexture.Width * 5, playerTexture.Height * 5), 
             new Rectangle(0, 0, playerTexture.Width, playerTexture.Height), 
             1, objectsColRecs);
         SpriteFont uiFont = Content.Load<SpriteFont>("Bell MT");
@@ -293,19 +293,19 @@ public class Game1 : Game
         player.plots = plotsList;
         
         // Init of corral
-        Texture2D corralTex = Content.Load<Texture2D>("corral_deactivated");
+        /**Texture2D corralTex = Content.Load<Texture2D>("corral_deactivated");
         Texture2D forceFieldTexHorizontal = Content.Load<Texture2D>("force_field_corral_prototype_anim");
         Texture2D forceFieldTexVertical = Content.Load<Texture2D>("force_field_corral_prototype_vertical_anim");
         Corral corral = new Corral(corralTex,
-            new Rectangle(0, 0, corralTex.Width, corralTex.Height),
+            new Rectangle(100, 100, corralTex.Width, corralTex.Height),
             new Rectangle(0, 0, corralTex.Width, corralTex.Height),
             3, forceFieldTexHorizontal, forceFieldTexVertical);
-        corralsList.Add(corral);
+        corralsList.Add(corral);**/
         
         // Init of plort collectors/sell point
         Texture2D plortCollectorTex = Content.Load<Texture2D>("plort_collector");
         plortSellPoint = new PlortCollector(plortCollectorTex,
-            new Rectangle(50, -300, plortCollectorTex.Width, plortCollectorTex.Height),
+            new Rectangle(100, 0, plortCollectorTex.Width, plortCollectorTex.Height),
             new Rectangle(0, 0, plortCollectorTex.Width, plortCollectorTex.Height), 3);
         plortSellPoint.player = player;
         plortSellPoint.plortsList = plortsList;
@@ -315,7 +315,7 @@ public class Game1 : Game
         for (int i = 0; i < 5; i++)
         {
             PlotBuilding plot = new PlotBuilding(plotTex,
-                new Rectangle(0 + 1000 * i, 0, plotTex.Width, plotTex.Height),
+                new Rectangle(0 + 1000 * i, 500, plotTex.Width, plotTex.Height),
                 new Rectangle(0, 0, plotTex.Width, plotTex.Height),
                 3, player, staminaHealthFGTexture, uiFont, Content, corralsList);
             plot.purchasePlotFacilitiesPrices = purchasePlotFacilitiesPrices;

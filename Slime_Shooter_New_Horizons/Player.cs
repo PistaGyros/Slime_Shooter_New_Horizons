@@ -262,12 +262,11 @@ public class Player : Animator
             {
                 if (slime.GetCollisionRectangle().Intersects(vacuumCone))
                 {
-                    slime.vacuumTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    slime.IsVacuumed = true;
+                    slime.Vacuum(gameTime);
                     int availableSlot = inventory.WhichSlotIsAvailable(slime.slimeID);
                     if (GetCollisionRectangle().Intersects(slime.GetCollisionRectangle()) && availableSlot != 69)
                     {
-                        Console.WriteLine("Slime is vacuumed");
+                        Console.WriteLine("Slime was vacuumed");
                         inventory.UpdateInventory(availableSlot, slime.slimeID, 1);
                         vacuumedSlimeList.Add(slime);
                     }
@@ -338,7 +337,7 @@ public class Player : Animator
             {
                 foreach (var slime in slimesList)
                 {
-                    if (!slime.GetCollisionRectangle().Intersects(vacuumCone))
+                    if (!slime.GetCollisionRectangle().Intersects(vacuumCone) || slime.isCollidingWithFence)
                     {
                         slime.vacuumTime = 0;
                         slime.IsVacuumed = false;

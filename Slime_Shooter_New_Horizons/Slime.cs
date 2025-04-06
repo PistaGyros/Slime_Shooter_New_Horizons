@@ -9,7 +9,8 @@ public class Slime : Animator
 {
     public int slimeID;
     private bool isCollidingWithSlime = false;
-    private bool isEnteringCorral;
+    public bool isCollidingWithFence;
+    public bool CanBeVacuumed;
     private bool isWithinCorral;
     public List<Texture2D> plortsTexs = new List<Texture2D>();
 
@@ -20,7 +21,7 @@ public class Slime : Animator
     private float eatingTimer = 0.0f;
     private FruitVeggie food;
     public List<PlotBuilding> plotsList;
-    private Corral itsCorral;
+    private Corral itsCorral = null;
         
     public SlimeOrientation ESlimeOrientation;
     public SlimeStatus ESlimeStatus;
@@ -81,17 +82,19 @@ public class Slime : Animator
             }
         }
 
-        if (!isEnteringCorral && outputOfCorralChecking.Item1)
+        if (!isCollidingWithFence && outputOfCorralChecking.Item1)
         {
             Console.WriteLine("Is entering corral");
-            isEnteringCorral = true;
+            isCollidingWithFence = true;
+            CanBeVacuumed = false;
+            itsCorral ??= outputOfCorralChecking.Item2;
         }
-        else if (isEnteringCorral && !outputOfCorralChecking.Item1)
+        else if (isCollidingWithFence && !outputOfCorralChecking.Item1)
         {
             Console.WriteLine("Slime has entered corral");
-            isEnteringCorral = false;
+            isCollidingWithFence = false;
+            CanBeVacuumed = true;
             isWithinCorral = true;
-            itsCorral = outputOfCorralChecking.Item2;
         }
 
         if (isEating)
@@ -157,6 +160,20 @@ public class Slime : Animator
         }
     }
 
+    public void Vacuum(GameTime gameTime)
+    {
+        vacuumTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+        IsVacuumed = true;
+        // Check for any sort of collision
+        if (isCollidingWithFence && isWithinCorral && !isThrowed)
+        {
+            vacuumTime -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+            IsVacuumed = false;
+            BounceAwayFromFence();
+        }
+        
+    }
+
     private void BounceAwayFromSlime(Rectangle badSlime)
     {
         Vector2 centerDestRec = new Vector2(GetCollisionRectangle().X + GetCollisionRectangle().Width / 2,
@@ -165,6 +182,18 @@ public class Slime : Animator
         Vector2 pointVec = new Vector2(centerDestRec.X - centerBadSlimeRec.X, centerDestRec.Y - centerBadSlimeRec.Y);
         destinationRectangle.X += (int)pointVec.X;
         destinationRectangle.Y += (int)pointVec.Y;
+    }
+
+    public void BounceAwayFromFence()
+    {
+        Vector2 centerDestRec = new Vector2(GetCollisionRectangle().X + GetCollisionRectangle().Width / 2,
+            GetCollisionRectangle().Y + GetCollisionRectangle().Height / 2);
+        Vector2 centerOfCorral = new Vector2(
+            itsCorral.destinationRectangle.X + itsCorral.destinationRectangle.Width * itsCorral.scaleMultiplier / 2,
+            itsCorral.destinationRectangle.Y + itsCorral.destinationRectangle.Height * itsCorral.scaleMultiplier / 2);
+        Vector2 pointVec = new Vector2(centerOfCorral.X - centerDestRec.X, centerOfCorral.Y - centerDestRec.Y);
+        destinationRectangle.X += (int)(pointVec.X / 125);
+        destinationRectangle.Y += (int)(pointVec.Y / 125);
     }
     
     public new (bool, Rectangle) CheckForCollisionsWithSlimes()
@@ -202,7 +231,7 @@ public class Slime : Animator
         return (collision, collidedFood);
     }
     
-    public new (bool, Corral corral) CheckForCollisionsWithCorral()
+    public new (bool, Corral) CheckForCollisionsWithCorral()
     {
         bool collision = false;
         Corral corral = null;
@@ -215,7 +244,8 @@ public class Slime : Animator
                     if(GetCollisionRectangle().Intersects(corralFence.GetCollisionRectangle()))
                     {
                         collision = true;
-                        corral = plot.plotsCorral;
+                        if (itsCorral == null)
+                            corral = plot.plotsCorral;
                     }    
                 }   
             }
