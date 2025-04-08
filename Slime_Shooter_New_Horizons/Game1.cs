@@ -115,22 +115,36 @@ public class Game1 : Game
         objectsColRecs = new List<List<List<Rectangle>>>()
         {
             // Empty object col
-            new List<List<Rectangle>>(){new List<Rectangle>(){new Rectangle()}},
+            null,
+            
+            // TODO: Update objects colliders rectangles according to their animated version
             // Pink Slime object colliders
             new List<List<Rectangle>>()
             {
-                new List<Rectangle>(){new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11),
+                new List<Rectangle>()
+                {   
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 10, 16, 11),
                     new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11), 
-                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11)},
-                new List<Rectangle>(){new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11),
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11)
+                },
+                new List<Rectangle>()
+                {
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11),
                     new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11), 
-                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11)},
-                new List<Rectangle>(){new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11),
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11)
+                },
+                new List<Rectangle>()
+                {
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11),
                     new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11), 
-                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11)},
-                new List<Rectangle>(){new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11),
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11)
+                },
+                new List<Rectangle>()
+                {
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11),
                     new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11), 
-                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11)}
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11)
+                }
             },
             
             // Rock Slime object colliders
@@ -283,7 +297,7 @@ public class Game1 : Game
             Content.Load<Texture2D>("paradayka_veggie")
         };
         
-        colliderTexture = Content.Load<Texture2D>("collider_texture");
+        colliderTexture = Content.Load<Texture2D>("green_square");
         inventoryTex = Content.Load<Texture2D>("inventory");
         itemsAtlas = Content.Load<Texture2D>("items_atlas");
         staminaHealthFGTexture = Content.Load<Texture2D>("UI_tex");
@@ -291,10 +305,7 @@ public class Game1 : Game
         
         
         tileMapAtlas = Content.Load<Texture2D>("tileMapTexture");
-        string sCurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;              
-        string sFile = Path.Combine(sCurrentDirectory, @"Data/tileMap.csv");  
-        string sFilePath = Path.GetFullPath(sFile);
-        tileMap = new TileMap(sFilePath, textureTileStore, tileMapAtlas, 16, 3);
+        tileMap = new TileMap("Data/tileMap.csv", textureTileStore, tileMapAtlas, 16, 3);
         
         
         Texture2D playerTexture = Content.Load<Texture2D>("spr_player_1_left_idle");
@@ -412,6 +423,7 @@ public class Game1 : Game
         if (slimeList != null)
             foreach (var slime in slimeList)
             {
+                slime.DrawCollisionRec(_spriteBatch, colliderTexture, followCamera.position, slime.GetCollisionRectangle());
                 slime.Draw(_spriteBatch, followCamera.position);
             }
 
@@ -427,6 +439,7 @@ public class Game1 : Game
         {
             foreach (var fruitVeggie in fruitsVeggiesList)
             {
+                fruitVeggie.DrawCollisionRec(_spriteBatch, colliderTexture, followCamera.position, fruitVeggie.GetCollisionRectangle());
                 fruitVeggie.Draw(_spriteBatch, followCamera.position);
             }
         }
@@ -452,7 +465,7 @@ public class Game1 : Game
             }
         }
         
-        
+        player.DrawCollisionRec(_spriteBatch, colliderTexture, followCamera.position, player.GetCollisionRectangle());
         player.Draw(_spriteBatch, followCamera.position);
         
         

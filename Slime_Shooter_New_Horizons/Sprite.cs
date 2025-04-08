@@ -89,6 +89,35 @@ public class Sprite : Physics
         
         spriteBatch.Draw(texture, dest, sourceRectangle, Color.White);
     }
+
+    public void DrawCollisionRec(SpriteBatch spriteBatch, Texture2D greenDot, Vector2 offset, Rectangle collisionRec)
+    {
+        int lineThicknes = 2;
+        Rectangle upperLine = new Rectangle(
+            collisionRec.X + (int)offset.X, 
+            collisionRec.Y + (int)offset.Y, 
+            collisionRec.Width, 
+            lineThicknes * (int)scaleMultiplier);
+        Rectangle bottomLine = new Rectangle(
+            (int)(collisionRec.X + offset.X), 
+            (int)(collisionRec.Y + collisionRec.Height - lineThicknes * scaleMultiplier + offset.Y), 
+            collisionRec.Width,
+            (int)(lineThicknes * scaleMultiplier));
+        Rectangle leftLine = new(
+            collisionRec.X + (int)offset.X, 
+            collisionRec.Y + (int)offset.Y,
+            lineThicknes * (int)scaleMultiplier, 
+            collisionRec.Height);
+        Rectangle rightLine = new(
+            (int)(collisionRec.X + collisionRec.Width - lineThicknes * scaleMultiplier + offset.X), 
+            collisionRec.Y + (int)offset.Y,
+            lineThicknes * (int)scaleMultiplier, 
+            collisionRec.Height);
+        spriteBatch.Draw(greenDot, upperLine, Color.Green);
+        spriteBatch.Draw(greenDot, bottomLine, Color.Green);
+        spriteBatch.Draw(greenDot, leftLine, Color.Green);
+        spriteBatch.Draw(greenDot, rightLine, Color.Green);
+    }
     
     public virtual Rectangle GetCollisionRectangle()
     {
