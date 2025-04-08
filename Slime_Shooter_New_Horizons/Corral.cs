@@ -49,6 +49,7 @@ public class Corral : Building
             4, 4, new Vector2((float)forceFieldHorizontalTex.Width / 4, forceFieldHorizontalTex.Height),
             0.5f);
         forceFields.Add(horizontalForceFieldUp);
+        
         horizontalForceFieldDown = new CorralForceField(ForceFieldTypes.Horizontal, forceFieldHorizontalTex,
             new Rectangle((int)(destinationRectangle.X + 17 * scaleMultiplier),
                 (int)(destinationRectangle.Y + 103 * scaleMultiplier), forceFieldHorizontalTex.Width / 4, 
@@ -57,6 +58,7 @@ public class Corral : Building
             4, 4, new Vector2((float)forceFieldHorizontalTex.Width / 4, forceFieldHorizontalTex.Height), 
             0.5f);
         forceFields.Add(horizontalForceFieldDown);
+        
         
         // VERTICAL FORCE FIELDS (OR FENCE)
         verticalForceFieldLeft = new CorralForceField(ForceFieldTypes.Vertical, forceFieldVerticalTex,
@@ -68,6 +70,7 @@ public class Corral : Building
             3, 4, 4, 
             new Vector2((float)forceFieldVerticalTex.Width / 4, forceFieldVerticalTex.Height), 0.5f);
         forceFields.Add(verticalForceFieldLeft);
+        
         verticalForceFieldRight = new CorralForceField(ForceFieldTypes.Vertical, forceFieldVerticalTex,
             new Rectangle((int)(destinationRectangle.X + 134 * scaleMultiplier),
                 (int)(destinationRectangle.Y + 8 * scaleMultiplier), forceFieldVerticalTex.Width / 4,

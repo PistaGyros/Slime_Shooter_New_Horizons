@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -17,12 +18,14 @@ public class Game1 : Game
     private Texture2D itemsAtlas;
     private Texture2D inventoryTex;
     private Texture2D colliderTexture;
+    private Texture2D tileMapAtlas;
     private List<Texture2D> listTextures;
     private Texture2D staminaHealthFGTexture;
     private Texture2D coinTex;
     private List<string> itemsNames;
     private Dictionary<int, string> itemsID;
     private List<Rectangle> itemsIDTexturesRec;
+    private List<Rectangle> textureTileStore;
     private List<Vector2> objectsColSize;
     private List<List<List<Vector2>>> animationOffSets;
     private List<List<List<Rectangle>>> objectsColRecs;
@@ -37,6 +40,7 @@ public class Game1 : Game
 
     private FollowCamera followCamera;
 
+    private TileMap tileMap;
     private Player player;
     //private Corral corral;
     private PlortCollector plortSellPoint;
@@ -88,6 +92,11 @@ public class Game1 : Game
             // Fruits and vegies
             new Rectangle(), new Rectangle(30, 44, 6, 8), new Rectangle(51, 44, 8, 9),
             new Rectangle(74, 44, 6, 12), new Rectangle(95, 44, 8, 9)
+        };
+
+        textureTileStore = new()
+        {
+            new Rectangle(0, 0, 16, 16), new Rectangle(16, 0, 16, 16)
         };
 
         // Price for which can player sold an item based on their objectID in the plot seller
@@ -281,6 +290,13 @@ public class Game1 : Game
         coinTex = Content.Load<Texture2D>("coin_tex");
         
         
+        tileMapAtlas = Content.Load<Texture2D>("tileMapTexture");
+        string sCurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;              
+        string sFile = Path.Combine(sCurrentDirectory, @"Data/tileMap.csv");  
+        string sFilePath = Path.GetFullPath(sFile);
+        tileMap = new TileMap(sFilePath, textureTileStore, tileMapAtlas, 16, 3);
+        
+        
         Texture2D playerTexture = Content.Load<Texture2D>("spr_player_1_left_idle");
         player = new Player(playerTexture, new Rectangle(100, 100, playerTexture.Width * 5, playerTexture.Height * 5), 
             new Rectangle(0, 0, playerTexture.Width, playerTexture.Height), 
@@ -336,6 +352,8 @@ public class Game1 : Game
         followCamera.FollowTarget(player.GetCollisionRectangle(),
             new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
         
+        tileMap.Update(gameTime);
+        
         if (slimeList != null)
             foreach (var slime in slimeList)
             {
@@ -387,6 +405,8 @@ public class Game1 : Game
         
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
+        tileMap.Draw(_spriteBatch, followCamera.position);
+        
         plortSellPoint.Draw(_spriteBatch, followCamera.position);
         
         if (slimeList != null)

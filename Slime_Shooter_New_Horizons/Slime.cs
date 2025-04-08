@@ -86,7 +86,7 @@ public class Slime : Animator
         {
             Console.WriteLine("Is entering corral");
             isCollidingWithFence = true;
-            CanBeVacuumed = false;
+            CanBeVacuumed = true;
             itsCorral ??= outputOfCorralChecking.Item2;
         }
         else if (isCollidingWithFence && !outputOfCorralChecking.Item1)

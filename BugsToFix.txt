@@ -1,0 +1,2 @@
+[]	Slime when vacuumed from bottom to top while being in the corral doesn't work properly, it should jump
+	away like from any other wall (any slime, top horizontal fence).
