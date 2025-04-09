@@ -45,7 +45,7 @@ public class Player : Animator
         this.objectsColRecs = objectsColRecs;
     }
     
-    public new virtual void Update(GameTime gameTime, Vector2 screenRes)
+    public new virtual void Update(GameTime gameTime, Vector2 screenRes, int elapsedTime)
     {
         KeyboardState keyboardState = Keyboard.GetState();
         if (canMove)
@@ -152,7 +152,7 @@ public class Player : Animator
 
         interactRec = CreateInteractiveRectangle();
         
-        StatusBarsUi.Update(gameTime, coins, (int)Stamina, (int)Health);
+        StatusBarsUi.Update(gameTime, screenRes, coins, (int)Stamina, (int)Health, elapsedTime);
     }
 
     private void Sprint(GameTime gameTime, KeyboardState keyboardState)

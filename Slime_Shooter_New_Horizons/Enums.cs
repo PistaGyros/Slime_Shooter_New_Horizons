@@ -65,3 +65,17 @@ public enum ForceFieldTypes
     Vertical,
     Horizontal
 }
+
+public enum DayNight
+{
+    Day,
+    Night
+}
+
+public enum Weather
+{
+    Sunny,
+    Cloudy,
+    Rain,
+    Storm
+}

@@ -12,6 +12,8 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private Vector2 screenRes = new Vector2(1600, 900);
+    private double elapsedTime = 18000;
+    private int days;
 
     
     // UI related
@@ -20,7 +22,7 @@ public class Game1 : Game
     private Texture2D colliderTexture;
     private Texture2D tileMapAtlas;
     private List<Texture2D> listTextures;
-    private Texture2D staminaHealthFGTexture;
+    private Texture2D UI_texture;
     private Texture2D coinTex;
     private List<string> itemsNames;
     private Dictionary<int, string> itemsID;
@@ -39,10 +41,10 @@ public class Game1 : Game
     private List<Corral> corralsList;
 
     private FollowCamera followCamera;
-
     private TileMap tileMap;
     private Player player;
     private PlortCollector plortSellPoint;
+    private DayNightCycle dayNightCycle;
 
     public Game1()
     {
@@ -302,7 +304,7 @@ public class Game1 : Game
         colliderTexture = Content.Load<Texture2D>("green_square");
         inventoryTex = Content.Load<Texture2D>("inventory");
         itemsAtlas = Content.Load<Texture2D>("items_atlas");
-        staminaHealthFGTexture = Content.Load<Texture2D>("UI_tex");
+        UI_texture = Content.Load<Texture2D>("UI_tex");
         coinTex = Content.Load<Texture2D>("coin_tex");
         
         
@@ -316,7 +318,7 @@ public class Game1 : Game
             1, objectsColRecs);
         SpriteFont uiFont = Content.Load<SpriteFont>("Bell MT");
         player.CreateInventory(screenRes, itemsAtlas, inventoryTex, uiFont, itemsID, itemsIDTexturesRec);
-        player.CreateStatusBar(screenRes, staminaHealthFGTexture, staminaHealthFGTexture, coinTex, uiFont);
+        player.CreateStatusBar(screenRes, UI_texture, UI_texture, coinTex, uiFont);
         player.objectsTextures = listTextures;
         player.SetLists(slimeList, plortsList, fruitsVeggiesList);
         player.plots = plotsList;
@@ -337,11 +339,12 @@ public class Game1 : Game
             PlotBuilding plot = new PlotBuilding(plotTex,
                 new Rectangle(0 + 1000 * i, 500, plotTex.Width, plotTex.Height),
                 new Rectangle(0, 0, plotTex.Width, plotTex.Height),
-                3, player, staminaHealthFGTexture, uiFont, Content, corralsList);
+                3, player, UI_texture, uiFont, Content, corralsList);
             plot.purchasePlotFacilitiesPrices = purchasePlotFacilitiesPrices;
             plotsList.Add(plot);
         }
-        
+
+        dayNightCycle = new DayNightCycle(UI_texture);
     }
 
     protected override void Update(GameTime gameTime)
@@ -350,8 +353,15 @@ public class Game1 : Game
             Exit();
 
         // TODO: Add your update logic here
+
+        elapsedTime += gameTime.ElapsedGameTime.TotalSeconds * 60;
+        if (elapsedTime > 86400)
+        {
+            elapsedTime = 0;
+            days++;
+        }
         
-        player.Update(gameTime, screenRes);
+        player.Update(gameTime, screenRes, (int)elapsedTime);
         
         followCamera.FollowTarget(player.destinationRectangle, screenRes);
         
@@ -396,6 +406,8 @@ public class Game1 : Game
         }
         
         plortSellPoint.Update(gameTime);
+        
+        dayNightCycle.Update(screenRes, elapsedTime);
 
         base.Update(gameTime);
     }
@@ -406,7 +418,7 @@ public class Game1 : Game
 
         // TODO: Add your drawing code here
         
-        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        _spriteBatch.Begin(samplerState: SamplerState.PointClamp, blendState: BlendState.NonPremultiplied);
 
         tileMap.Draw(_spriteBatch, followCamera.position);
         
@@ -455,6 +467,7 @@ public class Game1 : Game
                 corral.Draw(_spriteBatch, followCamera.position);
                 foreach (var fence in corral.forceFields)
                 {
+                    fence.DrawCollisionRec(_spriteBatch, colliderTexture, followCamera.position, fence.GetCollisionRectangle());
                     fence.Draw(_spriteBatch, followCamera.position);
                 }
             }
@@ -463,11 +476,14 @@ public class Game1 : Game
         player.DrawCollisionRec(_spriteBatch, colliderTexture, followCamera.position, player.GetCollisionRectangle());
         player.Draw(_spriteBatch, followCamera.position);
         
+        dayNightCycle.Draw(_spriteBatch);
         
         
+        // Draw player UI
         player.inventory.Draw(_spriteBatch, screenRes);
         player.StatusBarsUi.Draw(_spriteBatch);
         
+        // Draw plot UI menu
         if (plotsList != null)
         {
             foreach (var plot in plotsList)

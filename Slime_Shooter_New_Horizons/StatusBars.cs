@@ -8,9 +8,11 @@ namespace Slime_Shooter_New_Horizons;
 
 public class StatusBars : UI
 {
+    private Vector2 screenRes;
     public int CoinsStatus;
     public float StaminaStatus;
     public int HealthStatus;
+    private int actualTime;
     
     private Vector2 position;
     private Texture2D backGroundTexture, forGroundTexture, coinTex;
@@ -28,18 +30,21 @@ public class StatusBars : UI
         ChangeSizeScale(3);
     }
 
-    public new void Update(GameTime gameTime, int CoinsStatus, int StaminaStatus, int HealthStatus)
+    public new void Update(GameTime gameTime, Vector2 screenRes, int CoinsStatus, int StaminaStatus, int HealthStatus, 
+        int actualTime)
     {
+        this.screenRes = screenRes;
         this.CoinsStatus = CoinsStatus;
         this.StaminaStatus = StaminaStatus;
         this.HealthStatus = HealthStatus;
+        this.actualTime = actualTime;
     }
 
     public new void Draw(SpriteBatch spriteBatch)
     {
         DrawCoins(spriteBatch);
         DrawStamina(spriteBatch);
-        
+        DrawTime(spriteBatch);
     }
 
     private void DrawCoins(SpriteBatch spriteBatch)
@@ -66,5 +71,14 @@ public class StatusBars : UI
     private void DrawHealth(SpriteBatch spriteBatch)
     {
         
+    }
+
+    private void DrawTime(SpriteBatch spriteBatch)
+    {
+        int minutes = actualTime % 3600 / 60;
+        int hours = actualTime / 3600;
+        string timeString = "Time: " + hours.ToString() + ":" + minutes.ToString();
+        Vector2 timeTextPos = new Vector2(screenRes.X - 50 * SizeScaler, 50 * SizeScaler);
+        spriteBatch.DrawString(font, timeString, timeTextPos, Color.Black);
     }
 }

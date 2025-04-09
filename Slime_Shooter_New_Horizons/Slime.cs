@@ -191,8 +191,8 @@ public class Slime : Animator
             itsCorral.destinationRectangle.X + itsCorral.destinationRectangle.Width * itsCorral.scaleMultiplier / 2,
             itsCorral.destinationRectangle.Y + itsCorral.destinationRectangle.Height * itsCorral.scaleMultiplier / 2);
         Vector2 pointVec = new Vector2(centerOfCorral.X - centerDestRec.X, centerOfCorral.Y - centerDestRec.Y);
-        destinationRectangle.X += (int)(pointVec.X / 125);
-        destinationRectangle.Y += (int)(pointVec.Y / 125);
+        destinationRectangle.X += (int)(pointVec.X / 100);
+        destinationRectangle.Y += (int)(pointVec.Y / 100);
     }
     
     public new (bool, Rectangle) CheckForCollisionsWithSlimes()
