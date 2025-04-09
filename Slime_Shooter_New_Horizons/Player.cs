@@ -402,7 +402,6 @@ public class Player : Animator
             new Rectangle(destinationRectangle.X, destinationRectangle.Y, 22, 22),
             new Rectangle(0, 0, 22, 22), objectsColRecs[slimeID], 3);
         slime.plortsTexs = objectsTextures;
-        slime.scaleMultiplier = 3;
         slime.SetLists(slimesList, plortsList, fruitsVeggiesList);
         slime.SetupAnimator(6, 6, new Vector2(22, 22), 0.9f);
         slime.ThrowSlime(QuadrantClicked(spawnPos, screenRes));
@@ -414,7 +413,7 @@ public class Player : Animator
     {
         Plort plort = new Plort(plortID, plortTex, 
             new Rectangle(destinationRectangle.X, destinationRectangle.Y, plortTex.Width, plortTex.Height),
-            new Rectangle(0, 0, plortTex.Width, plortTex.Height), 2);
+            new Rectangle(0, 0, plortTex.Width, plortTex.Height), 3);
         plort.ThrowPlort(QuadrantClicked(spawnPos, screenRes));
         plort.SetLists(slimesList, plortsList, fruitsVeggiesList);
         plortsList.Add(plort);
@@ -425,7 +424,7 @@ public class Player : Animator
     {
         FruitVeggie fruitVeggie = new FruitVeggie(objectID, fruitVeggieTex, 
             new Rectangle(destinationRectangle.X, destinationRectangle.Y, fruitVeggieTex.Width, fruitVeggieTex.Height),
-            new Rectangle(0, 0, fruitVeggieTex.Width, fruitVeggieTex.Height), 2);
+            new Rectangle(0, 0, fruitVeggieTex.Width, fruitVeggieTex.Height), 3);
         fruitVeggie.ThrowFruitVeggie(QuadrantClicked(spawnPos, screenRes));
         fruitVeggie.SetLists(slimesList, plortsList, fruitsVeggiesList);
         fruitsVeggiesList.Add(fruitVeggie);
@@ -491,7 +490,7 @@ public class Player : Animator
     // TODO: In future remove this, when added animation spritesheet for player character
     public new Rectangle GetCollisionRectangle()
     {
-        return new Rectangle(destinationRectangle.X * (int)scaleMultiplier, destinationRectangle.Y * (int)scaleMultiplier, 
+        return new Rectangle(destinationRectangle.X, destinationRectangle.Y, 
             destinationRectangle.Width * (int)scaleMultiplier, destinationRectangle.Height * (int)scaleMultiplier);
     }
 }

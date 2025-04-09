@@ -94,9 +94,9 @@ public class Plort(
         return (collision, collidedRectangle);
     }
     
-    public new Rectangle GetCollisionRectangle()
+    /**public new Rectangle GetCollisionRectangle()
     {
         return new Rectangle(destinationRectangle.X, destinationRectangle.Y, 
             destinationRectangle.Width * (int)scaleMultiplier, destinationRectangle.Height * (int)scaleMultiplier);
-    }
+    }**/
 }

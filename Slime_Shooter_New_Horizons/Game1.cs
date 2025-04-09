@@ -124,8 +124,8 @@ public class Game1 : Game
                 new List<Rectangle>()
                 {   
                     new Rectangle(3, 11, 16, 11), new Rectangle(3, 10, 16, 11),
-                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11), 
-                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11)
+                    new Rectangle(4, 9, 14, 12), new Rectangle(3, 12, 16, 10), 
+                    new Rectangle(2, 13, 18, 9), new Rectangle(3, 12, 16, 10)
                 },
                 new List<Rectangle>()
                 {
@@ -152,9 +152,9 @@ public class Game1 : Game
             {
                 new List<Rectangle>()
                 {
-                    new Rectangle(3, 7, 16, 15), new Rectangle(3, 7, 16, 15),
-                    new Rectangle(3, 7, 16, 15), new Rectangle(3, 7, 16, 15), 
-                    new Rectangle(3, 7, 16, 15), new Rectangle(3, 7, 16, 15)
+                    new Rectangle(3, 7, 16, 15), new Rectangle(3, 6, 16, 15),
+                    new Rectangle(4, 6, 14, 15), new Rectangle(3, 8, 16, 14), 
+                    new Rectangle(2, 9, 18, 13), new Rectangle(3, 8, 16, 14)
                     
                 },
                 new List<Rectangle>()
@@ -185,9 +185,9 @@ public class Game1 : Game
             {
                 new List<Rectangle>()
                 {
-                    new Rectangle(1, 8, 20, 14), new Rectangle(1, 8, 20, 14),
-                    new Rectangle(1, 8, 20, 14), new Rectangle(1, 8, 20, 14),
-                    new Rectangle(1, 8, 20, 14), new Rectangle(1, 8, 20, 14)
+                    new Rectangle(1, 8, 20, 14), new Rectangle(1, 7, 20, 14),
+                    new Rectangle(2, 6, 19, 16), new Rectangle(1, 9, 20, 13),
+                    new Rectangle(1, 10, 20, 12), new Rectangle(1, 9, 20, 13)
                 },
                 new List<Rectangle>()
                 {
@@ -214,9 +214,9 @@ public class Game1 : Game
             {
                 new List<Rectangle>()
                 {
-                    new Rectangle(0, 9, 22, 13), new Rectangle(0, 9, 22, 13),
-                    new Rectangle(0, 9, 22, 13), new Rectangle(0, 9, 22, 13),
-                    new Rectangle(0, 9, 22, 13), new Rectangle(0, 9, 22, 13)
+                    new Rectangle(0, 9, 22, 13), new Rectangle(0, 8, 22, 13),
+                    new Rectangle(0, 7, 22, 13), new Rectangle(0, 6, 22, 13),
+                    new Rectangle(0, 7, 22, 13), new Rectangle(0, 8, 22, 13)
                 },
                 new List<Rectangle>()
                 {
@@ -241,9 +241,12 @@ public class Game1 : Game
             // Honey Slime object colliders
             new List<List<Rectangle>>()
             {
-                new List<Rectangle>(){new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11),
-                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11), 
-                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11)},
+                new List<Rectangle>()
+                {   
+                    new Rectangle(3, 11, 16, 11), new Rectangle(3, 10, 16, 11),
+                    new Rectangle(4, 9, 14, 12), new Rectangle(3, 12, 16, 10), 
+                    new Rectangle(2, 13, 18, 9), new Rectangle(3, 12, 16, 10)
+                },
                 new List<Rectangle>(){new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11),
                     new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11), 
                     new Rectangle(3, 11, 16, 11), new Rectangle(3, 11, 16, 11)},
@@ -358,10 +361,9 @@ public class Game1 : Game
 
         // TODO: Add your update logic here
         
-        player.Update(gameTime, new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
+        player.Update(gameTime, screenRes);
         
-        followCamera.FollowTarget(player.GetCollisionRectangle(),
-            new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
+        followCamera.FollowTarget(player.destinationRectangle, screenRes);
         
         tileMap.Update(gameTime);
         
@@ -418,7 +420,9 @@ public class Game1 : Game
 
         tileMap.Draw(_spriteBatch, followCamera.position);
         
+        
         plortSellPoint.Draw(_spriteBatch, followCamera.position);
+        plortSellPoint.DrawCollisionRec(_spriteBatch, colliderTexture, followCamera.position, plortSellPoint.GetCollectorRectangle());
         
         if (slimeList != null)
             foreach (var slime in slimeList)
@@ -431,6 +435,7 @@ public class Game1 : Game
         {
             foreach (var plort in plortsList)
             {
+                plort.DrawCollisionRec(_spriteBatch, colliderTexture, followCamera.position, plort.GetCollisionRectangle());
                 plort.Draw(_spriteBatch, followCamera.position);
             }
         }

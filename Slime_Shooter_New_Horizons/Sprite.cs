@@ -97,21 +97,20 @@ public class Sprite : Physics
             collisionRec.X + (int)offset.X, 
             collisionRec.Y + (int)offset.Y, 
             collisionRec.Width, 
-            lineThicknes * (int)scaleMultiplier);
+            lineThicknes);
         Rectangle bottomLine = new Rectangle(
             (int)(collisionRec.X + offset.X), 
-            (int)(collisionRec.Y + collisionRec.Height - lineThicknes * scaleMultiplier + offset.Y), 
-            collisionRec.Width,
-            (int)(lineThicknes * scaleMultiplier));
+            (int)(collisionRec.Y + collisionRec.Height - lineThicknes + offset.Y), 
+            collisionRec.Width, lineThicknes);
         Rectangle leftLine = new(
             collisionRec.X + (int)offset.X, 
             collisionRec.Y + (int)offset.Y,
-            lineThicknes * (int)scaleMultiplier, 
+            lineThicknes, 
             collisionRec.Height);
         Rectangle rightLine = new(
-            (int)(collisionRec.X + collisionRec.Width - lineThicknes * scaleMultiplier + offset.X), 
+            (int)(collisionRec.X + collisionRec.Width - lineThicknes + offset.X), 
             collisionRec.Y + (int)offset.Y,
-            lineThicknes * (int)scaleMultiplier, 
+            lineThicknes, 
             collisionRec.Height);
         spriteBatch.Draw(greenDot, upperLine, Color.Green);
         spriteBatch.Draw(greenDot, bottomLine, Color.Green);
@@ -119,9 +118,9 @@ public class Sprite : Physics
         spriteBatch.Draw(greenDot, rightLine, Color.Green);
     }
     
-    public virtual Rectangle GetCollisionRectangle()
+    public new Rectangle GetCollisionRectangle()
     {
-        return new Rectangle(destinationRectangle.X + colliderRectangle.X, destinationRectangle.Y + colliderRectangle.Y,
-            colliderRectangle.Width, colliderRectangle.Height);
+        return new Rectangle(destinationRectangle.X, destinationRectangle.Y, 
+            destinationRectangle.Width * (int)scaleMultiplier, destinationRectangle.Height * (int)scaleMultiplier);
     }
 }

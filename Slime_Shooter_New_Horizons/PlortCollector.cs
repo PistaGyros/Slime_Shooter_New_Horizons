@@ -27,7 +27,6 @@ public class PlortCollector : Building
             {
                 player.coins += sellPrices[outPutCheck.Item2.plortID];
                 plortsList.Remove(outPutCheck.Item2);
-                Console.WriteLine(player.coins);
             }
         }
     }
@@ -54,7 +53,7 @@ public class PlortCollector : Building
     {
         return new Rectangle((int)(destinationRectangle.X + 5 * scaleMultiplier), 
             (int)(destinationRectangle.Y + 4 * scaleMultiplier), 
-            (int)(24 * scaleMultiplier), (int)(15 * scaleMultiplier));
+            (int)(12 * scaleMultiplier), (int)(12 * scaleMultiplier));
     }
     
 }
