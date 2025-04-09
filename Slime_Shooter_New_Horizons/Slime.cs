@@ -115,7 +115,7 @@ public class Slime : Animator
 
         else if (!isCollidingWithSlime)
         {
-            UpdateSprite(gameTime, playerRec);
+            UpdateSprite(gameTime, playerRec, destinationRectangle, GetCollisionRectangle());
         }
     }
     
@@ -160,10 +160,9 @@ public class Slime : Animator
         }
     }
 
-    public void Vacuum(GameTime gameTime)
+    public new void Vacuum(GameTime gameTime)
     {
-        vacuumTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-        IsVacuumed = true;
+        VacuumTime(gameTime);
         // Check for any sort of collision
         if (isCollidingWithFence && isWithinCorral && !isThrowed)
         {
@@ -220,7 +219,7 @@ public class Slime : Animator
         FruitVeggie collidedFood = null;
         foreach (var fruitVeggie in fruitsVeggiesList)
         {
-            if (GetCollisionRectangle().Contains(fruitVeggie.GetCollisionRectangle()))
+            if (GetCollisionRectangle().Intersects(fruitVeggie.GetCollisionRectangle()))
             {
                 collision = true;
                 collidedFood = fruitVeggie;

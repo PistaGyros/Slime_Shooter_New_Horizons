@@ -54,7 +54,7 @@ public class FruitVeggie : Sprite
 
         else if (!isCollidingWithObject)
         {
-            UpdateSprite(gameTime, playerRec);
+            UpdateSprite(gameTime, playerRec, destinationRectangle, GetCollisionRectangle());
         }
     }
     
@@ -88,10 +88,4 @@ public class FruitVeggie : Sprite
         }
         return (collision, collidedRectangle);
     }
-    
-    /**public new Rectangle GetCollisionRectangle()
-    {
-        return new Rectangle(destinationRectangle.X, destinationRectangle.Y, 
-            destinationRectangle.Width * (int)scaleMultiplier, destinationRectangle.Height * (int)scaleMultiplier);
-    }**/
 }

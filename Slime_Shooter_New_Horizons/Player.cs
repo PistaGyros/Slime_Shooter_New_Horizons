@@ -277,8 +277,7 @@ public class Player : Animator
             {
                 if (plort.GetCollisionRectangle().Intersects(vacuumCone))
                 {
-                    plort.vacuumTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    plort.IsVacuumed = true;
+                    plort.VacuumTime(gameTime);
                     int availableSlot = inventory.WhichSlotIsAvailable(plort.plortID);
                     if (GetCollisionRectangle().Intersects(plort.GetCollisionRectangle()) && availableSlot != 69)
                     {
@@ -293,8 +292,7 @@ public class Player : Animator
             {
                 if (fruitVeggie.GetCollisionRectangle().Intersects(vacuumCone))
                 {
-                    fruitVeggie.vacuumTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    fruitVeggie.IsVacuumed = true;
+                    fruitVeggie.VacuumTime(gameTime);
                     int availableSlot = inventory.WhichSlotIsAvailable(fruitVeggie.fruitVeggieID);
                     if (GetCollisionRectangle().Intersects(fruitVeggie.GetCollisionRectangle()) && availableSlot != 69)
                     {
@@ -413,7 +411,7 @@ public class Player : Animator
     {
         Plort plort = new Plort(plortID, plortTex, 
             new Rectangle(destinationRectangle.X, destinationRectangle.Y, plortTex.Width, plortTex.Height),
-            new Rectangle(0, 0, plortTex.Width, plortTex.Height), 3);
+            new Rectangle(0, 0, plortTex.Width, plortTex.Height), 2);
         plort.ThrowPlort(QuadrantClicked(spawnPos, screenRes));
         plort.SetLists(slimesList, plortsList, fruitsVeggiesList);
         plortsList.Add(plort);
@@ -424,7 +422,7 @@ public class Player : Animator
     {
         FruitVeggie fruitVeggie = new FruitVeggie(objectID, fruitVeggieTex, 
             new Rectangle(destinationRectangle.X, destinationRectangle.Y, fruitVeggieTex.Width, fruitVeggieTex.Height),
-            new Rectangle(0, 0, fruitVeggieTex.Width, fruitVeggieTex.Height), 3);
+            new Rectangle(0, 0, fruitVeggieTex.Width, fruitVeggieTex.Height), 2);
         fruitVeggie.ThrowFruitVeggie(QuadrantClicked(spawnPos, screenRes));
         fruitVeggie.SetLists(slimesList, plortsList, fruitsVeggiesList);
         fruitsVeggiesList.Add(fruitVeggie);

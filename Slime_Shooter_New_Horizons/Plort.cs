@@ -49,7 +49,7 @@ public class Plort(
 
         else if (!isCollidingWithObject)
         {
-            UpdateSprite(gameTime, playerRec);
+            UpdateSprite(gameTime, playerRec, destinationRectangle, GetCollisionRectangle());
         }
     }
     

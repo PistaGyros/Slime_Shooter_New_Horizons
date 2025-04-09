@@ -51,9 +51,9 @@ public class PlortCollector : Building
 
     public Rectangle GetCollectorRectangle()
     {
-        return new Rectangle((int)(destinationRectangle.X + 5 * scaleMultiplier), 
-            (int)(destinationRectangle.Y + 4 * scaleMultiplier), 
-            (int)(12 * scaleMultiplier), (int)(12 * scaleMultiplier));
+        return new Rectangle((int)(destinationRectangle.X + 5 * scaleMultiplier - 2 * scaleMultiplier), 
+            (int)(destinationRectangle.Y + 4 * scaleMultiplier - 2 * scaleMultiplier), 
+            (int)(16 * scaleMultiplier), (int)(16 * scaleMultiplier));
     }
     
 }

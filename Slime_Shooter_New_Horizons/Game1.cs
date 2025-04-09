@@ -42,7 +42,6 @@ public class Game1 : Game
 
     private TileMap tileMap;
     private Player player;
-    //private Corral corral;
     private PlortCollector plortSellPoint;
 
     public Game1()
@@ -322,15 +321,6 @@ public class Game1 : Game
         player.SetLists(slimeList, plortsList, fruitsVeggiesList);
         player.plots = plotsList;
         
-        // Init of corral
-        /**Texture2D corralTex = Content.Load<Texture2D>("corral_deactivated");
-        Texture2D forceFieldTexHorizontal = Content.Load<Texture2D>("force_field_corral_prototype_anim");
-        Texture2D forceFieldTexVertical = Content.Load<Texture2D>("force_field_corral_prototype_vertical_anim");
-        Corral corral = new Corral(corralTex,
-            new Rectangle(100, 100, corralTex.Width, corralTex.Height),
-            new Rectangle(0, 0, corralTex.Width, corralTex.Height),
-            3, forceFieldTexHorizontal, forceFieldTexVertical);
-        corralsList.Add(corral);**/
         
         // Init of plort collectors/sell point
         Texture2D plortCollectorTex = Content.Load<Texture2D>("plort_collector");

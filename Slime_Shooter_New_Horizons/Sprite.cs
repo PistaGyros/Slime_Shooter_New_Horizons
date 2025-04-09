@@ -18,7 +18,7 @@ public class Sprite : Physics
 
     private Vector2 colliderSize;
     private Texture2D colliderTexture;
-    private bool colliderVisible = false;
+    public bool colliderVisible = true;
     
     public bool isThrowed = false;
     public bool IsVacuumed = false;
@@ -52,16 +52,16 @@ public class Sprite : Physics
         colliderVisible = true;
     }
 
-    public new void Update(GameTime gameTime, Rectangle playerRec)
+    public new void Update(GameTime gameTime, Rectangle playerRec, Rectangle colliderRec, Rectangle colliderColRec)
     {
-        UpdateSprite(gameTime, playerRec);
+        UpdateSprite(gameTime, playerRec, colliderRec, colliderColRec);
     }
 
-    public void UpdateSprite(GameTime gameTime, Rectangle playerRec)
+    public void UpdateSprite(GameTime gameTime, Rectangle playerRec, Rectangle colliderRec, Rectangle colliderColRec)
     {
         if (IsVacuumed)
         {
-            destinationRectangle = Vacuum(playerRec, destinationRectangle, gameTime);
+            destinationRectangle = Vacuum(gameTime, playerRec, colliderRec, colliderColRec);
         }
         else if (isThrowed)
         {
@@ -78,6 +78,13 @@ public class Sprite : Physics
             }
         }
     }
+    
+    public void VacuumTime(GameTime gameTime)
+    {
+        vacuumTime += gameTime.ElapsedGameTime.TotalSeconds;
+        IsVacuumed = true;
+        // Check for any sort of collision
+    }
 
     public virtual void Draw(SpriteBatch spriteBatch, Vector2 offset)
     {
@@ -92,30 +99,33 @@ public class Sprite : Physics
 
     public void DrawCollisionRec(SpriteBatch spriteBatch, Texture2D greenDot, Vector2 offset, Rectangle collisionRec)
     {
-        int lineThicknes = 2;
-        Rectangle upperLine = new Rectangle(
-            collisionRec.X + (int)offset.X, 
-            collisionRec.Y + (int)offset.Y, 
-            collisionRec.Width, 
-            lineThicknes);
-        Rectangle bottomLine = new Rectangle(
-            (int)(collisionRec.X + offset.X), 
-            (int)(collisionRec.Y + collisionRec.Height - lineThicknes + offset.Y), 
-            collisionRec.Width, lineThicknes);
-        Rectangle leftLine = new(
-            collisionRec.X + (int)offset.X, 
-            collisionRec.Y + (int)offset.Y,
-            lineThicknes, 
-            collisionRec.Height);
-        Rectangle rightLine = new(
-            (int)(collisionRec.X + collisionRec.Width - lineThicknes + offset.X), 
-            collisionRec.Y + (int)offset.Y,
-            lineThicknes, 
-            collisionRec.Height);
-        spriteBatch.Draw(greenDot, upperLine, Color.Green);
-        spriteBatch.Draw(greenDot, bottomLine, Color.Green);
-        spriteBatch.Draw(greenDot, leftLine, Color.Green);
-        spriteBatch.Draw(greenDot, rightLine, Color.Green);
+        if (colliderVisible)
+        {
+            int lineThicknes = 2;
+            Rectangle upperLine = new Rectangle(
+                collisionRec.X + (int)offset.X, 
+                collisionRec.Y + (int)offset.Y, 
+                collisionRec.Width, 
+                lineThicknes);
+            Rectangle bottomLine = new Rectangle(
+                (int)(collisionRec.X + offset.X), 
+                (int)(collisionRec.Y + collisionRec.Height - lineThicknes + offset.Y), 
+                collisionRec.Width, lineThicknes);
+            Rectangle leftLine = new(
+                collisionRec.X + (int)offset.X, 
+                collisionRec.Y + (int)offset.Y,
+                lineThicknes, 
+                collisionRec.Height);
+            Rectangle rightLine = new(
+                (int)(collisionRec.X + collisionRec.Width - lineThicknes + offset.X), 
+                collisionRec.Y + (int)offset.Y,
+                lineThicknes, 
+                collisionRec.Height);
+            spriteBatch.Draw(greenDot, upperLine, Color.Green);
+            spriteBatch.Draw(greenDot, bottomLine, Color.Green);
+            spriteBatch.Draw(greenDot, leftLine, Color.Green);
+            spriteBatch.Draw(greenDot, rightLine, Color.Green);   
+        }
     }
     
     public new Rectangle GetCollisionRectangle()
