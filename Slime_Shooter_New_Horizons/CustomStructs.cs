@@ -24,12 +24,24 @@ public struct Triangle(float x1, float y1, float x2, float y2, float x3, float y
     public bool IntersectsRectangle(Rectangle rect)
     {
         bool intersects = false;
+        
         foreach (var vertex in Verticies)
         {
             if (IsPointWithinRectangle(vertex, rect))
                 return true;
-            else if ()
-
+        }
+        
+        List<Vector2> rectVertices = new List<Vector2>
+        {
+            new Vector2(rect.X, rect.Y),
+            new Vector2(rect.Right, rect.Y),
+            new Vector2(rect.X, rect.Bottom),
+            new Vector2(rect.Right, rect.Bottom),
+        };
+        foreach (var vertex in rectVertices)
+        {
+            if (IsPointWithinTriangle(vertex))
+                return true;
         }
         
         return intersects;
@@ -41,21 +53,39 @@ public struct Triangle(float x1, float y1, float x2, float y2, float x3, float y
         return cointaints;
     }
 
-    private bool IsPointWithinRectangle(Vector2 vertex, Rectangle rect)
+    public bool IsPointWithinRectangle(Vector2 point, Rectangle rect)
     {
         bool isWithin = false;
-        if (vertex.X >= rect.X && vertex.X <= rect.X + rect.Width)
-            if (vertex.Y >= rect.Y && vertex.Y <= rect.Y + rect.Height)
+        if (point.X >= rect.X && point.X <= rect.X + rect.Width)
+            if (point.Y >= rect.Y && point.Y <= rect.Y + rect.Height)
                 isWithin = true;
         
         return isWithin;
     }
 
-    private bool RectangleLinesIntersect(List<Vector2> verticies, Rectangle rect)
+    public bool IsPointWithinTriangle(Vector2 point)
     {
-        bool intersects = false;
-        Vector3 line
-        
-        return intersects;
+        // Check if the point is on the same side as the third vertex
+        if (SameSide(point, Verticies[2], Verticies[0], Verticies[1]))
+            return true;
+        else if (SameSide(point, Verticies[0], Verticies[1], Verticies[2]))
+            return true;
+        else if (SameSide(point, Verticies[1], Verticies[2], Verticies[0]))
+            return true;
+        else
+            return false;
+    }
+    
+    private bool SameSide(Vector2 point1, Vector2 point2, Vector2 a, Vector2 b)
+    {
+        Vector3 ab = new Vector3(b.X - a.X, b.Y - a.Y, 0);
+        Vector3 aPont1 = new Vector3(point1.X - a.X, point1.Y - a.Y, 0);
+        Vector3 aPont2 = new Vector3(point2.X - a.X, point2.Y - a.Y, 0);
+        Vector3 crossProduct1 = Vector3.Cross(ab, aPont1);
+        Vector3 crossProduct2 = Vector3.Cross(ab, aPont2);
+        if (Vector3.Dot(crossProduct1, crossProduct2) >= 0)
+            return true;
+        else
+            return false;
     }
 }
