@@ -11,8 +11,8 @@
         <ApplicationIcon>Icon.ico</ApplicationIcon>
     </PropertyGroup>
     <ItemGroup>
-        <None Remove="Icon.ico"/>
-        <None Remove="Icon.bmp"/>
+        <None Remove="Icon.ico" />
+        <None Remove="Icon.bmp" />
         <None Remove="Content\white_prototype_rectangle.png" />
         <None Remove="Content\items_atlas.png" />
     </ItemGroup>
@@ -25,8 +25,9 @@
         </EmbeddedResource>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.2.1105"/>
-        <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.2.1105"/>
+        <PackageReference Include="MonoGame.Extended" Version="4.0.4" />
+        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.2.1105" />
+        <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.2.1105" />
     </ItemGroup>
     <ItemGroup>
       <Content Include="Data\tileMap.csv">
@@ -34,7 +35,7 @@
       </Content>
     </ItemGroup>
     <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
-        <Message Text="Restoring dotnet tools" Importance="High"/>
-        <Exec Command="dotnet tool restore"/>
+        <Message Text="Restoring dotnet tools" Importance="High" />
+        <Exec Command="dotnet tool restore" />
     </Target>
 </Project>

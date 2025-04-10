@@ -7,6 +7,8 @@ namespace Slime_Shooter_New_Horizons;
 
 public class Animator : Sprite
 {
+    private bool runAnim = true;
+
     public int numFrames;
     public int numCollums;
     public int numRows;
@@ -100,7 +102,8 @@ public class Animator : Sprite
 
     public new void Update(GameTime gameTime)
     {
-        UpdateAnimator(gameTime);
+        if (runAnim)
+            UpdateAnimator(gameTime);
     }
 
     public void UpdateAnimator(GameTime gameTime)
@@ -111,6 +114,17 @@ public class Animator : Sprite
             counter = 0;
             NextFrame();
         }
+    }
+
+    public void StartAnimator()
+    {
+        runAnim = true;
+    }
+
+    public void StopAnimator()
+    {
+        ResetAnim();
+        runAnim = false;
     }
 
     public new virtual void Draw(SpriteBatch spriteBatch, Vector2 offset)
@@ -124,7 +138,7 @@ public class Animator : Sprite
         spriteBatch.Draw(texture, dest, GetFrame(currentRow), Color.White);
     }
 
-    public void NextFrame()
+    private void NextFrame()
     {
         currentFrame++;
         colPos++;
@@ -135,7 +149,7 @@ public class Animator : Sprite
         }
     }
 
-    public void ResetAnim()
+    private void ResetAnim()
     {
         currentFrame = 0;
         colPos = 0;

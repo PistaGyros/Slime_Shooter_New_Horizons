@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.Graphics;
 
 namespace Slime_Shooter_New_Horizons;
 
@@ -33,6 +34,7 @@ public class Player : Animator
     public List<PlotBuilding> plots;
 
     public Rectangle interactRec;
+    public List<Rectangle> VacuumConeRecs;
     public Inventory inventory;
     public StatusBars StatusBarsUi;
     
@@ -48,6 +50,7 @@ public class Player : Animator
     public new virtual void Update(GameTime gameTime, Vector2 screenRes, int elapsedTime, int days)
     {
         KeyboardState keyboardState = Keyboard.GetState();
+        Vector2 mousePos = Mouse.GetState().Position.ToVector2();
         isWalking = false;
         if (canMove)
         {
@@ -87,16 +90,18 @@ public class Player : Animator
             // VACUUM
             if (Mouse.GetState().RightButton == ButtonState.Pressed)
             {
+                VacuumConeRecs = CreateVacuumConeRecs(mousePos, screenRes);
                 Vacuum(gameTime, screenRes);
             }
             else if (Mouse.GetState().RightButton == ButtonState.Released)
             {
-                StopVacuum(screenRes);
+                VacuumConeRecs = CreateVacuumConeRecs(mousePos, screenRes);
+                StopVacuum(mousePos, screenRes);
+                VacuumConeRecs = null;
             }
 
             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
-                Vector2 mousePos = Mouse.GetState().Position.ToVector2();
                 Rectangle clickRec = new Rectangle((int)mousePos.X, (int)mousePos.Y, 5, 5);
                 bool clickedOnSlot = false;
                 int clickedSlot = 0;
@@ -150,7 +155,10 @@ public class Player : Animator
         
         slimeShootTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        CheckForPlotsInteractiveRecs(keyboardState, screenRes);
+        if (keyboardState.IsKeyDown(Keys.E))
+            CheckForPlotsInteractiveRecs(keyboardState, screenRes);
+        else
+            interactRec = Rectangle.Empty;
         
         StatusBarsUi.Update(gameTime, screenRes, coins, (int)Stamina, (int)Health, elapsedTime, days);
     }
@@ -227,34 +235,34 @@ public class Player : Animator
                 for(int i = 0; i < 6; i++)
                 {
                     vacuumConeRecs.Add(new Rectangle(
-                        (int)(destinationRectangle.X + destinationRectangle.Width + 25 * i), 
-                        (int)(destinationRectangle.Y - 10 * i),
+                        GetCollisionRectangle().X + GetCollisionRectangle().Width + 25 * i, 
+                        GetCollisionRectangle().Y - 10 * i,
                         25, 
-                        destinationRectangle.Height + 10 * i * 2));
+                        GetCollisionRectangle().Height + 10 * i * 2));
                 }
                 break;
             case 3:
                 for(int i = 0; i < 6; i++)
                 {
                     vacuumConeRecs.Add(new Rectangle(
-                        (int)destinationRectangle.X - 25 * i, (int)destinationRectangle.Y - 10 * i,
-                        25, destinationRectangle.Height + 10 * i * 2));
+                        GetCollisionRectangle().X - 25 - 25 * i, GetCollisionRectangle().Y - 10 * i,
+                        25, GetCollisionRectangle().Height + 10 * i * 2));
                 }
                 break;
             case 2:
                 for(int i = 0; i < 6; i++)
                 {
                     vacuumConeRecs.Add(new Rectangle(
-                        (int)(destinationRectangle.X - 10 * i), (int)(destinationRectangle.Y - 25 * i),
-                        destinationRectangle.Width + 10 * i * 2, 25));
+                        GetCollisionRectangle().X - 10 * i, GetCollisionRectangle().Y - 25 - 25 * i,
+                        GetCollisionRectangle().Width + 10 * i * 2, 25));
                 }
                 break;
             case 4:
                 for(int i = 0; i < 6; i++)
                 {
                     vacuumConeRecs.Add(new Rectangle(
-                        (int)(destinationRectangle.X - 10 * i), (int)destinationRectangle.Y + destinationRectangle.Height + 25 * i,
-                        destinationRectangle.Width + 10 * i * 2, 25));
+                        GetCollisionRectangle().X - 10 * i, GetCollisionRectangle().Y + GetCollisionRectangle().Height + 25 * i,
+                        GetCollisionRectangle().Width + 10 * i * 2, 25));
                 }
                 break;
         }
@@ -266,11 +274,9 @@ public class Player : Animator
         List<Slime> vacuumedSlimeList = new List<Slime>();
         List<Plort> vacuumedPlortList = new List<Plort>();
         List<FruitVeggie> vacuumedFruitVeggieList = new List<FruitVeggie>();
-        Vector2 mousePos = Mouse.GetState().Position.ToVector2();
-        List<Rectangle> vacuumConeRecs = CreateVacuumConeRecs(mousePos, screenRes);
         
         // Check for vacuum collisions with slimes and/or plorts, fruits and veggies
-        foreach (var vacuumCone in vacuumConeRecs)
+        foreach (var vacuumCone in VacuumConeRecs)
         {
             foreach (var slime in slimesList)
             {
@@ -338,14 +344,12 @@ public class Player : Animator
         }
     }
 
-    private void StopVacuum(Vector2 screenRes)
+    private void StopVacuum(Vector2 mousePos, Vector2 screenRes)
     {
         if (slimesList != null)
         {
-            Vector2 mousePos = Mouse.GetState().Position.ToVector2();
-            List<Rectangle> vacuumConeRecs = CreateVacuumConeRecs(mousePos, screenRes);
             // Check for vacuum collisions with slimes and/or plorts, fruits and veggies
-            foreach (var vacuumCone in vacuumConeRecs)
+            foreach (var vacuumCone in VacuumConeRecs)
             {
                 foreach (var slime in slimesList)
                 {
@@ -399,45 +403,47 @@ public class Player : Animator
 
     private void DecideWhatTypeOfObjectToShoot(int objectID, Vector2 mousePos, Vector2 screenRes)
     {
+        Vector2 spawnPosition = new Vector2(GetCollisionRectangle().X + (float)GetCollisionRectangle().Width / 2,
+            GetCollisionRectangle().Y + (float)GetCollisionRectangle().Height / 2);
         if (objectID > 0 && objectID < 10)
-            SpawnSlime(objectsTextures[objectID], mousePos, screenRes, objectID);
+            SpawnSlime(objectsTextures[objectID], spawnPosition, mousePos, screenRes, objectID);
         else if (objectID > 9 && objectID < 21)
-            SpawnPlort(objectsTextures[objectID], mousePos, screenRes, objectID);
+            SpawnPlort(objectsTextures[objectID], spawnPosition, mousePos, screenRes, objectID);
         else if (objectID > 20 && objectID < 31)
-            SpawnFruitOrVeggie(objectsTextures[objectID], mousePos, screenRes, objectID);
+            SpawnFruitOrVeggie(objectsTextures[objectID], spawnPosition, mousePos, screenRes, objectID);
     }
     
 
-    private void SpawnSlime(Texture2D slimeTex, Vector2 spawnPos, Vector2 screenRes, int slimeID)
+    private void SpawnSlime(Texture2D slimeTex, Vector2 spawnPos, Vector2 mousePos, Vector2 screenRes, int slimeID)
     {
         Slime slime = new Slime(slimeID, slimeTex,
-            new Rectangle(destinationRectangle.X, destinationRectangle.Y, 22, 22),
+            new Rectangle((int)spawnPos.X, (int)spawnPos.Y, 22, 22),
             new Rectangle(0, 0, 22, 22), objectsColRecs[slimeID], 3);
         slime.plortsTexs = objectsTextures;
         slime.SetLists(slimesList, plortsList, fruitsVeggiesList);
         slime.SetupAnimator(6, 6, new Vector2(22, 22), 0.9f);
-        slime.ThrowSlime(QuadrantClicked(spawnPos, screenRes));
+        slime.ThrowSlime(QuadrantClicked(mousePos, screenRes));
         slime.plotsList = plots;
         slimesList.Add(slime);
     }
 
-    private void SpawnPlort(Texture2D plortTex, Vector2 spawnPos, Vector2 screenRes, int plortID)
+    private void SpawnPlort(Texture2D plortTex, Vector2 spawnPos, Vector2 mousePos, Vector2 screenRes, int plortID)
     {
         Plort plort = new Plort(plortID, plortTex, 
-            new Rectangle(destinationRectangle.X, destinationRectangle.Y, plortTex.Width, plortTex.Height),
+            new Rectangle((int)spawnPos.X, (int)spawnPos.Y, plortTex.Width, plortTex.Height),
             new Rectangle(0, 0, plortTex.Width, plortTex.Height), 2);
-        plort.ThrowPlort(QuadrantClicked(spawnPos, screenRes));
+        plort.ThrowPlort(QuadrantClicked(mousePos, screenRes));
         plort.SetLists(slimesList, plortsList, fruitsVeggiesList);
         plortsList.Add(plort);
     }
 
-    private void SpawnFruitOrVeggie(Texture2D fruitVeggieTex, Vector2 spawnPos, 
+    private void SpawnFruitOrVeggie(Texture2D fruitVeggieTex, Vector2 spawnPos, Vector2 mousePos, 
         Vector2 screenRes, int objectID)
     {
         FruitVeggie fruitVeggie = new FruitVeggie(objectID, fruitVeggieTex, 
-            new Rectangle(destinationRectangle.X, destinationRectangle.Y, fruitVeggieTex.Width, fruitVeggieTex.Height),
+            new Rectangle((int)spawnPos.X, (int)spawnPos.Y, fruitVeggieTex.Width, fruitVeggieTex.Height),
             new Rectangle(0, 0, fruitVeggieTex.Width, fruitVeggieTex.Height), 2);
-        fruitVeggie.ThrowFruitVeggie(QuadrantClicked(spawnPos, screenRes));
+        fruitVeggie.ThrowFruitVeggie(QuadrantClicked(mousePos, screenRes));
         fruitVeggie.SetLists(slimesList, plortsList, fruitsVeggiesList);
         fruitsVeggiesList.Add(fruitVeggie);
     }

@@ -4,6 +4,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.OpenGL;
 
 namespace Slime_Shooter_New_Horizons;
 
@@ -46,7 +47,7 @@ public class Game1 : Game
     private PlortCollector plortSellPoint;
     private DayNightCycle dayNightCycle;
 
-    private Triangle triangle = new Triangle(0, 0, 1, 0, 1, 0);
+    private Triangle triangle = new Triangle(0, 0, 1, 0, 0, 1);
 
     public Game1()
     {
@@ -478,9 +479,15 @@ public class Game1 : Game
             }
         }
         
-        player.DrawCollisionRec(_spriteBatch, colliderTexture, followCamera.position, player.GetCollisionRectangle());
-        player.DrawCollisionRec(_spriteBatch, colliderTexture, followCamera.position, player.interactRec);
         player.Draw(_spriteBatch, followCamera.position);
+        player.DrawCollisionRec(_spriteBatch, colliderTexture, followCamera.position, player.GetCollisionRectangle());
+        if (player.interactRec != Rectangle.Empty)
+            player.DrawCollisionRec(_spriteBatch, colliderTexture, followCamera.position, player.interactRec);
+        if (player.VacuumConeRecs != null)
+            foreach (var rec in player.VacuumConeRecs)
+            {
+                player.DrawCollisionRec(_spriteBatch, colliderTexture, followCamera.position, rec);   
+            }
         
         dayNightCycle.Draw(_spriteBatch);
         
@@ -497,6 +504,7 @@ public class Game1 : Game
                 plot.plotMenu?.Draw(_spriteBatch);
             }
         }
+        
         
         
         _spriteBatch.End();
