@@ -31,12 +31,12 @@ public class Player : Animator
     public Texture2D playerTexture;
     public List<Texture2D> objectsTextures;
     public List<PlotBuilding> plots;
-    
+
+    public Rectangle interactRec;
     public Inventory inventory;
     public StatusBars StatusBarsUi;
     
     public PlayerOrientation playerOrientation;
-    public Rectangle interactRec;
     
     public Player(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle,
         float scaleMultiplier, List<List<List<Rectangle>>> objectsColRecs) : 
@@ -45,29 +45,12 @@ public class Player : Animator
         this.objectsColRecs = objectsColRecs;
     }
     
-    public new virtual void Update(GameTime gameTime, Vector2 screenRes, int elapsedTime)
+    public new virtual void Update(GameTime gameTime, Vector2 screenRes, int elapsedTime, int days)
     {
         KeyboardState keyboardState = Keyboard.GetState();
+        isWalking = false;
         if (canMove)
         {
-            int changeY = 0;
-            if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
-            {
-                playerOrientation = PlayerOrientation.Up;
-                changeY -= (int)(defaultSpeed * sprintSpeed * gameTime.ElapsedGameTime.Milliseconds);
-                isWalking = true;
-            }
-            else if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
-            {
-                playerOrientation = PlayerOrientation.Down;
-                changeY += (int)(defaultSpeed * sprintSpeed * gameTime.ElapsedGameTime.Milliseconds);
-                isWalking = true;
-            }
-            else
-                isWalking = false;
-            destinationRectangle.Y += changeY;
-
-
             int changeX = 0;
             if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
             {
@@ -82,7 +65,24 @@ public class Player : Animator
                 isWalking = true;
             }
             destinationRectangle.X += changeX;
+            
+            int changeY = 0;
+            if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
+            {
+                playerOrientation = PlayerOrientation.Up;
+                changeY -= (int)(defaultSpeed * sprintSpeed * gameTime.ElapsedGameTime.Milliseconds);
+                isWalking = true;
+            }
+            else if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
+            {
+                playerOrientation = PlayerOrientation.Down;
+                changeY += (int)(defaultSpeed * sprintSpeed * gameTime.ElapsedGameTime.Milliseconds);
+                isWalking = true;
+            }
+            destinationRectangle.Y += changeY;
+            ChangeAnimation((int)playerOrientation);
             Sprint(gameTime, keyboardState);
+            
             
             // VACUUM
             if (Mouse.GetState().RightButton == ButtonState.Pressed)
@@ -150,15 +150,16 @@ public class Player : Animator
         
         slimeShootTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        interactRec = CreateInteractiveRectangle();
+        CheckForPlotsInteractiveRecs(keyboardState, screenRes);
         
-        StatusBarsUi.Update(gameTime, screenRes, coins, (int)Stamina, (int)Health, elapsedTime);
+        StatusBarsUi.Update(gameTime, screenRes, coins, (int)Stamina, (int)Health, elapsedTime, days);
     }
 
     private void Sprint(GameTime gameTime, KeyboardState keyboardState)
     {
         if (isWalking && Stamina > 0 && keyboardState.IsKeyDown(Keys.LeftShift))
         {
+            ChangeAnimation((int)playerOrientation, 1.5f);
             sprintSpeed = 1.5f;
             Stamina -= (double)gameTime.ElapsedGameTime.Milliseconds / 50;
         }
@@ -176,11 +177,24 @@ public class Player : Animator
         }
     }
 
+    private void CheckForPlotsInteractiveRecs(KeyboardState keyboardState, Vector2 screenRes)
+    {
+        interactRec = CreateInteractiveRectangle();
+        foreach (var plot in plots)
+        {
+            if (interactRec.Intersects(plot.interactiveRec))
+            {
+                plot.PlayerIntersects(keyboardState, screenRes);
+            }
+                
+        }
+    }
+
     private Rectangle CreateInteractiveRectangle()
     {
         Rectangle rect = new Rectangle(0, 0, 
-            (int)((float)GetCollisionRectangle().Width * 2 * scaleMultiplier),
-            (int)((float)GetCollisionRectangle().Height / 2 * scaleMultiplier));
+            (int)((float)GetCollisionRectangle().Width / 2),
+            (int)((float)GetCollisionRectangle().Width / 2));
         switch (playerOrientation)
         {
             case PlayerOrientation.Right:
@@ -188,15 +202,15 @@ public class Player : Animator
                 rect.Y = (int)(GetCollisionRectangle().Y + (float)GetCollisionRectangle().Height / 3);
                 break;
             case PlayerOrientation.Up:
-                rect.X = (int)(GetCollisionRectangle().X + (float)GetCollisionRectangle().X / 3);
-                rect.Y = GetCollisionRectangle().Y + rect.Height;
+                rect.X = (int)(GetCollisionRectangle().X + (float)(GetCollisionRectangle().Width) / 2 - (float)rect.Width / 2);
+                rect.Y = GetCollisionRectangle().Y - rect.Height;
                 break;
             case PlayerOrientation.Left:
                 rect.X = GetCollisionRectangle().X - rect.Width;
                 rect.Y = (int)(GetCollisionRectangle().Y + (float)GetCollisionRectangle().Height / 3);
                 break;
             case PlayerOrientation.Down:
-                rect.X = (int)(GetCollisionRectangle().X + (float)GetCollisionRectangle().X / 3);
+                rect.X = (int)(GetCollisionRectangle().X + (float)(GetCollisionRectangle().Width) / 2 - (float)rect.Width / 2);
                 rect.Y = GetCollisionRectangle().Y + GetCollisionRectangle().Height;
                 break;
         }

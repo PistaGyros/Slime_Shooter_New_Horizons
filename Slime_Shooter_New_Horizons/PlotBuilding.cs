@@ -21,7 +21,7 @@ public class PlotBuilding : Building
     private SpriteFont font;
     private float scaleMultiplier;
 
-    private Rectangle interactiveRec;
+    public Rectangle interactiveRec;
     private bool isPlayerColliding;
     private bool plotMenuOpened;
     public bool buyBtnPressed;
@@ -53,22 +53,7 @@ public class PlotBuilding : Building
 
     public new void Update(GameTime gameTime, Vector2 screenRes)
     {
-        KeyboardState keyboardState = Keyboard.GetState();
-        if (interactiveRec.Intersects(player.interactRec))
-        {
-            isPlayerColliding = true;
-            if (!plotMenuOpened && keyboardState.IsKeyDown(Keys.E))
-            {
-                OpenPlotMenu(screenRes);
-            }
-            else if (plotMenuOpened && keyboardState.IsKeyDown(Keys.Escape))
-            {
-                ClosePlotMenu();
-            }
-
-        }
-        else
-            isPlayerColliding = false;
+        isPlayerColliding = false;
 
         plotMenu?.Update(gameTime);
     }
@@ -81,6 +66,19 @@ public class PlotBuilding : Building
             (int)(26 * scaleMultiplier),
             (int)(15 * scaleMultiplier)
         );
+    }
+
+    public void PlayerIntersects(KeyboardState keyboardState, Vector2 screenRes)
+    {
+        isPlayerColliding = true;
+        if (!plotMenuOpened && keyboardState.IsKeyDown(Keys.E))
+        {
+            OpenPlotMenu(screenRes);
+        }
+        else if (plotMenuOpened && keyboardState.IsKeyDown(Keys.Escape))
+        {
+            ClosePlotMenu();
+        }
     }
 
     private void OpenPlotMenu(Vector2 screenRes)

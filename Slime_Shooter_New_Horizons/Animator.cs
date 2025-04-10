@@ -12,7 +12,7 @@ public class Animator : Sprite
     public int numRows;
     public Vector2 size;
     public float counter;
-    private float animSpeedMultiplier = 1;
+    public float animSpeedMultiplier = 1;
     public List<List<Rectangle>> objectColRecs;
     
     public int currentFrame;
@@ -83,9 +83,10 @@ public class Animator : Sprite
         this.animSpeedMultiplier = animSpeedMultiplier;
     }
 
-    public void ChangeAnimation(int actualRow)
+    public void ChangeAnimation(int actualRow, float animSpeedMultiplier = 1)
     {
         this.currentRow = actualRow;
+        this.animSpeedMultiplier = animSpeedMultiplier;
     }
     
     public new Rectangle GetCollisionRectangle()

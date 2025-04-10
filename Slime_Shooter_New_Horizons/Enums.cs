@@ -12,8 +12,7 @@ public enum PlayerStatus
 {
     Idle,
     Walking,
-    Throwing,
-    Vacuuming
+    ThrowVacuum
 }
 
 public enum SlimeOrientation

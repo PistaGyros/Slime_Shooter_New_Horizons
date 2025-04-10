@@ -11,9 +11,9 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private Vector2 screenRes = new Vector2(1600, 900);
+    private Vector2 screenRes = new (1600, 900);
     private double elapsedTime = 18000;
-    private int days;
+    private int days = 0;
 
     
     // UI related
@@ -45,6 +45,8 @@ public class Game1 : Game
     private Player player;
     private PlortCollector plortSellPoint;
     private DayNightCycle dayNightCycle;
+
+    private Triangle triangle = new Triangle(0, 0, 1, 0, 1, 0);
 
     public Game1()
     {
@@ -312,10 +314,12 @@ public class Game1 : Game
         tileMap = new TileMap("Data/tileMap.csv", textureTileStore, tileMapAtlas, 16, 3);
         
         
-        Texture2D playerTexture = Content.Load<Texture2D>("spr_player_1_left_idle");
-        player = new Player(playerTexture, new Rectangle(100, 100, playerTexture.Width * 5, playerTexture.Height * 5), 
-            new Rectangle(0, 0, playerTexture.Width, playerTexture.Height), 
-            1, objectsColRecs);
+        Texture2D playerTexture = Content.Load<Texture2D>("bea_walking_spritesheet");
+        Vector2 playerSize = new Vector2(32, 40);
+        player = new Player(playerTexture, new Rectangle(100, 100, (int)playerSize.X, (int)playerSize.Y), 
+            new Rectangle(0, 0, (int)playerSize.X, (int)playerSize.Y), 
+            3, objectsColRecs);
+        player.SetupAnimator(6, 6, playerSize);
         SpriteFont uiFont = Content.Load<SpriteFont>("Bell MT");
         player.CreateInventory(screenRes, itemsAtlas, inventoryTex, uiFont, itemsID, itemsIDTexturesRec);
         player.CreateStatusBar(screenRes, UI_texture, UI_texture, coinTex, uiFont);
@@ -361,7 +365,7 @@ public class Game1 : Game
             days++;
         }
         
-        player.Update(gameTime, screenRes, (int)elapsedTime);
+        player.Update(gameTime, screenRes, (int)elapsedTime, days);
         
         followCamera.FollowTarget(player.destinationRectangle, screenRes);
         
@@ -456,6 +460,7 @@ public class Game1 : Game
             foreach (var plot in plotsList)
             {
                 plot.Draw(_spriteBatch, followCamera.position);
+                plot.DrawCollisionRec(_spriteBatch, colliderTexture, followCamera.position, plot.interactiveRec);
                 plot.plotMenu?.Draw(_spriteBatch);
             }
         }
@@ -474,6 +479,7 @@ public class Game1 : Game
         }
         
         player.DrawCollisionRec(_spriteBatch, colliderTexture, followCamera.position, player.GetCollisionRectangle());
+        player.DrawCollisionRec(_spriteBatch, colliderTexture, followCamera.position, player.interactRec);
         player.Draw(_spriteBatch, followCamera.position);
         
         dayNightCycle.Draw(_spriteBatch);

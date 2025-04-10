@@ -13,6 +13,7 @@ public class StatusBars : UI
     public float StaminaStatus;
     public int HealthStatus;
     private int actualTime;
+    private int days;
     
     private Vector2 position;
     private Texture2D backGroundTexture, forGroundTexture, coinTex;
@@ -31,13 +32,14 @@ public class StatusBars : UI
     }
 
     public new void Update(GameTime gameTime, Vector2 screenRes, int CoinsStatus, int StaminaStatus, int HealthStatus, 
-        int actualTime)
+        int actualTime, int days)
     {
         this.screenRes = screenRes;
         this.CoinsStatus = CoinsStatus;
         this.StaminaStatus = StaminaStatus;
         this.HealthStatus = HealthStatus;
         this.actualTime = actualTime;
+        this.days = days;
     }
 
     public new void Draw(SpriteBatch spriteBatch)
@@ -80,5 +82,8 @@ public class StatusBars : UI
         string timeString = "Time: " + hours.ToString() + ":" + minutes.ToString();
         Vector2 timeTextPos = new Vector2(screenRes.X - 50 * SizeScaler, 50 * SizeScaler);
         spriteBatch.DrawString(font, timeString, timeTextPos, Color.Black);
+        string daysString = "Day  " + days;
+        Vector2 daysTextPos = new Vector2(screenRes.X - 25 * SizeScaler, timeTextPos.Y);
+        spriteBatch.DrawString(font, daysString, daysTextPos, Color.Black);
     }
 }

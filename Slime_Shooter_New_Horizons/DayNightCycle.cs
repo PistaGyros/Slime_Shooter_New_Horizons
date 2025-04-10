@@ -17,6 +17,7 @@ public class DayNightCycle
     // Alpha value
     private float currentGlobalLightIntensity = 0;
     
+    
     public DayNightCycle(Texture2D globalLightFakeTexture)
     {
         this.globalLightFakeTexture = globalLightFakeTexture;
@@ -35,7 +36,7 @@ public class DayNightCycle
         Color nightColor = new Color(Color.MidnightBlue, currentGlobalLightIntensity);
         spriteBatch.Draw(
             globalLightFakeTexture, 
-            new Rectangle(0, 0, (int)(screenRes.X * 10), (int)(screenRes.Y * 10)),
+            new Rectangle(-(int)screenRes.X, -(int)screenRes.Y, (int)(screenRes.X * 100), (int)(screenRes.Y * 100)),
             new Rectangle(0, 0, 1, 1), 
             nightColor);
     }
