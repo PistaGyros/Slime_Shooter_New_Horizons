@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -73,10 +74,12 @@ public class PlotBuilding : Building
         isPlayerColliding = true;
         if (!plotMenuOpened && keyboardState.IsKeyDown(Keys.E))
         {
+            Console.WriteLine("Plot menu opened");
             OpenPlotMenu(screenRes);
         }
         else if (plotMenuOpened && keyboardState.IsKeyDown(Keys.Escape))
         {
+            Console.WriteLine("Plot menu closed");
             ClosePlotMenu();
         }
     }

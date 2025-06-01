@@ -10,6 +10,7 @@ namespace Slime_Shooter_New_Horizons;
 public class DayNightCycle
 {
     public double elapsedTime;
+    public int days;
     private Texture2D globalLightFakeTexture;
     private Vector2 screenRes;
     
@@ -23,10 +24,15 @@ public class DayNightCycle
         this.globalLightFakeTexture = globalLightFakeTexture;
     }
 
-    public new void Update(Vector2 screenRes, double elapsedTime)
+    public new void Update(GameTime gameTime, Vector2 screenRes)
     {
-        this.elapsedTime = elapsedTime;
         this.screenRes = screenRes;
+        elapsedTime += gameTime.ElapsedGameTime.TotalSeconds * 60;
+        if (elapsedTime > 86400)
+        {
+            elapsedTime = 0;
+            days++;
+        }
         
         DayOrNight();
     }

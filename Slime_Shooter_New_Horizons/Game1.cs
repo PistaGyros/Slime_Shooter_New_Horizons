@@ -13,8 +13,6 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private Vector2 screenRes = new (1600, 900);
-    private double elapsedTime = 18000;
-    private int days = 0;
 
     
     // UI related
@@ -30,7 +28,6 @@ public class Game1 : Game
     private List<Rectangle> itemsIDTexturesRec;
     private List<Rectangle> textureTileStore;
     private List<Vector2> objectsColSize;
-    private List<List<List<Vector2>>> animationOffSets;
     private List<List<List<Rectangle>>> objectsColRecs;
     private List<int> sellPrices;
     private List<int> purchasePlotFacilitiesPrices;
@@ -47,7 +44,8 @@ public class Game1 : Game
     private PlortCollector plortSellPoint;
     private DayNightCycle dayNightCycle;
 
-    private Triangle triangle = new Triangle(0, 0, 1, 0, 0, 1);
+    // TODO: Adjust drawing so it does work properly
+    private Triangle triangle;
 
     public Game1()
     {
@@ -64,6 +62,8 @@ public class Game1 : Game
         // TODO: Add your initialization logic here
 
         followCamera = new FollowCamera(Vector2.Zero);
+
+        //triangle = new Triangle(800, 450, 1000, 650, 1000, 250);
 
         // UI
         itemsNames = new List<string>()
@@ -118,8 +118,34 @@ public class Game1 : Game
         // Lists for collider offsets, it goes by objectID then animation row and then specific frame from the row
         objectsColRecs = new List<List<List<Rectangle>>>()
         {
-            // Empty object col
-            null,
+            // Player colliders
+            new List<List<Rectangle>>
+            {
+                new List<Rectangle>()
+                {
+                    new Rectangle(12, 8, 8, 32), new Rectangle(12, 8, 8, 32),
+                    new Rectangle(12, 8, 8, 32), new Rectangle(12, 8, 8, 32),
+                    new Rectangle(12, 8, 8, 32), new Rectangle(12, 8, 8, 32)
+                },
+                new List<Rectangle>()
+                {
+                    new Rectangle(12, 8, 8, 32), new Rectangle(12, 8, 8, 32),
+                    new Rectangle(12, 8, 8, 32), new Rectangle(12, 8, 8, 32),
+                    new Rectangle(12, 8, 8, 32), new Rectangle(12, 8, 8, 32)
+                },
+                new List<Rectangle>()
+                {
+                    new Rectangle(12, 8, 8, 32), new Rectangle(12, 8, 8, 32),
+                    new Rectangle(12, 8, 8, 32), new Rectangle(12, 8, 8, 32),
+                    new Rectangle(12, 8, 8, 32), new Rectangle(12, 8, 8, 32)
+                },
+                new List<Rectangle>()
+                {
+                    new Rectangle(12, 8, 8, 32), new Rectangle(12, 8, 8, 32),
+                    new Rectangle(12, 8, 8, 32), new Rectangle(12, 8, 8, 32),
+                    new Rectangle(12, 8, 8, 32), new Rectangle(12, 8, 8, 32)
+                }
+            },
             
             // TODO: Update objects colliders rectangles according to their animated version
             // Pink Slime object colliders
@@ -350,6 +376,11 @@ public class Game1 : Game
         }
 
         dayNightCycle = new DayNightCycle(UI_texture);
+        dayNightCycle.elapsedTime = 18000;
+
+        //triangle.CreateCollider(GraphicsDevice, colliderTexture);
+        //triangle.scaleMultiplier = 1;
+        
     }
 
     protected override void Update(GameTime gameTime)
@@ -358,15 +389,10 @@ public class Game1 : Game
             Exit();
 
         // TODO: Add your update logic here
-
-        elapsedTime += gameTime.ElapsedGameTime.TotalSeconds * 60;
-        if (elapsedTime > 86400)
-        {
-            elapsedTime = 0;
-            days++;
-        }
         
-        player.Update(gameTime, screenRes, (int)elapsedTime, days);
+        dayNightCycle.Update(gameTime, screenRes);
+        
+        player.Update(gameTime, screenRes, (int)dayNightCycle.elapsedTime, dayNightCycle.days);
         
         followCamera.FollowTarget(player.destinationRectangle, screenRes);
         
@@ -411,8 +437,6 @@ public class Game1 : Game
         }
         
         plortSellPoint.Update(gameTime);
-        
-        dayNightCycle.Update(screenRes, elapsedTime);
 
         base.Update(gameTime);
     }
@@ -505,7 +529,7 @@ public class Game1 : Game
             }
         }
         
-        
+        //triangle.DrawCollider(_spriteBatch, followCamera.position);
         
         _spriteBatch.End();
 
