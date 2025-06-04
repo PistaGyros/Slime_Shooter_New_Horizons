@@ -12,7 +12,7 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private Vector2 screenRes = new (1600, 900);
+    private Vector2 screenRes = new (1920, 1080);
 
     
     // UI related

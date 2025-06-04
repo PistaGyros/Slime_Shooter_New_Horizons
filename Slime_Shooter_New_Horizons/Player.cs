@@ -22,6 +22,7 @@ public class Player : Animator
     public double Health = 100;
 
     private bool isWalking;
+    private bool lastOrientationUpDown;
     private float defaultSpeed = 0.3f;
     private float sprintSpeed;
     private double sprintDelay;
@@ -159,7 +160,9 @@ public class Player : Animator
         slimeShootTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
         if (keyboardState.IsKeyDown(Keys.E))
+        {
             CheckForPlotsInteractiveRecs(keyboardState, screenRes);
+        }
         else
             interactRec.X += 9999999;
         
@@ -190,7 +193,8 @@ public class Player : Animator
 
     private void CheckForPlotsInteractiveRecs(KeyboardState keyboardState, Vector2 screenRes)
     {
-        UpdateInteractiveRectangle(interactRec);
+        interactRec = UpdateInteractiveRectangle(interactRec);
+        Console.WriteLine(interactRec);
         foreach (var plot in plots)
         {
             if (interactRec.Intersects(plot.interactiveRec))
@@ -204,34 +208,58 @@ public class Player : Animator
     private Rectangle CreateInteractiveRectangle()
     {
         Rectangle rect = new Rectangle(0, 0, 
-            (int)((float)GetCollisionRectangle().Width),
-            (int)(float)GetCollisionRectangle().Width * 2);
+            (int)((float)GetCollisionRectangle().Width * 2),
+            (int)(float)GetCollisionRectangle().Width);
         return rect;
     }
 
-    private void UpdateInteractiveRectangle(Rectangle rect)
+    private Rectangle UpdateInteractiveRectangle(Rectangle rect)
     {
         switch (playerOrientation)
         {
             case PlayerOrientation.Right:
+                CheckLastOrientUpDown();
+                lastOrientationUpDown = false;
                 rect.X = GetCollisionRectangle().X + GetCollisionRectangle().Width;
                 rect.Y = (int)(GetCollisionRectangle().Y + (float)GetCollisionRectangle().Height / 2 - (float)rect.Height / 2);
                 break;
             case PlayerOrientation.Up:
-                (rect.Width, rect.Height) = (rect.Height, rect.Width);
+                CheckLastOrientLeftRight();
+                lastOrientationUpDown = true;
                 rect.X = (int)(GetCollisionRectangle().X + (float)(GetCollisionRectangle().Width) / 2 - (float)rect.Width / 2);
                 rect.Y = GetCollisionRectangle().Y - rect.Height;
                 break;
             case PlayerOrientation.Left:
+                CheckLastOrientUpDown();
+                lastOrientationUpDown = false;
                 rect.X = GetCollisionRectangle().X - rect.Width;
                 rect.Y = (int)(GetCollisionRectangle().Y + (float)GetCollisionRectangle().Height / 2 - (float)rect.Height / 2);
                 break;
             case PlayerOrientation.Down:
-                (rect.Width, rect.Height) = (rect.Height, rect.Width);
+                CheckLastOrientLeftRight();
+                lastOrientationUpDown = true;
                 rect.X = (int)(GetCollisionRectangle().X + (float)(GetCollisionRectangle().Width) / 2 - (float)rect.Width / 2);
                 rect.Y = GetCollisionRectangle().Y + GetCollisionRectangle().Height;
                 break;
         }
+
+        void CheckLastOrientUpDown()
+        {
+            if (lastOrientationUpDown)
+            {
+                (rect.Width, rect.Height) = (rect.Height, rect.Width);
+            }
+        }
+
+        void CheckLastOrientLeftRight()
+        {
+            if (!lastOrientationUpDown)
+            {
+                (rect.Width, rect.Height) = (rect.Height, rect.Width);
+            }
+        }
+
+        return rect;
     }
 
     private List<Rectangle> CreateVacuumConeRecs(Vector2 mousePos, Vector2 screenRes)
