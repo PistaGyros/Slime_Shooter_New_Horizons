@@ -2,30 +2,79 @@
 
 public enum PlayerOrientation
 {
-    Down,
     Right,
+    Up,
     Left,
-    Up
+    Down
 }
 
 public enum PlayerStatus
 {
     Idle,
     Walking,
-    Throwing,
-    Vacuuming
+    ThrowVacuum
 }
 
 public enum SlimeOrientation
 {
     Left,
-    Right
+    Right,
 }
 
 public enum SlimeStatus
 {
     Idle,
-    Walking,
-    Jumping,
-    BeingVacuumed
+    BeingVacuumed,
+    Jumping
+}
+
+public enum PlotMenu
+{
+    Start,
+    Upgrades
+}
+
+public enum PlotTypes
+{
+    Empty,
+    Corral,
+    Garden,
+    Pond,
+    Storage
+}
+
+public enum CorralUpgrades
+{
+    None,
+    AutoFeeder,
+    AutoCollector,
+    SunProtection
+}
+
+public enum GardenUpgrades
+{
+    None,
+    Sprinkler,
+    Fertilizer,
+    AutoPicker
+}
+
+public enum ForceFieldTypes
+{
+    Vertical,
+    Horizontal
+}
+
+public enum DayNight
+{
+    Day,
+    Night
+}
+
+public enum Weather
+{
+    Sunny,
+    Cloudy,
+    Rain,
+    Storm
 }

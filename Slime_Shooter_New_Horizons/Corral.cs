@@ -8,13 +8,12 @@ namespace Slime_Shooter_New_Horizons;
 
 public class Corral : Building
 {
-    public Rectangle destinationRectangle;
-    public Rectangle sourceRectangle;
+    //public Rectangle destinationRectangle;
+    //public Rectangle sourceRectangle;
 
     private Texture2D collarTex;
     private Texture2D forceFieldHorizontalTex;
     private Texture2D forceFieldVerticalTex;
-    private Texture2D colliderTexture;
     private CorralForceField horizontalForceFieldUp;
     private CorralForceField horizontalForceFieldDown;
     private CorralForceField verticalForceFieldLeft;
@@ -27,36 +26,58 @@ public class Corral : Building
     {
         this.forceFieldHorizontalTex = forceFieldHorizontalTex;
         this.forceFieldVerticalTex = forceFieldVerticalTex;
-        this.colliderTexture = colliderTexture;
+        CreateForceFields();
+    }
+    
+    public Corral(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle,
+        float scaleMultiplier, Texture2D forceFieldHorizontalTex, Texture2D forceFieldVerticalTex) : 
+        base (texture, destinationRectangle, sourceRectangle, scaleMultiplier)
+    {
+        this.forceFieldHorizontalTex = forceFieldHorizontalTex;
+        this.forceFieldVerticalTex = forceFieldVerticalTex;
         CreateForceFields();
     }
 
     private void CreateForceFields()
     {
-        horizontalForceFieldUp = new CorralForceField(forceFieldHorizontalTex,
-            new Rectangle(destinationRectangle.X + 51, destinationRectangle.Y + 327, forceFieldHorizontalTex.Width / 6, 
+        // HORIZONTAL FORCE FIELDS (OR FENCE)
+        horizontalForceFieldUp = new CorralForceField(ForceFieldTypes.Horizontal, forceFieldHorizontalTex,
+            new Rectangle((int)(destinationRectangle.X + 17 * scaleMultiplier),
+                (int)(destinationRectangle.Y + 8 * scaleMultiplier), forceFieldHorizontalTex.Width / 4,
                 forceFieldHorizontalTex.Height),
-            new Rectangle(0, 0, forceFieldHorizontalTex.Width, forceFieldHorizontalTex.Height), 3, 6, 6, new Vector2(forceFieldHorizontalTex.Width / 6, 
-                forceFieldHorizontalTex.Height), 0.5f);
+            new Rectangle(0, 0, forceFieldHorizontalTex.Width, forceFieldHorizontalTex.Height), 3,
+            4, 4, new Vector2((float)forceFieldHorizontalTex.Width / 4, forceFieldHorizontalTex.Height),
+            0.5f);
         forceFields.Add(horizontalForceFieldUp);
-        horizontalForceFieldDown = new CorralForceField(forceFieldHorizontalTex,
-            new Rectangle(destinationRectangle.X + 51, destinationRectangle.Y + 24, forceFieldHorizontalTex.Width / 6,
+        
+        horizontalForceFieldDown = new CorralForceField(ForceFieldTypes.Horizontal, forceFieldHorizontalTex,
+            new Rectangle((int)(destinationRectangle.X + 17 * scaleMultiplier),
+                (int)(destinationRectangle.Y + 103 * scaleMultiplier), forceFieldHorizontalTex.Width / 4, 
                 forceFieldHorizontalTex.Height),
-            new Rectangle(0, 0, forceFieldHorizontalTex.Width, forceFieldHorizontalTex.Height), 3, 6, 6, new Vector2(forceFieldHorizontalTex.Width / 6, 
-                forceFieldHorizontalTex.Height), 0.5f);
+            new Rectangle(0, 0, forceFieldHorizontalTex.Width, forceFieldHorizontalTex.Height), 3,
+            4, 4, new Vector2((float)forceFieldHorizontalTex.Width / 4, forceFieldHorizontalTex.Height), 
+            0.5f);
         forceFields.Add(horizontalForceFieldDown);
-
-        verticalForceFieldLeft = new CorralForceField(forceFieldVerticalTex,
-            new Rectangle(destinationRectangle.X + 51, destinationRectangle.Y + 24, forceFieldVerticalTex.Width / 6,
+        
+        
+        // VERTICAL FORCE FIELDS (OR FENCE)
+        verticalForceFieldLeft = new CorralForceField(ForceFieldTypes.Vertical, forceFieldVerticalTex,
+            new Rectangle((int)(destinationRectangle.X + 17 * scaleMultiplier),
+                (int)(destinationRectangle.Y + 8 * scaleMultiplier),
+                forceFieldVerticalTex.Width / 4,
                 forceFieldVerticalTex.Height), 
             new Rectangle(0, 0, forceFieldVerticalTex.Width, forceFieldVerticalTex.Height), 
-            3, 6, 6, 
-            new Vector2(forceFieldVerticalTex.Width / 6, forceFieldVerticalTex.Height), 0.5f);
+            3, 4, 4, 
+            new Vector2((float)forceFieldVerticalTex.Width / 4, forceFieldVerticalTex.Height), 0.5f);
         forceFields.Add(verticalForceFieldLeft);
-        verticalForceFieldRight = new CorralForceField(forceFieldVerticalTex,
-            new Rectangle(destinationRectangle.X + 390, destinationRectangle.Y + 24, forceFieldVerticalTex.Width / 6,
+        
+        verticalForceFieldRight = new CorralForceField(ForceFieldTypes.Vertical, forceFieldVerticalTex,
+            new Rectangle((int)(destinationRectangle.X + 134 * scaleMultiplier),
+                (int)(destinationRectangle.Y + 8 * scaleMultiplier), forceFieldVerticalTex.Width / 4,
                 forceFieldVerticalTex.Height),
-            new Rectangle(0, 0, forceFieldVerticalTex.Width, forceFieldVerticalTex.Height), 3, 6, 6, new Vector2(forceFieldVerticalTex.Width / 6, forceFieldVerticalTex.Height), 0.5f);
+            new Rectangle(0, 0, forceFieldVerticalTex.Width, forceFieldVerticalTex.Height), 
+            3, 4, 4, 
+            new Vector2((float)forceFieldVerticalTex.Width / 4, forceFieldVerticalTex.Height), 0.5f);
         forceFields.Add(verticalForceFieldRight);
     }
 
@@ -71,18 +92,46 @@ public class Corral : Building
 
 public class CorralForceField : Animator
 {
-    public CorralForceField(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle,
-        float scaleMultiplier, int numFrames, int numCollums, Vector2 size, float animSpeedMultiplier) : 
+    private Rectangle destRec;
+    private ForceFieldTypes fenceType;
+    
+    public CorralForceField(ForceFieldTypes fenceType, Texture2D texture, Rectangle destinationRectangle, 
+        Rectangle sourceRectangle, float scaleMultiplier, int numFrames, int numCollums, Vector2 size, 
+        float animSpeedMultiplier) : 
         base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, numFrames, 
             numCollums, size, animSpeedMultiplier)
     {
-        
+        this.fenceType = fenceType;
     }
 
-    public CorralForceField(Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle,
+    public CorralForceField(ForceFieldTypes fenceType, Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle,
         float scaleMultiplier, int numFrames, int numCollums, Vector2 size) :
         base(texture, destinationRectangle, sourceRectangle, scaleMultiplier, numFrames, numCollums, size)
     {
+        this.fenceType = fenceType;
+    }
+
+    public new Rectangle GetCollisionRectangle()
+    {
+        Rectangle collisionRec = new();
+        switch (fenceType)
+        {
+            case ForceFieldTypes.Vertical:
+                collisionRec = new Rectangle(
+                    destinationRectangle.X, 
+                    destinationRectangle.Y, 
+                    (int)(destinationRectangle.Width * scaleMultiplier), 
+                    (int)(destinationRectangle.Height * scaleMultiplier));
+                break;
+            case ForceFieldTypes.Horizontal:
+                collisionRec = new Rectangle(
+                    destinationRectangle.X, 
+                    destinationRectangle.Y + (int)(destinationRectangle.Height * scaleMultiplier - 3 * scaleMultiplier), 
+                    (int)(destinationRectangle.Width * scaleMultiplier), 
+                    (int)(3 * scaleMultiplier));
+                break;
+        }
         
+        return collisionRec;
     }
 }

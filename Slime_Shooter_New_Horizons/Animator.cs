@@ -7,12 +7,14 @@ namespace Slime_Shooter_New_Horizons;
 
 public class Animator : Sprite
 {
+    private bool runAnim = true;
+
     public int numFrames;
     public int numCollums;
     public int numRows;
     public Vector2 size;
     public float counter;
-    private float animSpeedMultiplier = 1;
+    public float animSpeedMultiplier = 1;
     public List<List<Rectangle>> objectColRecs;
     
     public int currentFrame;
@@ -83,9 +85,10 @@ public class Animator : Sprite
         this.animSpeedMultiplier = animSpeedMultiplier;
     }
 
-    public void ChangeAnimation(int actualRow)
+    public void ChangeAnimation(int actualRow, float animSpeedMultiplier = 1)
     {
         this.currentRow = actualRow;
+        this.animSpeedMultiplier = animSpeedMultiplier;
     }
     
     public new Rectangle GetCollisionRectangle()
@@ -99,7 +102,8 @@ public class Animator : Sprite
 
     public new void Update(GameTime gameTime)
     {
-        UpdateAnimator(gameTime);
+        if (runAnim)
+            UpdateAnimator(gameTime);
     }
 
     public void UpdateAnimator(GameTime gameTime)
@@ -112,6 +116,17 @@ public class Animator : Sprite
         }
     }
 
+    public void StartAnimator()
+    {
+        runAnim = true;
+    }
+
+    public void StopAnimator()
+    {
+        ResetAnim();
+        runAnim = false;
+    }
+
     public new virtual void Draw(SpriteBatch spriteBatch, Vector2 offset)
     {
         Rectangle dest = new Rectangle(
@@ -119,11 +134,11 @@ public class Animator : Sprite
             (int)offset.Y + destinationRectangle.Y,
             (int)(destinationRectangle.Width * scaleMultiplier),
             (int)(destinationRectangle.Height * scaleMultiplier));
-        
+
         spriteBatch.Draw(texture, dest, GetFrame(currentRow), Color.White);
     }
 
-    public void NextFrame()
+    private void NextFrame()
     {
         currentFrame++;
         colPos++;
@@ -134,7 +149,7 @@ public class Animator : Sprite
         }
     }
 
-    public void ResetAnim()
+    private void ResetAnim()
     {
         currentFrame = 0;
         colPos = 0;
@@ -145,9 +160,9 @@ public class Animator : Sprite
         return new Rectangle((int)(colPos * size.X), (int)(actualRow * size.Y), (int)size.X, (int)size.Y);
     }
 
-    public bool CheckForCollisionsWithSlimes(List<Slime> slimeList)
+    public bool CheckForCollisionsWithSlimes()
     {
-        foreach (var slime in slimeList)
+        foreach (var slime in slimesList)
         {
             if (this != slime) continue;
             if(GetCollisionRectangle().Intersects(slime.GetCollisionRectangle()))

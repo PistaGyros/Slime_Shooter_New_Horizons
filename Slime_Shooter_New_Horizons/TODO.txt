@@ -1,0 +1,21 @@
+-----------------------------------------
+Explanatory notes
+x - done
+"-" - in progress
+s - stuck af
+-----------------------------------------
+General states of development
+[]  fix the player interactive rec
+[]  add main biome (name doesn't really matter)
+[]  add secondary biome (something with lake or river to add water slimes)
+[]  add player character animations and "model"
+[]  add garden as plot
+-----------------------------------------
+Art and shit
+[]  design player character (you already got silhouette)
+[]  draw individual frames for player animations
+[]  draw top-down rocks
+[]  draw top-down trees (and/or redraw existing)
+-----------------------------------------
+Interesting features to add later
+[]  add water slimes (puddle or something)

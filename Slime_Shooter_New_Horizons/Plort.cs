@@ -25,11 +25,10 @@ public class Plort(
         velocity *= DecideWhatinitQuadrant(quadrantSpawned);
     }
 
-    public new void Update(GameTime gameTime, Rectangle playerRec, List<Slime> slimeList, List<Plort> plortsList)
+    public new void Update(GameTime gameTime, Rectangle playerRec)
     {
-        Console.WriteLine(isThrowed);
         Rectangle collidedObjectRec = new();
-        var outputOfChecking = CheckForCollisionsWithSlimesPlorts(slimeList, plortsList);
+        var outputOfChecking = CheckForCollisionsWithSlimesPlorts();
         
         if (outputOfChecking.Item1)
         {
@@ -50,7 +49,7 @@ public class Plort(
 
         else if (!isCollidingWithObject)
         {
-            UpdateSprite(gameTime, playerRec);
+            UpdateSprite(gameTime, playerRec, destinationRectangle, GetCollisionRectangle());
         }
     }
     
@@ -64,40 +63,40 @@ public class Plort(
         destinationRectangle.Y += (int)pointVec.Y;
     }
     
-    public new (bool, Rectangle) CheckForCollisionsWithSlimesPlorts(
-        List<Slime> slimeList, List<Plort> plortsList)
+    public (bool, Rectangle) CheckForCollisionsWithSlimesPlorts()
     {
         bool collision = false;
         Rectangle collidedRectangle = new Rectangle();
-        foreach (var plort in plortsList)
-        {
-            if (this != plort)
-                if(GetCollisionRectangle().Intersects(plort.GetCollisionRectangle()))
+        if (plortsList != null) {
+            
+            foreach (var plort in plortsList)
+            {
+                if (this != plort)
+                    if(GetCollisionRectangle().Intersects(plort.GetCollisionRectangle()))
+                    {
+                        collision = true;
+                        collidedRectangle = plort.GetCollisionRectangle();
+                        isThrowed = false;
+                        plort.isThrowed = false;
+                    }
+            }
+            foreach (var slime in slimesList)
+            {
+                if(GetCollisionRectangle().Intersects(slime.GetCollisionRectangle()))
                 {
                     collision = true;
-                    collidedRectangle = plort.GetCollisionRectangle();
+                    collidedRectangle = slime.GetCollisionRectangle();
                     isThrowed = false;
-                    plort.isThrowed = false;
-                    Console.WriteLine("Plort has collided with plort");
                 }
-        }
-        foreach (var slime in slimeList)
-        {
-            if(GetCollisionRectangle().Intersects(slime.GetCollisionRectangle()))
-            {
-                collision = true;
-                collidedRectangle = slime.GetCollisionRectangle();
-                isThrowed = false;
-                Console.WriteLine("Plort has collided with slime");
             }
+               
         }
         return (collision, collidedRectangle);
-        
     }
     
-    public new Rectangle GetCollisionRectangle()
+    /**public new Rectangle GetCollisionRectangle()
     {
         return new Rectangle(destinationRectangle.X, destinationRectangle.Y, 
             destinationRectangle.Width * (int)scaleMultiplier, destinationRectangle.Height * (int)scaleMultiplier);
-    }
+    }**/
 }

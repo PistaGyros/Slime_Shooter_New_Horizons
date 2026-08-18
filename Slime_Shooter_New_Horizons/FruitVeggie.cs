@@ -6,16 +6,21 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Slime_Shooter_New_Horizons;
 
-public class FruitVeggie(
-    int fruitVeggieId,
-    Texture2D texture,
-    Rectangle destinationRectangle,
-    Rectangle sourceRectangle,
-    float scaleMultiplier)
-    : Sprite(texture, destinationRectangle, sourceRectangle, scaleMultiplier)
+public class FruitVeggie : Sprite
 {
-    public int fruitVeggieID = fruitVeggieId;
+    public int fruitVeggieID;
     public bool isCollidingWithObject;
+    
+    
+    public FruitVeggie(int fruitVeggieId,
+        Texture2D texture,
+        Rectangle destinationRectangle,
+        Rectangle sourceRectangle,
+        float scaleMultiplier)
+        : base(texture, destinationRectangle, sourceRectangle, scaleMultiplier)
+    {
+        this.fruitVeggieID = fruitVeggieId;
+    }
 
     public void ThrowFruitVeggie(int quadrantSpawned)
     {
@@ -25,10 +30,10 @@ public class FruitVeggie(
         velocity *= DecideWhatinitQuadrant(quadrantSpawned);
     }
 
-    public new void Update(GameTime gameTime, Rectangle playerRec, List<FruitVeggie> fruitVeggiesList)
+    public new void Update(GameTime gameTime, Rectangle playerRec)
     {
         Rectangle collidedObjectRec = new();
-        var outputOfChecking = CheckForCollisionsWithFruitsVeggies(fruitVeggiesList);
+        var outputOfChecking = CheckForCollisionsWithFruitsVeggies();
         
         if (outputOfChecking.Item1)
         {
@@ -49,7 +54,7 @@ public class FruitVeggie(
 
         else if (!isCollidingWithObject)
         {
-            UpdateSprite(gameTime, playerRec);
+            UpdateSprite(gameTime, playerRec, destinationRectangle, GetCollisionRectangle());
         }
     }
     
@@ -63,11 +68,12 @@ public class FruitVeggie(
         destinationRectangle.Y += (int)(pointVec.Y / 2);
     }
     
-    public new (bool, Rectangle) CheckForCollisionsWithFruitsVeggies(List<FruitVeggie> fruitVeggiesList)
+    public new (bool, Rectangle) CheckForCollisionsWithFruitsVeggies()
     {
         bool collision = false;
         Rectangle collidedRectangle = new Rectangle();
-        foreach (var fruitVeggie in fruitVeggiesList)
+        
+        foreach (var fruitVeggie in fruitsVeggiesList)
         {
             if (this != fruitVeggie)
             {
@@ -77,16 +83,9 @@ public class FruitVeggie(
                     collidedRectangle = fruitVeggie.GetCollisionRectangle();
                     isThrowed = false;
                     fruitVeggie.isThrowed = false;
-                    Console.WriteLine("FruitVeggie has collided with fruitVeggie");
                 }
             }
         }
         return (collision, collidedRectangle);
-    }
-    
-    public new Rectangle GetCollisionRectangle()
-    {
-        return new Rectangle(destinationRectangle.X, destinationRectangle.Y, 
-            destinationRectangle.Width * (int)scaleMultiplier, destinationRectangle.Height * (int)scaleMultiplier);
     }
 }

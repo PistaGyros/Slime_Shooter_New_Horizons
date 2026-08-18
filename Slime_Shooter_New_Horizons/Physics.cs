@@ -7,7 +7,7 @@ namespace Slime_Shooter_New_Horizons;
 public class Physics
 {
     private float time;
-    public float vacuumTime;
+    public double vacuumTime;
     public Vector2 velocity;
     public Vector2 initPos;
     public int initQuadrant;
@@ -20,16 +20,19 @@ public class Physics
         initPos = new Vector2(destinationRectangle.X, destinationRectangle.Y);
     }
 
-    public Rectangle Vacuum(Rectangle vacuumerRec, Rectangle vacuumedRec, GameTime gameTime)
+    public Rectangle Vacuum( GameTime gameTime, Rectangle vacuumerRec, Rectangle vacuumedRec, Rectangle vacuumedColRec)
     {
-        Vector2 pointVec = new Vector2(vacuumerRec.X + (vacuumerRec.Width / 2) - (vacuumedRec.X + vacuumedRec.Width / 2), 
-            vacuumerRec.Y + (vacuumerRec.Height / 2) - (vacuumedRec.Y + vacuumedRec.Height / 2));
-        double x = vacuumedRec.X + pointVec.X * vacuumTime * gameTime.ElapsedGameTime.TotalSeconds;
-        double y = vacuumedRec.Y + pointVec.Y * vacuumTime * gameTime.ElapsedGameTime.TotalSeconds;
-        vacuumedRec.X = (int)x;
-        vacuumedRec.Y = (int)y;
+        Vector2 pointVec = new Vector2(
+            (vacuumerRec.X + ((float)vacuumerRec.Width / 2)) - (vacuumedColRec.X + (float)vacuumedColRec.Width / 2), 
+            (vacuumerRec.Y + ((float)vacuumerRec.Height / 2)) - (vacuumedColRec.Y + (float)vacuumedColRec.Height / 2)
+            );
+        var x = pointVec.X * vacuumTime * gameTime.ElapsedGameTime.TotalSeconds;
+        var y = pointVec.Y * vacuumTime * gameTime.ElapsedGameTime.TotalSeconds;
+        vacuumedRec.X += (int)x;
+        vacuumedRec.Y += (int)y;
         return vacuumedRec;
     }
+    
     
     public Rectangle Fly(GameTime gameTime, Rectangle destinationRectangle)
     {

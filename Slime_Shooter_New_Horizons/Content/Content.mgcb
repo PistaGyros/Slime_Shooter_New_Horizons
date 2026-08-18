@@ -13,7 +13,7 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin ../../../../../pixel_arts/slime_rancehr/Corral/force_field_corral_prototype_anim.png
+#begin bea_walking_spritesheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -23,7 +23,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:../../../../../pixel_arts/slime_rancehr/Corral/force_field_corral_prototype_anim.png;force_field_corral_prototype_anim.png
+/build:bea_walking_spritesheet.png
+
+#begin coin_tex.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:coin_tex.png
 
 #begin collider_texture.png
 /importer:TextureImporter
@@ -49,7 +61,7 @@
 /processorParam:TextureFormat=Color
 /build:corral_deactivated.png
 
-#begin force_field_corral_prototype_anim_vertical.png
+#begin empty_plot.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -59,7 +71,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:force_field_corral_prototype_anim_vertical.png
+/build:empty_plot.png
 
 #begin force_field_corral_prototype_anim.png
 /importer:TextureImporter
@@ -72,6 +84,54 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:force_field_corral_prototype_anim.png
+
+#begin force_field_corral_prototype_anim.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:force_field_corral_prototype_anim.png
+
+#begin force_field_corral_prototype_vertical_anim.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:force_field_corral_prototype_vertical_anim.png
+
+#begin green_square.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:green_square.png
+
+#begin honey_plort.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:honey_plort.png
 
 #begin honey_slime_new_spritesheet.png
 /importer:TextureImporter
@@ -133,6 +193,18 @@
 /processorParam:TextureFormat=Color
 /build:paradayka_veggie.png
 
+#begin phospor_plort.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:phospor_plort.png
+
 #begin phospor_slime_new_spritesheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -157,7 +229,7 @@
 /processorParam:TextureFormat=Color
 /build:pink_plort.png
 
-#begin pink_slime_jumping_spritesheet-export.png
+#begin pink_slime_new_spritesheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -167,9 +239,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:pink_slime_jumping_spritesheet-export.png
+/build:pink_slime_new_spritesheet.png
 
-#begin pink_slime_jumping_spritesheet.png
+#begin pink_slime_new_spritesheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -179,7 +251,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:pink_slime_jumping_spritesheet.png
+/build:pink_slime_new_spritesheet.png
 
 #begin pink_slime_new_spritesheet.png
 /importer:TextureImporter
@@ -205,7 +277,7 @@
 /processorParam:TextureFormat=Color
 /build:pink_slime_new.png
 
-#begin pink_slime.png
+#begin plort_collector.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -215,7 +287,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:pink_slime.png
+/build:plort_collector.png
 
 #begin rock_plort.png
 /importer:TextureImporter
@@ -277,6 +349,18 @@
 /processorParam:TextureFormat=Color
 /build:spr_player_1_left_idle.png
 
+#begin tabby_plort.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:tabby_plort.png
+
 #begin tabby_slime_new_spritesheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -289,12 +373,36 @@
 /processorParam:TextureFormat=Color
 /build:tabby_slime_new_spritesheet.png
 
+#begin tileMapTexture.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:tileMapTexture.png
+
 #begin UI_menu_font.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:UI_menu_font.spritefont;Bell MT.spritefont
+
+#begin UI_tex.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI_tex.png
 
 #begin yahoda_fruit.png
 /importer:TextureImporter
